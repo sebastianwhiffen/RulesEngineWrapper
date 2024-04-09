@@ -14,4 +14,8 @@
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\RulesEngine\src\RulesEngine\RulesEngine.csproj" />
+  </ItemGroup>
+
 </Project>

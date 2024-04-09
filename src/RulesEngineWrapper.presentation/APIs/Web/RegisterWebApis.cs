@@ -5,7 +5,7 @@ namespace RulesEngineWrapper.presentation.APIs
 {
     public static class RegisterWebApis
     {
-        public static IEndpointRouteBuilder RegisterWrapperWebApis(this IEndpointRouteBuilder endpoints)
+        public static IEndpointRouteBuilder RegisterRulesEngineWebApis(this IEndpointRouteBuilder endpoints)
         {
             endpoints.MapGet("/test", () =>
             {

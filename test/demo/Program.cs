@@ -5,6 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddRulesEngineWrapper();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -18,6 +20,6 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
-app.UseRulesEngineWebAPIs();
+app.UseRulesEngineWrapper();
 
 app.Run();

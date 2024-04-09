@@ -1,6 +1,6 @@
 namespace RulesEngineWrapper.presentation.Options
 {
-    public class RulesEngineWrapperPresentationOptions
+    public class RulesEngineBuilderOptions
     {
 
 

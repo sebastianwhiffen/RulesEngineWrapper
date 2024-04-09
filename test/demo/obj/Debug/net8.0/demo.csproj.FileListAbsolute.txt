@@ -34,3 +34,9 @@ C:\Users\SebastianWhiffen\source\repos\RulesEngineWrapper\test\demo\obj\Debug\ne
 C:\Users\SebastianWhiffen\source\repos\RulesEngineWrapper\test\demo\obj\Debug\net8.0\demo.pdb
 C:\Users\SebastianWhiffen\source\repos\RulesEngineWrapper\test\demo\obj\Debug\net8.0\demo.genruntimeconfig.cache
 C:\Users\SebastianWhiffen\source\repos\RulesEngineWrapper\test\demo\obj\Debug\net8.0\ref\demo.dll
+C:\Users\SebastianWhiffen\source\repos\RulesEngineWrapper\test\demo\bin\Debug\net8.0\FastExpressionCompiler.dll
+C:\Users\SebastianWhiffen\source\repos\RulesEngineWrapper\test\demo\bin\Debug\net8.0\FluentValidation.dll
+C:\Users\SebastianWhiffen\source\repos\RulesEngineWrapper\test\demo\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\SebastianWhiffen\source\repos\RulesEngineWrapper\test\demo\bin\Debug\net8.0\System.Linq.Dynamic.Core.dll
+C:\Users\SebastianWhiffen\source\repos\RulesEngineWrapper\test\demo\bin\Debug\net8.0\RulesEngine.dll
+C:\Users\SebastianWhiffen\source\repos\RulesEngineWrapper\test\demo\bin\Debug\net8.0\RulesEngine.pdb
