@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RulesEngineWrapper.Infrastr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RulesEngineWrapper.presentation", "src\RulesEngineWrapper.presentation\RulesEngineWrapper.presentation.csproj", "{DCC50603-B010-48EE-999A-235AA12A7DFD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{A5F0380A-0F24-4A46-9224-206A0E428EDF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "demo", "test\demo\demo.csproj", "{33B92D11-99C3-4B13-947F-91A66836DE48}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,16 +31,18 @@ Global
 		{DCC50603-B010-48EE-999A-235AA12A7DFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCC50603-B010-48EE-999A-235AA12A7DFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCC50603-B010-48EE-999A-235AA12A7DFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33B92D11-99C3-4B13-947F-91A66836DE48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33B92D11-99C3-4B13-947F-91A66836DE48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33B92D11-99C3-4B13-947F-91A66836DE48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33B92D11-99C3-4B13-947F-91A66836DE48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{437880D4-B804-49FD-8E84-9BF08B043CE5} = {84EAD8DB-B36E-4E8F-A7D1-545093CBA994}
-		{865B4416-44ED-44B6-8200-1C217A695239} = {84EAD8DB-B36E-4E8F-A7D1-545093CBA994}
-		{DCC50603-B010-48EE-999A-235AA12A7DFD} = {84EAD8DB-B36E-4E8F-A7D1-545093CBA994}
-	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FA3F5203-7CEE-44A3-BA97-33108293B524}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{33B92D11-99C3-4B13-947F-91A66836DE48} = {A5F0380A-0F24-4A46-9224-206A0E428EDF}
 	EndGlobalSection
 EndGlobal

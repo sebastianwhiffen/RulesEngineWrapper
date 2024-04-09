@@ -1,0 +1,11 @@
+
+presentation layer will get done first
+
+define ingress points
+1. embedded APIs ? needed ?
+2. WebAPI. needed.
+
+define ingress presentation
+2. Append WebAPIs to swagger
+
+
