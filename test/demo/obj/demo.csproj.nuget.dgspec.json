@@ -190,14 +190,82 @@
         }
       }
     },
-    "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\src\\RulesEngineWrapper.presentation\\RulesEngineWrapper.presentation.csproj": {
+    "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\src\\RulesEngineWrapper.Domain\\RulesEngineWrapper.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\src\\RulesEngineWrapper.presentation\\RulesEngineWrapper.presentation.csproj",
-        "projectName": "RulesEngineWrapper.presentation",
-        "projectPath": "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\src\\RulesEngineWrapper.presentation\\RulesEngineWrapper.presentation.csproj",
+        "projectUniqueName": "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\src\\RulesEngineWrapper.Domain\\RulesEngineWrapper.Domain.csproj",
+        "projectName": "RulesEngineWrapper.Domain",
+        "projectPath": "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\src\\RulesEngineWrapper.Domain\\RulesEngineWrapper.Domain.csproj",
         "packagesPath": "C:\\Users\\SebastianWhiffen\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\src\\RulesEngineWrapper.presentation\\obj\\",
+        "outputPath": "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\src\\RulesEngineWrapper.Domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\SebastianWhiffen\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\RulesEngine\\src\\RulesEngine\\RulesEngine.csproj": {
+                "projectPath": "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\RulesEngine\\src\\RulesEngine\\RulesEngine.csproj"
+              },
+              "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\src\\RulesEngineWrapper.Infrastructure\\RulesEngineWrapper.Infrastructure.csproj": {
+                "projectPath": "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\src\\RulesEngineWrapper.Infrastructure\\RulesEngineWrapper.Infrastructure.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\src\\RulesEngineWrapper.Infrastructure\\RulesEngineWrapper.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\src\\RulesEngineWrapper.Infrastructure\\RulesEngineWrapper.Infrastructure.csproj",
+        "projectName": "RulesEngineWrapper.Infrastructure",
+        "projectPath": "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\src\\RulesEngineWrapper.Infrastructure\\RulesEngineWrapper.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\SebastianWhiffen\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\src\\RulesEngineWrapper.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\SebastianWhiffen\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -236,9 +304,90 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\src\\RulesEngineWrapper.presentation\\RulesEngineWrapper.presentation.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\src\\RulesEngineWrapper.presentation\\RulesEngineWrapper.presentation.csproj",
+        "projectName": "RulesEngineWrapper.presentation",
+        "projectPath": "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\src\\RulesEngineWrapper.presentation\\RulesEngineWrapper.presentation.csproj",
+        "packagesPath": "C:\\Users\\SebastianWhiffen\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\src\\RulesEngineWrapper.presentation\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\SebastianWhiffen\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\RulesEngine\\src\\RulesEngine\\RulesEngine.csproj": {
+                "projectPath": "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\RulesEngine\\src\\RulesEngine\\RulesEngine.csproj"
+              },
+              "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\src\\RulesEngineWrapper.Domain\\RulesEngineWrapper.Domain.csproj": {
+                "projectPath": "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\src\\RulesEngineWrapper.Domain\\RulesEngineWrapper.Domain.csproj"
+              },
+              "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\src\\RulesEngineWrapper.Infrastructure\\RulesEngineWrapper.Infrastructure.csproj": {
+                "projectPath": "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\src\\RulesEngineWrapper.Infrastructure\\RulesEngineWrapper.Infrastructure.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[8.0.3, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.4, )"
             }
           },
           "imports": [
@@ -313,6 +462,10 @@
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[8.0.3, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[8.0.4, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

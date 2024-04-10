@@ -14,3 +14,7 @@ C:\Users\SebastianWhiffen\source\repos\RulesEngineWrapper\src\RulesEngineWrapper
 C:\Users\SebastianWhiffen\source\repos\RulesEngineWrapper\src\RulesEngineWrapper.presentation\bin\Debug\net8.0\RulesEngine.dll
 C:\Users\SebastianWhiffen\source\repos\RulesEngineWrapper\src\RulesEngineWrapper.presentation\bin\Debug\net8.0\RulesEngine.pdb
 C:\Users\SebastianWhiffen\source\repos\RulesEngineWrapper\src\RulesEngineWrapper.presentation\obj\Debug\net8.0\RulesEng.FF24D269.Up2Date
+C:\Users\SebastianWhiffen\source\repos\RulesEngineWrapper\src\RulesEngineWrapper.presentation\bin\Debug\net8.0\RulesEngineWrapper.Infrastructure.dll
+C:\Users\SebastianWhiffen\source\repos\RulesEngineWrapper\src\RulesEngineWrapper.presentation\bin\Debug\net8.0\RulesEngineWrapper.Infrastructure.pdb
+C:\Users\SebastianWhiffen\source\repos\RulesEngineWrapper\src\RulesEngineWrapper.presentation\bin\Debug\net8.0\RulesEngineWrapper.Domain.dll
+C:\Users\SebastianWhiffen\source\repos\RulesEngineWrapper\src\RulesEngineWrapper.presentation\bin\Debug\net8.0\RulesEngineWrapper.Domain.pdb

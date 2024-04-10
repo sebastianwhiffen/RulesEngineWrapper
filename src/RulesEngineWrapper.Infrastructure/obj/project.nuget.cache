@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "LDsG8zyduIyguRHmngQhckGl7D0p/MNSrFrnBHfjvDj/5b4GpZGXeMSVkAE2a3bIeFlEtEGl8QZiK1gsYW9GnQ==",
+  "dgSpecHash": "Bfp0kelbfysPgusAesC+Q58XyRO8IgF1KfVcbpRFg9Q6ukEhYd5xv1s0OLIbmZvcoBZEeFyQfrVUdkAtC9ievQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\SebastianWhiffen\\source\\repos\\RulesEngineWrapper\\src\\RulesEngineWrapper.Infrastructure\\RulesEngineWrapper.Infrastructure.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\SebastianWhiffen\\.nuget\\packages\\fastexpressioncompiler\\4.0.1\\fastexpressioncompiler.4.0.1.nupkg.sha512",
+    "C:\\Users\\SebastianWhiffen\\.nuget\\packages\\fluentvalidation\\11.9.0\\fluentvalidation.11.9.0.nupkg.sha512",
     "C:\\Users\\SebastianWhiffen\\.nuget\\packages\\microsoft.entityframeworkcore\\8.0.1\\microsoft.entityframeworkcore.8.0.1.nupkg.sha512",
     "C:\\Users\\SebastianWhiffen\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\8.0.1\\microsoft.entityframeworkcore.abstractions.8.0.1.nupkg.sha512",
     "C:\\Users\\SebastianWhiffen\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\8.0.1\\microsoft.entityframeworkcore.analyzers.8.0.1.nupkg.sha512",
@@ -14,7 +16,10 @@
     "C:\\Users\\SebastianWhiffen\\.nuget\\packages\\microsoft.extensions.logging\\8.0.0\\microsoft.extensions.logging.8.0.0.nupkg.sha512",
     "C:\\Users\\SebastianWhiffen\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.0\\microsoft.extensions.logging.abstractions.8.0.0.nupkg.sha512",
     "C:\\Users\\SebastianWhiffen\\.nuget\\packages\\microsoft.extensions.options\\8.0.0\\microsoft.extensions.options.8.0.0.nupkg.sha512",
-    "C:\\Users\\SebastianWhiffen\\.nuget\\packages\\microsoft.extensions.primitives\\8.0.0\\microsoft.extensions.primitives.8.0.0.nupkg.sha512"
+    "C:\\Users\\SebastianWhiffen\\.nuget\\packages\\microsoft.extensions.primitives\\8.0.0\\microsoft.extensions.primitives.8.0.0.nupkg.sha512",
+    "C:\\Users\\SebastianWhiffen\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
+    "C:\\Users\\SebastianWhiffen\\.nuget\\packages\\system.linq.dynamic.core\\1.3.7\\system.linq.dynamic.core.1.3.7.nupkg.sha512",
+    "C:\\Users\\SebastianWhiffen\\.nuget\\packages\\rulesengine\\5.0.3\\rulesengine.5.0.3.nupkg.sha512"
   ],
   "logs": []
 }

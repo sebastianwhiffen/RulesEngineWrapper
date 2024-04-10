@@ -5,12 +5,21 @@ using RulesEngine.Models;
 
 namespace RulesEngine.Data
 {
-    public class RulesEngineContext : DbContext
+    public class RulesEngineContext : DbContext, IRulesEngineContext
     {
+
+        public RulesEngineContext(DbContextOptions<RulesEngineContext> options) : base(options)
+        {
+        }
+
         public DbSet<Workflow> Workflows { get; set; }
 
         public DbSet<Rule> Rules { get; set; }
 
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return base.SaveChangesAsync(cancellationToken);
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -30,10 +39,10 @@ namespace RulesEngine.Data
             });
 
             modelBuilder.Entity<Rule>()
-                .HasOne<Rule>()
-                .WithMany(r => r.Rules)
-                .HasForeignKey("RuleNameFK")
-                .OnDelete(DeleteBehavior.Cascade);
+            .HasOne<Rule>()
+            .WithMany(r => r.Rules)
+            .HasForeignKey("RuleNameFK")
+            .OnDelete(DeleteBehavior.NoAction);
 
             var serializationOptions = new JsonSerializerOptions(JsonSerializerDefaults.General);
 

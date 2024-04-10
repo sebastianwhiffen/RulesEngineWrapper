@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\RulesEngine\RulesEngine.csproj" />
     <ProjectReference Include="..\..\RulesEngine\RulesEngine.csproj" />
+	<ProjectReference Include="..\..\RulesEngine\src\RulesEngine\RulesEngine.csproj" />
   </ItemGroup>
 
 
