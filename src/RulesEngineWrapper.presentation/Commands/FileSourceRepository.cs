@@ -45,6 +45,11 @@ public class FileSourceRepository : IDataSourceRepository
         throw new NotImplementedException();
     }
 
+    public Task<object> RunActionWorkflow(ExecuteActionWorkflowCommand executeAllRulesCommand)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<IEnumerable<RuleResultTree>> RunAllRulesAsync(ExecuteAllRulesCommand executeAllRulesCommand)
     {
         throw new NotImplementedException();

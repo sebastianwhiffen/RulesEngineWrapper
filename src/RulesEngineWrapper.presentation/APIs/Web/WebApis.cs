@@ -23,7 +23,8 @@ namespace RulesEngineWrapper.presentation.APIs
 
             #region commands
 
-            endpoints.MapPost("executeAllRules/{workflowName}", ExecuteAllRules).WithTags(Commands).WithOpenApi();
+            endpoints.MapPost("executeAllRules", ExecuteAllRules).WithTags(Commands).WithOpenApi();
+            endpoints.MapPost("executeActionWorkflow", ExecuteActionWorkflow).WithTags(Commands).WithOpenApi();
             endpoints.MapPost("addOrUpdateWorkflow", AddOrUpdateWorkflow).WithTags(Commands).WithOpenApi();
             endpoints.MapDelete("removeWorkflowByName", RemoveWorkflowByName).WithTags(Commands).WithOpenApi();
 
@@ -73,6 +74,15 @@ namespace RulesEngineWrapper.presentation.APIs
         {
             var result = await services.Repository.RunAllRulesAsync(executeAllRulesCommand);
             return TypedResults.Ok<IEnumerable<dynamic>>(result);
+        }
+
+          public static async Task<Results<Ok<dynamic>, BadRequest<string>>> ExecuteActionWorkflow(
+            [AsParameters] RulesEngineServices services,
+            ExecuteActionWorkflowCommand executeActionWorkflowCommand
+        )
+        {
+            var result = await services.Repository.RunActionWorkflow(executeActionWorkflowCommand);
+            return TypedResults.Ok<dynamic>(result);
         }
 
         public static async Task<Results<Ok<Workflow>, BadRequest<string>>> AddOrUpdateWorkflow(

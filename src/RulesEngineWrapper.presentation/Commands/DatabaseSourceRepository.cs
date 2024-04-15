@@ -18,6 +18,11 @@ public class DatabaseRulesEngineRepository : IDataSourceRepository
         _rulesEngineContext = rulesEngineContext;
         _rulesEngine = rulesEngine;
     }
+
+    public Task<Workflow> AddOrUpdateWorkflows(Workflow workflow)
+    {
+        throw new NotImplementedException();
+    }
     #region queries
     public async Task<IEnumerable<Rule>> GetAllRulesAsync()
     {
@@ -38,52 +43,26 @@ public class DatabaseRulesEngineRepository : IDataSourceRepository
     {
         return await _rulesEngineContext.Workflows.FindAsync(workflowName) ?? throw new KeyNotFoundException(workflowName);
     }
+
+    public Task<bool> RemoveWorkflowByNameAsync(string workflowName)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<object> RunActionWorkflow(ExecuteActionWorkflowCommand executeAllRulesCommand)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<RuleResultTree>> RunAllRulesAsync(ExecuteAllRulesCommand executeAllRulesCommand)
+    {
+        throw new NotImplementedException();
+    }
     #endregion
 
     //re-do anything below this
     #region commands
-    public async Task<IEnumerable<RuleResultTree>> RunAllRulesAsync(ExecuteAllRulesCommand executeAllRulesCommand)
-    {
-        dynamic input1 = JsonConvert.DeserializeObject<ExpandoObject>(executeAllRulesCommand.data.ToString(), new ExpandoObjectConverter());
 
-        var rp1 = new RuleParameter(executeAllRulesCommand.data.GetType().Name, input1);
-
-        var result = await _rulesEngine.ExecuteAllRulesAsync(executeAllRulesCommand.workflowName, rp1);
-        return result;
-    }
-
-    public async Task<Workflow> AddOrUpdateWorkflows(Workflow workflow)
-    {
-        await RemoveWorkflowByNameAsync(workflow.WorkflowName);
-
-        var result = await _rulesEngineContext.Workflows.AddAsync(workflow);
-
-        _rulesEngine.AddOrUpdateWorkflow(result.Entity);
-    
-        await _rulesEngineContext.SaveChangesAsync();
-
-        return result.Entity;
-    }
-    
-    public async Task<bool> RemoveWorkflowByNameAsync(string workflowName)
-    {
-           var workflow = await _rulesEngineContext.Workflows
-            .Include(w => w.Rules)
-            .FirstOrDefaultAsync(w => w.WorkflowName == workflowName);
-
-        if (workflow.Rules.Any())
-        {
-            _rulesEngineContext.Rules.RemoveRange(workflow.Rules);
-        }
-
-        _rulesEngineContext.Workflows.Remove(workflow);
-        await _rulesEngineContext.SaveChangesAsync();
-
-        _rulesEngine.RemoveWorkflow(workflow.WorkflowName);
-
-        return true;
-    
-    }
 
     #endregion
 
