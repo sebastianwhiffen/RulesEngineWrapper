@@ -8,5 +8,4 @@ public interface IRulesEngineContext
         public DbSet<Rule> Rules { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
-
 }

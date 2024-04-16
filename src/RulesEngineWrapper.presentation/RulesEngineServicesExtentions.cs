@@ -1,40 +1,51 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using RulesEngineWrapper.presentation.Options;
-using static RulesEngineWrapper.presentation.Options.RulesEngineServiceOptions;
 using RulesEngineWrapper.presentation.Queries;
 using RulesEngine.Interfaces;
+using System.Runtime.InteropServices;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace RulesEngineWrapper.presentation;
 
 public static class RuleEngineServicesExtensions
 {
-    //this needs to be improved greatly. primary functionality should be added for multiple rule source types. not just DB. as well as including the Action<DbContextOptionsBuilder> optionsAction inside of
-    //the RulesEngineServiceOptions class. got a demo coming up. quick implemented this for it. currenlty only to be used with a database
-     public static IServiceCollection AddRulesEngineWrapper<TContext>(this IServiceCollection services,
-        Action<RulesEngineServiceOptions> optionsAction) where TContext : DbContext, IRulesEngineContext
+    public static IServiceCollection AddRulesEngineWrapper(this IServiceCollection services,
+       [Optional] Action<RulesEngineWrapperOptions> optionsAction)
+    {
+        RulesEngineWrapperOptions options = new RulesEngineWrapperOptions();
+        optionsAction?.Invoke(options);
+
+        services.AddScoped<IRulesEngine, RulesEngine.RulesEngine>(p =>
+        {
+            return new RulesEngine.RulesEngine(options.workflowsToInit.ToArray(), options.reSettings);
+        });
+
+        services.AddScoped<IDataSourceRepository, FileSourceRepository>();
+
+        return services;
+    }
+
+    public static IServiceCollection AddRulesEngineWrapper<TContext>(this IServiceCollection services,
+       [Optional] Action<RulesEngineWrapperOptions>? optionsAction) where TContext : DbContext, IRulesEngineContext
     {
         services.AddServiceDefaults();
 
-        RulesEngineServiceOptions options = new RulesEngineServiceOptions();
+        RulesEngineWrapperOptions options = new RulesEngineWrapperOptions();
         optionsAction?.Invoke(options);
 
-        switch(options.rulesEngineDataSource)
-        {
-            case RulesEngineDataSource.Database:
-            services.AddDbContext<IRulesEngineContext ,TContext>(options.DbContextOptionsAction);
-            services.AddScoped<IRulesEngine ,RulesEngine.RulesEngine>(p =>
-            {
-                var dbContext = p.GetRequiredService<TContext>();
-                return new RulesEngine.RulesEngine(dbContext.Workflows.Include(w => w.Rules).ToArray(), options.reSettings);
-            });
-            services.AddScoped<IDataSourceRepository, DatabaseRulesEngineRepository>();
-            break;
+        if (options?.DbContextOptionsAction == null) throw new ArgumentNullException("You must specify a database provider if you wish to register a DbContext. Please register a provider in options.DbContextOptionsAction ");
 
-            case RulesEngineDataSource.File:
-            services.AddScoped<IDataSourceRepository, FileSourceRepository>();
-            break;
-        }
+        services.AddDbContext<IRulesEngineContext, TContext>(options.DbContextOptionsAction);
+        services.AddScoped<IRulesEngine, RulesEngine.RulesEngine>(p =>
+        {
+            var dbContext = p.GetRequiredService<TContext>();
+
+            if(options.WrapperDbEnsureCreated) dbContext.Database.EnsureCreatedAsync();
+
+            return new RulesEngine.RulesEngine(dbContext.Workflows.Include(w => w.Rules).ToArray(), options.reSettings);
+        });
+        services.AddScoped<IDataSourceRepository, DatabaseRulesEngineRepository>();
 
         return services;
     }
