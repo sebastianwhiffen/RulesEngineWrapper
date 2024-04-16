@@ -9,15 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RulesEngineWrapper.Infrastr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RulesEngineWrapper.presentation", "src\RulesEngineWrapper.presentation\RulesEngineWrapper.presentation.csproj", "{DCC50603-B010-48EE-999A-235AA12A7DFD}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{A5F0380A-0F24-4A46-9224-206A0E428EDF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "demo", "test\demo\demo.csproj", "{33B92D11-99C3-4B13-947F-91A66836DE48}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RulesEngine", "RulesEngine", "{C0560ADE-9759-4834-8D28-E33172BD3EE0}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BD054C4B-6E0C-471F-B7CF-55D7BBA95CB8}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulesEngine", "RulesEngine\src\RulesEngine\RulesEngine.csproj", "{69F0CAB5-3EB4-4286-A1FC-B75F35101368}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulesEngineWrapper.UnitTest", "test\RulesEngineWrapper.UnitTest\RulesEngineWrapper.UnitTest.csproj", "{40F1D100-58F7-4457-9BF0-9E9E06F6C033}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,16 +39,15 @@ Global
 		{69F0CAB5-3EB4-4286-A1FC-B75F35101368}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69F0CAB5-3EB4-4286-A1FC-B75F35101368}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69F0CAB5-3EB4-4286-A1FC-B75F35101368}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40F1D100-58F7-4457-9BF0-9E9E06F6C033}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40F1D100-58F7-4457-9BF0-9E9E06F6C033}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40F1D100-58F7-4457-9BF0-9E9E06F6C033}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40F1D100-58F7-4457-9BF0-9E9E06F6C033}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FA3F5203-7CEE-44A3-BA97-33108293B524}
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{33B92D11-99C3-4B13-947F-91A66836DE48} = {A5F0380A-0F24-4A46-9224-206A0E428EDF}
-		{BD054C4B-6E0C-471F-B7CF-55D7BBA95CB8} = {C0560ADE-9759-4834-8D28-E33172BD3EE0}
-		{69F0CAB5-3EB4-4286-A1FC-B75F35101368} = {BD054C4B-6E0C-471F-B7CF-55D7BBA95CB8}
 	EndGlobalSection
 EndGlobal
