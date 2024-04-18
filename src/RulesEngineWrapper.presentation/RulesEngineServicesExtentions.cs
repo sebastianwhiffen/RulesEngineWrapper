@@ -4,7 +4,6 @@ using RulesEngineWrapper.presentation.Options;
 using RulesEngineWrapper.presentation.Queries;
 using RulesEngine.Interfaces;
 using System.Runtime.InteropServices;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace RulesEngineWrapper.presentation;
 
@@ -16,9 +15,9 @@ public static class RuleEngineServicesExtensions
         RulesEngineWrapperOptions options = new RulesEngineWrapperOptions();
         optionsAction?.Invoke(options);
 
-        services.AddScoped<IRulesEngine, RulesEngine.RulesEngine>(p =>
+        services.AddScoped<IRulesEngine, RulesEngineWrapper>(p =>
         {
-            return new RulesEngine.RulesEngine(options.workflowsToInit.ToArray(), options.reSettings);
+            return new RulesEngineWrapper(options.workflowsToInit.ToArray(), options.reSettings);
         });
 
         services.AddScoped<IDataSourceRepository, FileSourceRepository>();
@@ -37,13 +36,13 @@ public static class RuleEngineServicesExtensions
         if (options?.DbContextOptionsAction == null) throw new ArgumentNullException("You must specify a database provider if you wish to register a DbContext. Please register a provider in options.DbContextOptionsAction ");
 
         services.AddDbContext<IRulesEngineContext, TContext>(options.DbContextOptionsAction);
-        services.AddScoped<IRulesEngine, RulesEngine.RulesEngine>(p =>
+        services.AddScoped<IRulesEngine, RulesEngineWrapper>(p =>
         {
             var dbContext = p.GetRequiredService<TContext>();
 
             if(options.WrapperDbEnsureCreated) dbContext.Database.EnsureCreatedAsync();
 
-            return new RulesEngine.RulesEngine(dbContext.Workflows.Include(w => w.Rules).ToArray(), options.reSettings);
+            return new RulesEngineWrapper(dbContext.Workflows.Include(w => w.Rules).ToArray(), options.reSettings);
         });
         services.AddScoped<IDataSourceRepository, DatabaseRulesEngineRepository>();
 
