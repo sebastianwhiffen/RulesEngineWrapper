@@ -3,15 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RulesEngineWrapper.Domain", "src\RulesEngineWrapper.Domain\RulesEngineWrapper.Domain.csproj", "{437880D4-B804-49FD-8E84-9BF08B043CE5}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RulesEngineWrapper.Infrastructure", "src\RulesEngineWrapper.Infrastructure\RulesEngineWrapper.Infrastructure.csproj", "{865B4416-44ED-44B6-8200-1C217A695239}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RulesEngineWrapper.presentation", "src\RulesEngineWrapper.presentation\RulesEngineWrapper.presentation.csproj", "{DCC50603-B010-48EE-999A-235AA12A7DFD}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulesEngine", "RulesEngine\src\RulesEngine\RulesEngine.csproj", "{69F0CAB5-3EB4-4286-A1FC-B75F35101368}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulesEngineWrapper.UnitTest", "test\RulesEngineWrapper.UnitTest\RulesEngineWrapper.UnitTest.csproj", "{40F1D100-58F7-4457-9BF0-9E9E06F6C033}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulesEngineWrapper", "src\RulesEngineWrapper.csproj", "{9611857E-F45E-4F56-9F01-81B4093F81D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,22 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{437880D4-B804-49FD-8E84-9BF08B043CE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{437880D4-B804-49FD-8E84-9BF08B043CE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{437880D4-B804-49FD-8E84-9BF08B043CE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{437880D4-B804-49FD-8E84-9BF08B043CE5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{865B4416-44ED-44B6-8200-1C217A695239}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{865B4416-44ED-44B6-8200-1C217A695239}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{865B4416-44ED-44B6-8200-1C217A695239}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{865B4416-44ED-44B6-8200-1C217A695239}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DCC50603-B010-48EE-999A-235AA12A7DFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DCC50603-B010-48EE-999A-235AA12A7DFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DCC50603-B010-48EE-999A-235AA12A7DFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DCC50603-B010-48EE-999A-235AA12A7DFD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{33B92D11-99C3-4B13-947F-91A66836DE48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{33B92D11-99C3-4B13-947F-91A66836DE48}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{33B92D11-99C3-4B13-947F-91A66836DE48}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{33B92D11-99C3-4B13-947F-91A66836DE48}.Release|Any CPU.Build.0 = Release|Any CPU
 		{69F0CAB5-3EB4-4286-A1FC-B75F35101368}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{69F0CAB5-3EB4-4286-A1FC-B75F35101368}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69F0CAB5-3EB4-4286-A1FC-B75F35101368}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -43,6 +23,10 @@ Global
 		{40F1D100-58F7-4457-9BF0-9E9E06F6C033}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40F1D100-58F7-4457-9BF0-9E9E06F6C033}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40F1D100-58F7-4457-9BF0-9E9E06F6C033}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9611857E-F45E-4F56-9F01-81B4093F81D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9611857E-F45E-4F56-9F01-81B4093F81D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9611857E-F45E-4F56-9F01-81B4093F81D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9611857E-F45E-4F56-9F01-81B4093F81D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
