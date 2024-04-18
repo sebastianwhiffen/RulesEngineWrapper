@@ -5,6 +5,7 @@ namespace RulesEngineWrapper;
 
 public class RulesEngineWrapper : IRulesEngine
 {
+    #region constructors
     private readonly RulesEngine.RulesEngine _rulesEngine;
 
     public RulesEngineWrapper(RulesEngine.RulesEngine rulesEngine)
@@ -26,7 +27,9 @@ public class RulesEngineWrapper : IRulesEngine
     {
         _rulesEngine = new RulesEngine.RulesEngine(reSettings);
     }
+    #endregion
    
+    #region public methods
     public void AddOrUpdateWorkflow(params Workflow[] Workflows)
     {
         _rulesEngine.AddOrUpdateWorkflow(Workflows);
@@ -71,4 +74,5 @@ public class RulesEngineWrapper : IRulesEngine
     {
         _rulesEngine.RemoveWorkflow(workflowNames);
     }
+    #endregion
 }
