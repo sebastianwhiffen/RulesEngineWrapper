@@ -72,8 +72,7 @@ namespace RulesEngineWrapper.presentation.APIs
             ExecuteAllRulesCommand executeAllRulesCommand
         )
         {
-            var result = await services.Repository.RunAllRulesAsync(executeAllRulesCommand);
-            return TypedResults.Ok<IEnumerable<dynamic>>(result);
+          throw new NotImplementedException();
         }
 
           public static async Task<Results<Ok<dynamic>, BadRequest<string>>> ExecuteActionWorkflow(
@@ -81,8 +80,7 @@ namespace RulesEngineWrapper.presentation.APIs
             ExecuteActionWorkflowCommand executeActionWorkflowCommand
         )
         {
-            var result = await services.Repository.RunActionWorkflow(executeActionWorkflowCommand);
-            return TypedResults.Ok<dynamic>(result);
+            throw new NotImplementedException();
         }
 
         public static async Task<Results<Ok<Workflow>, BadRequest<string>>> AddOrUpdateWorkflow(
@@ -90,7 +88,7 @@ namespace RulesEngineWrapper.presentation.APIs
             Workflow workflow
             )
         {
-            return TypedResults.Ok(await services.Repository.AddOrUpdateWorkflows(workflow));
+            throw new NotImplementedException();
         }
 
         public static async Task<Results<Ok<bool>, BadRequest<string>>> RemoveWorkflowByName(
@@ -98,7 +96,7 @@ namespace RulesEngineWrapper.presentation.APIs
             string workflowName
         )
         {
-            return TypedResults.Ok(await services.Repository.RemoveWorkflowByNameAsync(workflowName));
+            throw new NotImplementedException();
         }
 
         #endregion

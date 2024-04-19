@@ -11,21 +11,21 @@ public class RulesEngineQueries : IRulesEngineQueries
     }
     public async Task<IEnumerable<Rule>> GetAllRulesAsync()
     {
-        return await _dataSourceRepository.GetAllRulesAsync();
+        throw new NotImplementedException();
     }
 
     public async Task<IEnumerable<Workflow>> GetAllWorkflowsAsync()
     {
-        return await _dataSourceRepository.GetAllWorkflowsAsync();
+        throw new NotImplementedException();
     }
 
     public async Task<Rule> GetRuleAsync(string ruleName)
     {
-        return await _dataSourceRepository.GetRuleAsync(ruleName);
+        throw new NotImplementedException();
     }
 
     public async Task<Workflow> GetWorkflowAsync(string workflowName)
     {
-        return await _dataSourceRepository.GetWorkflowAsync(workflowName);
+        throw new NotImplementedException();
     }
 }

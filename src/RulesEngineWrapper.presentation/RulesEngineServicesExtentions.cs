@@ -4,6 +4,7 @@ using RulesEngineWrapper.presentation.Options;
 using RulesEngineWrapper.presentation.Queries;
 using RulesEngine.Interfaces;
 using System.Runtime.InteropServices;
+using FastExpressionCompiler;
 
 namespace RulesEngineWrapper.presentation;
 
@@ -12,6 +13,8 @@ public static class RuleEngineServicesExtensions
     public static IServiceCollection AddRulesEngineWrapper(this IServiceCollection services,
        [Optional] Action<RulesEngineWrapperOptions> optionsAction)
     {
+        services.AddScoped<IDataSourceRepository, FileSourceRepository>();
+
         RulesEngineWrapperOptions options = new RulesEngineWrapperOptions();
         optionsAction?.Invoke(options);
 
@@ -20,15 +23,13 @@ public static class RuleEngineServicesExtensions
             return new RulesEngineWrapper(options.workflowsToInit.ToArray(), options.reSettings);
         });
 
-        services.AddScoped<IDataSourceRepository, FileSourceRepository>();
-
         return services;
     }
 
     public static IServiceCollection AddRulesEngineWrapper<TContext>(this IServiceCollection services,
        [Optional] Action<RulesEngineWrapperOptions>? optionsAction) where TContext : DbContext, IRulesEngineContext
     {
-        services.AddServiceDefaults();
+        services.AddScoped<IDataSourceRepository, DatabaseRulesEngineRepository>();
 
         RulesEngineWrapperOptions options = new RulesEngineWrapperOptions();
         optionsAction?.Invoke(options);
@@ -44,14 +45,7 @@ public static class RuleEngineServicesExtensions
 
             return new RulesEngineWrapper(dbContext.Workflows.Include(w => w.Rules).ToArray(), options.reSettings);
         });
-        services.AddScoped<IDataSourceRepository, DatabaseRulesEngineRepository>();
 
-        return services;
-    }
-
-    private static IServiceCollection AddServiceDefaults(this IServiceCollection services)
-    {
-        services.AddScoped<IRulesEngineQueries, RulesEngineQueries>();
         return services;
     }
 }

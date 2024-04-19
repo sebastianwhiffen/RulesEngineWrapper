@@ -10,47 +10,32 @@ public class FileSourceRepository : IDataSourceRepository
     {
     }
 
-    public Task<Workflow> AddOrUpdateWorkflows(Workflow workflow)
+    public ValueTask<IEnumerable<Workflow>> AddOrUpdateWorkflow(params Workflow[] Workflows)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<IEnumerable<Rule>> GetAllRulesAsync()
+    public ValueTask<IEnumerable<Workflow>> AddWorkflow(params Workflow[] Workflows)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<IEnumerable<Workflow>> GetAllWorkflowsAsync()
+    public void ClearWorkflows()
     {
         throw new NotImplementedException();
     }
 
-    public async Task<Rule> GetRuleAsync(string ruleName)
+    public bool ContainsWorkflow(string workflowName)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<Workflow> GetWorkflowAsync(string workflowName)
+    public ValueTask<List<string>> GetAllRegisteredWorkflowNames()
     {
         throw new NotImplementedException();
     }
 
-    public void RemoveWorkflowByName(string workflowName)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<bool> RemoveWorkflowByNameAsync(string workflowName)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<object> RunActionWorkflow(ExecuteActionWorkflowCommand executeAllRulesCommand)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<IEnumerable<RuleResultTree>> RunAllRulesAsync(ExecuteAllRulesCommand executeAllRulesCommand)
+    public ValueTask RemoveWorkflow(params string[] workflowNames)
     {
         throw new NotImplementedException();
     }

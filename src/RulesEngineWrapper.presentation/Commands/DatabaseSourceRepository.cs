@@ -19,51 +19,33 @@ public class DatabaseRulesEngineRepository : IDataSourceRepository
         _rulesEngine = rulesEngine;
     }
 
-    public Task<Workflow> AddOrUpdateWorkflows(Workflow workflow)
-    {
-        throw new NotImplementedException();
-    }
-    #region queries
-    public async Task<IEnumerable<Rule>> GetAllRulesAsync()
-    {
-        return await _rulesEngineContext.Rules.ToListAsync();
-    }
-
-    public async Task<IEnumerable<Workflow>> GetAllWorkflowsAsync()
-    {
-        return await _rulesEngineContext.Workflows.ToListAsync();
-    }
-
-    public async Task<Rule> GetRuleAsync(string ruleName)
-    {
-        return await _rulesEngineContext.Rules.FindAsync(ruleName) ?? throw new KeyNotFoundException(ruleName);
-    }
-
-    public async Task<Workflow> GetWorkflowAsync(string workflowName)
-    {
-        return await _rulesEngineContext.Workflows.FindAsync(workflowName) ?? throw new KeyNotFoundException(workflowName);
-    }
-
-    public Task<bool> RemoveWorkflowByNameAsync(string workflowName)
+    public ValueTask<IEnumerable<Workflow>> AddOrUpdateWorkflow(params Workflow[] Workflows)
     {
         throw new NotImplementedException();
     }
 
-    public Task<object> RunActionWorkflow(ExecuteActionWorkflowCommand executeAllRulesCommand)
+    public ValueTask<IEnumerable<Workflow>> AddWorkflow(params Workflow[] Workflows)
     {
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<RuleResultTree>> RunAllRulesAsync(ExecuteAllRulesCommand executeAllRulesCommand)
+    public void ClearWorkflows()
     {
         throw new NotImplementedException();
     }
-    #endregion
 
-    //re-do anything below this
-    #region commands
+    public bool ContainsWorkflow(string workflowName)
+    {
+        throw new NotImplementedException();
+    }
 
+    public ValueTask<List<string>> GetAllRegisteredWorkflowNames()
+    {
+        throw new NotImplementedException();
+    }
 
-    #endregion
-
+    public ValueTask RemoveWorkflow(params string[] workflowNames)
+    {
+        throw new NotImplementedException();
+    }
 }
