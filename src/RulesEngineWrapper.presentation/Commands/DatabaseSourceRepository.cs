@@ -11,9 +11,9 @@ namespace RulesEngineWrapper.presentation;
 
 public class DatabaseRulesEngineRepository : IDataSourceRepository
 {
-    private readonly IRulesEngineContext _rulesEngineContext;
+    private readonly IRulesEngineWrapperContext _rulesEngineContext;
     private readonly IRulesEngine _rulesEngine;
-    public DatabaseRulesEngineRepository(IRulesEngineContext rulesEngineContext, IRulesEngine rulesEngine)
+    public DatabaseRulesEngineRepository(IRulesEngineWrapperContext rulesEngineContext, IRulesEngine rulesEngine)
     {
         _rulesEngineContext = rulesEngineContext;
         _rulesEngine = rulesEngine;

@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using RulesEngine.Models;
 
-public interface IRulesEngineContext
+public interface IRulesEngineWrapperContext
 {
         public DbSet<Workflow> Workflows { get; set; }
 

@@ -5,7 +5,7 @@ using RulesEngine.Models;
 
 namespace RulesEngine.Data
 {
-    public class RulesEngineContext : DbContext, IRulesEngineContext
+    public class RulesEngineContext : DbContext, IRulesEngineWrapperContext
     {
 
         public RulesEngineContext(DbContextOptions<RulesEngineContext> options) : base(options)

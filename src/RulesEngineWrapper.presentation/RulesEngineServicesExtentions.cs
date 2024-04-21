@@ -27,7 +27,7 @@ public static class RuleEngineServicesExtensions
     }
 
     public static IServiceCollection AddRulesEngineWrapper<TContext>(this IServiceCollection services,
-       [Optional] Action<RulesEngineWrapperOptions>? optionsAction) where TContext : DbContext, IRulesEngineContext
+       [Optional] Action<RulesEngineWrapperOptions>? optionsAction) where TContext : DbContext, IRulesEngineWrapperContext
     {
         services.AddScoped<IDataSourceRepository, DatabaseRulesEngineRepository>();
 
@@ -36,7 +36,7 @@ public static class RuleEngineServicesExtensions
 
         if (options?.DbContextOptionsAction == null) throw new ArgumentNullException("You must specify a database provider if you wish to register a DbContext. Please register a provider in options.DbContextOptionsAction ");
 
-        services.AddDbContext<IRulesEngineContext, TContext>(options.DbContextOptionsAction);
+        services.AddDbContext<IRulesEngineWrapperContext, TContext>(options.DbContextOptionsAction);
         services.AddScoped<IRulesEngine, RulesEngineWrapper>(p =>
         {
             var dbContext = p.GetRequiredService<TContext>();
