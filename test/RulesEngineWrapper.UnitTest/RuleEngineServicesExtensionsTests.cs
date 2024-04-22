@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RulesEngineWrapper.presentation;
 using RulesEngine.Data;
 using Microsoft.EntityFrameworkCore;
+using RulesEngine.Interfaces;
 
 namespace RulesEngineWrapper.UnitTest;
 public class RuleEngineServicesExtensionsTests
@@ -43,8 +44,9 @@ public class RuleEngineServicesExtensionsTests
 
         // Assert
         var serviceProvider = services.BuildServiceProvider();
+        
         Assert.NotNull(serviceProvider.GetService<IDataSourceRepository>());
-        Assert.IsType<DatabaseRulesEngineRepository>(serviceProvider.GetService<IDataSourceRepository>());
+        Assert.IsType<DatabaseSourceRepository>(serviceProvider.GetService<IDataSourceRepository>());
     }
 }
 

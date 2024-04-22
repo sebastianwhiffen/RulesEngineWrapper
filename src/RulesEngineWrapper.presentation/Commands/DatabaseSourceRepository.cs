@@ -1,22 +1,15 @@
-﻿using System.Dynamic;
-using FluentValidation.TestHelper;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using RulesEngine.Interfaces;
+﻿using RulesEngine.Interfaces;
 using RulesEngine.Models;
 
 //these shouldnt be here. again. just need this working for demo
 namespace RulesEngineWrapper.presentation;
 
-public class DatabaseRulesEngineRepository : IDataSourceRepository
+public class DatabaseSourceRepository : IDataSourceRepository
 {
     private readonly IRulesEngineWrapperContext _rulesEngineContext;
-    private readonly IRulesEngine _rulesEngine;
-    public DatabaseRulesEngineRepository(IRulesEngineWrapperContext rulesEngineContext, IRulesEngine rulesEngine)
+    public DatabaseSourceRepository(IRulesEngineWrapperContext rulesEngineContext)
     {
         _rulesEngineContext = rulesEngineContext;
-        _rulesEngine = rulesEngine;
     }
 
     public ValueTask<IEnumerable<Workflow>> AddOrUpdateWorkflow(params Workflow[] Workflows)

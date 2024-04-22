@@ -1,41 +1,35 @@
-﻿using RulesEngine.Interfaces;
+﻿using System.Runtime.InteropServices;
+using RulesEngine.Interfaces;
 using RulesEngine.Models;
 using RulesEngineWrapper.presentation;
+using RulesEngineWrapper.presentation.Options;
 
 namespace RulesEngineWrapper;
 
-public class RulesEngineWrapper : IRulesEngine
+public interface IRulesEngineWrapper: IRulesEngine {}
+
+public class RulesEngineWrapper : IRulesEngineWrapper
 {
     #region constructors
-    private readonly RulesEngine.RulesEngine _rulesEngine;
+    private readonly IRulesEngine _rulesEngine;
     private readonly IDataSourceRepository _dataSourceRepository;
 
-    public RulesEngineWrapper(RulesEngine.RulesEngine rulesEngine, IDataSourceRepository dataSourceRepository)
+    public RulesEngineWrapper(IRulesEngine rulesEngine, IDataSourceRepository dataSourceRepository)
     {
         _rulesEngine = rulesEngine;
-        _dataSourceRepository = dataSourceRepository; 
+        _dataSourceRepository = dataSourceRepository;
     }
 
-    public RulesEngineWrapper(string[] jsonConfig, ReSettings reSettings = null) : this(reSettings)
+    public RulesEngineWrapper(Workflow[] workflows, RulesEngineWrapperOptions options, IDataSourceRepository dataSourceRepository)
+        : this(new RulesEngine.RulesEngine(workflows, options.reSettings), dataSourceRepository)
     {
-        _rulesEngine = new RulesEngine.RulesEngine(jsonConfig, reSettings);
-    }
-
-    public RulesEngineWrapper(Workflow[] Workflows, ReSettings reSettings = null) : this(reSettings)
-    {
-         _rulesEngine = new RulesEngine.RulesEngine(Workflows, reSettings);
-    }
-
-    public RulesEngineWrapper(ReSettings reSettings = null)
-    {
-        _rulesEngine = new RulesEngine.RulesEngine(reSettings);
     }
 
     #endregion
-   
+
     #region public methods
     public void AddOrUpdateWorkflow(params Workflow[] Workflows)
-    {   
+    {
         _dataSourceRepository.AddOrUpdateWorkflow(Workflows);
         _rulesEngine.AddOrUpdateWorkflow(Workflows);
     }
@@ -86,4 +80,3 @@ public class RulesEngineWrapper : IRulesEngine
     }
     #endregion
 }
- 
