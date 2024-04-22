@@ -44,8 +44,8 @@ public class RuleEngineServicesExtensionsTests
 
         // Assert
         var serviceProvider = services.BuildServiceProvider();
-        
-        Assert.NotNull(serviceProvider.GetService<IDataSourceRepository>());
+
+        Assert.NotNull(serviceProvider.GetService<IRulesEngineWrapper>());
         Assert.IsType<DatabaseSourceRepository>(serviceProvider.GetService<IDataSourceRepository>());
     }
 }

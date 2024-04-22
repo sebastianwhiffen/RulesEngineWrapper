@@ -1,7 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using RulesEngineWrapper.presentation.Options;
-using RulesEngine.Interfaces;
 using System.Runtime.InteropServices;
 
 namespace RulesEngineWrapper.presentation;
@@ -15,7 +14,6 @@ public static class RuleEngineServicesExtensions
 
         RulesEngineWrapperOptions options = new RulesEngineWrapperOptions();
         optionsAction?.Invoke(options);
-
 
         services.AddScoped<IRulesEngineWrapper, RulesEngineWrapper>(p =>
         {

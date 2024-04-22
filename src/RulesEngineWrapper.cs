@@ -14,15 +14,16 @@ public class RulesEngineWrapper : IRulesEngineWrapper
     private readonly IRulesEngine _rulesEngine;
     private readonly IDataSourceRepository _dataSourceRepository;
 
-    public RulesEngineWrapper(IRulesEngine rulesEngine, IDataSourceRepository dataSourceRepository)
+    public RulesEngineWrapper(ReSettings options, IDataSourceRepository dataSourceRepository)
     {
-        _rulesEngine = rulesEngine;
+        _rulesEngine = new RulesEngine.RulesEngine(options);
         _dataSourceRepository = dataSourceRepository;
     }
 
     public RulesEngineWrapper(Workflow[] workflows, RulesEngineWrapperOptions options, IDataSourceRepository dataSourceRepository)
-        : this(new RulesEngine.RulesEngine(workflows, options.reSettings), dataSourceRepository)
+        : this(options.reSettings, dataSourceRepository)
     {
+        AddWorkflow(workflows);
     }
 
     #endregion
