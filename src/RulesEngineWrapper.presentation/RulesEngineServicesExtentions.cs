@@ -44,6 +44,7 @@ public static class RuleEngineServicesExtensions
 
             var workflows = dbContext.Workflows.Include(w => w.Rules).ToArray();
 
+            //this requires a workflow Entity. currenlty the wrapper object is set up for a workflow from the base rules engine. need to evaluate and change
             return ActivatorUtilities.CreateInstance<RulesEngineWrapper>(p, workflows, options, dataSourceRepository);
         });
 

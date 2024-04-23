@@ -14,7 +14,7 @@ public class RulesEngineWrapper : IRulesEngineWrapper
     private readonly IRulesEngine _rulesEngine;
     private readonly IDataSourceRepository _dataSourceRepository;
 
-    public RulesEngineWrapper(ReSettings options, IDataSourceRepository dataSourceRepository)
+    private RulesEngineWrapper(ReSettings options, IDataSourceRepository dataSourceRepository)
     {
         _rulesEngine = new RulesEngine.RulesEngine(options);
         _dataSourceRepository = dataSourceRepository;

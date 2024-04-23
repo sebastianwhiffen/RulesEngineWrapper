@@ -1,11 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using RulesEngine.Models;
+using RulesEngineWrapper.Domain;
 
 public interface IRulesEngineWrapperContext
 {
-        public DbSet<Workflow> Workflows { get; set; }
+        public DbSet<WorkflowEntity> Workflows { get; set; }
 
-        public DbSet<Rule> Rules { get; set; }
+        public DbSet<RuleEntity> Rules { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
 }
