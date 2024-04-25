@@ -1,12 +1,27 @@
-﻿using System.Runtime.InteropServices;
-using RulesEngine.Interfaces;
+﻿using RulesEngine.Interfaces;
 using RulesEngine.Models;
+using RulesEngineWrapper.Domain;
 using RulesEngineWrapper.presentation;
 using RulesEngineWrapper.presentation.Options;
 
 namespace RulesEngineWrapper;
 
-public interface IRulesEngineWrapper: IRulesEngine {}
+public interface IRulesEngineWrapper: IRulesEngine 
+{
+    public Task<Workflow> AddWorkflowToDataSource(IEnumerable<Workflow> workflow);
+    public Task<Workflow> AddWorkflowToCache(IEnumerable<Workflow> workflow);
+    public Task<Workflow> RemoveWorkflowFromDataSource(string workflowName);
+    public Task<Workflow> RemoveWorkflowFromCache(string workflowName);
+    public Task<Workflow> GetWorkflowFromDataSource(string workflowName);
+    public Task<Workflow> GetWorkflowFromCache(string workflowName);
+    public Task<IEnumerable<Workflow>> GetAllWorkflowsFromDataSource();
+    public Task<IEnumerable<Workflow>> GetAllWorkflowsFromCache();
+    public Task<IEnumerable<Workflow>> ClearWorkflowsFromDataSource();
+    public Task<IEnumerable<Workflow>> ClearWorkflowsFromCache();
+    public Task<IEnumerable<Workflow>> AddOrUpdateWorkflowInDataSource(IEnumerable<Workflow> workflows);
+    public Task<IEnumerable<Workflow>> AddOrUpdateWorkflowInCache(IEnumerable<Workflow> workflows);
+
+}
 
 public class RulesEngineWrapper : IRulesEngineWrapper
 {
@@ -20,64 +35,121 @@ public class RulesEngineWrapper : IRulesEngineWrapper
         _dataSourceRepository = dataSourceRepository;
     }
 
-    public RulesEngineWrapper(Workflow[] workflows, RulesEngineWrapperOptions options, IDataSourceRepository dataSourceRepository)
+    public RulesEngineWrapper(IEnumerable<Workflow> workflows, RulesEngineWrapperOptions options, IDataSourceRepository dataSourceRepository)
         : this(options.reSettings, dataSourceRepository)
     {
-        AddWorkflow(workflows);
+        AddWorkflowToDataSource(workflows);
+        AddWorkflowToCache(workflows);
+    }
+
+    public Task<Workflow> AddWorkflowToDataSource(IEnumerable<Workflow> workflow)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Workflow> AddWorkflowToCache(IEnumerable<Workflow> workflow)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Workflow> RemoveWorkflowFromDataSource(string workflowName)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Workflow> RemoveWorkflowFromCache(string workflowName)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Workflow> GetWorkflowFromDataSource(string workflowName)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Workflow> GetWorkflowFromCache(string workflowName)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<Workflow>> GetAllWorkflowsFromDataSource()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<Workflow>> GetAllWorkflowsFromCache()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<Workflow>> ClearWorkflowsFromDataSource()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<Workflow>> ClearWorkflowsFromCache()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<Workflow>> AddOrUpdateWorkflowInDataSource(IEnumerable<Workflow> workflows)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<Workflow>> AddOrUpdateWorkflowInCache(IEnumerable<Workflow> workflows)
+    {
+        throw new NotImplementedException();
+    }
+
+    public ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params object[] inputs)
+    {
+        throw new NotImplementedException();
+    }
+
+    public ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params RuleParameter[] ruleParams)
+    {
+        throw new NotImplementedException();
+    }
+
+    public ValueTask<ActionRuleResult> ExecuteActionWorkflowAsync(string workflowName, string ruleName, RuleParameter[] ruleParameters)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void AddWorkflow(params Workflow[] Workflows)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void ClearWorkflows()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void RemoveWorkflow(params string[] workflowNames)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool ContainsWorkflow(string workflowName)
+    {
+        throw new NotImplementedException();
+    }
+
+    public List<string> GetAllRegisteredWorkflowNames()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void AddOrUpdateWorkflow(params Workflow[] Workflows)
+    {
+        throw new NotImplementedException();
     }
 
     #endregion
 
     #region public methods
-    public void AddOrUpdateWorkflow(params Workflow[] Workflows)
-    {
-        _dataSourceRepository.AddOrUpdateWorkflow(Workflows);
-        _rulesEngine.AddOrUpdateWorkflow(Workflows);
-    }
 
-    public void AddWorkflow(params Workflow[] Workflows)
-    {
-        _dataSourceRepository.AddWorkflow(Workflows);
-        _rulesEngine.AddWorkflow(Workflows);
-    }
-
-    public void ClearWorkflows()
-    {
-        _dataSourceRepository.ClearWorkflows();
-        _rulesEngine.ClearWorkflows();
-    }
-
-    public bool ContainsWorkflow(string workflowName)
-    {
-        _rulesEngine.ContainsWorkflow(workflowName);
-        return _rulesEngine.ContainsWorkflow(workflowName);
-    }
-
-    public ValueTask<ActionRuleResult> ExecuteActionWorkflowAsync(string workflowName, string ruleName, RuleParameter[] ruleParameters)
-    {
-        return _rulesEngine.ExecuteActionWorkflowAsync(workflowName, ruleName, ruleParameters);
-    }
-
-    public ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params object[] inputs)
-    {
-        return _rulesEngine.ExecuteAllRulesAsync(workflowName, inputs);
-    }
-
-    public ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params RuleParameter[] ruleParams)
-    {
-        return _rulesEngine.ExecuteAllRulesAsync(workflowName, ruleParams);
-    }
-
-    public List<string> GetAllRegisteredWorkflowNames()
-    {
-        _dataSourceRepository.GetAllRegisteredWorkflowNames();
-        return _rulesEngine.GetAllRegisteredWorkflowNames();
-    }
-
-    public void RemoveWorkflow(params string[] workflowNames)
-    {
-        _dataSourceRepository.RemoveWorkflow(workflowNames);
-        _rulesEngine.RemoveWorkflow(workflowNames);
-    }
     #endregion
 }

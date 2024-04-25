@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using RulesEngineWrapper.presentation.Options;
 using System.Runtime.InteropServices;
+using RulesEngineWrapper.Domain;
 
 namespace RulesEngineWrapper.presentation;
 
@@ -42,7 +43,9 @@ public static class RuleEngineServicesExtensions
 
             if (options.WrapperDbEnsureCreated) dbContext.Database.EnsureCreatedAsync();
 
-            var workflows = dbContext.Workflows.Include(w => w.Rules).ToArray();
+            var workflows = dbContext.Workflows.Include(w => w.Rules);
+
+
 
             //this requires a workflow Entity. currenlty the wrapper object is set up for a workflow from the base rules engine. need to evaluate and change
             return ActivatorUtilities.CreateInstance<RulesEngineWrapper>(p, workflows, options, dataSourceRepository);

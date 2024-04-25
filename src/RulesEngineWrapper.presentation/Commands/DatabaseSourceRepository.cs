@@ -1,5 +1,5 @@
-﻿using RulesEngine.Interfaces;
-using RulesEngine.Models;
+﻿using RulesEngine.Models;
+using RulesEngineWrapper.Domain;
 
 //these shouldnt be here. again. just need this working for demo
 namespace RulesEngineWrapper.presentation;
@@ -12,12 +12,12 @@ public class DatabaseSourceRepository : IDataSourceRepository
         _rulesEngineContext = rulesEngineContext;
     }
 
-    public ValueTask<IEnumerable<Workflow>> AddOrUpdateWorkflow(params Workflow[] Workflows)
+    public ValueTask<IEnumerable<WorkflowEntity>> AddOrUpdateWorkflow(params WorkflowEntity[] Workflows)
     {
         throw new NotImplementedException();
     }
 
-    public ValueTask<IEnumerable<Workflow>> AddWorkflow(params Workflow[] Workflows)
+    public ValueTask<IEnumerable<WorkflowEntity>> AddWorkflow(params WorkflowEntity[] Workflows)
     {
         throw new NotImplementedException();
     }
