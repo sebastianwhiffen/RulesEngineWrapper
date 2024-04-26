@@ -11,12 +11,12 @@ public class FileSourceRepository : IDataSourceRepository
     {
     }
 
-    public ValueTask<IEnumerable<WorkflowEntity>> AddOrUpdateWorkflow(params WorkflowEntity[] Workflows)
+    public ValueTask<IEnumerable<WorkflowEntity>> AddOrUpdateWorkflow(IEnumerable<WorkflowEntity> workflows)
     {
         throw new NotImplementedException();
     }
 
-    public ValueTask<IEnumerable<WorkflowEntity>> AddWorkflow(params WorkflowEntity[] Workflows)
+    public ValueTask<IEnumerable<WorkflowEntity>> AddWorkflow(IEnumerable<WorkflowEntity> workflows)
     {
         throw new NotImplementedException();
     }

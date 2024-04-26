@@ -5,8 +5,8 @@ namespace RulesEngineWrapper.presentation;
 
 public interface IDataSourceRepository
 {
-    ValueTask<IEnumerable<WorkflowEntity>> AddOrUpdateWorkflow(params WorkflowEntity[] Workflows);
-    ValueTask<IEnumerable<WorkflowEntity>> AddWorkflow(params WorkflowEntity[] Workflows);
+    ValueTask<IEnumerable<WorkflowEntity>> AddOrUpdateWorkflow(IEnumerable<WorkflowEntity> workflowEntities);
+    ValueTask<IEnumerable<WorkflowEntity>> AddWorkflow(IEnumerable<WorkflowEntity> workflowEntities);
     public void ClearWorkflows();
     public bool ContainsWorkflow(string workflowName);
     ValueTask<List<string>> GetAllRegisteredWorkflowNames();

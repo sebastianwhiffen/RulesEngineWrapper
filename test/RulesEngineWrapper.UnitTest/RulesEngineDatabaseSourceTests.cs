@@ -2,47 +2,63 @@ using Microsoft.Extensions.DependencyInjection;
 using RulesEngineWrapper.presentation;
 using RulesEngine.Data;
 using Microsoft.EntityFrameworkCore;
+using RulesEngine.Models;
 
-namespace RulesEngineWrapper.UnitTest;
-public class RulesEngineDatabaseSourceTests
+namespace RulesEngineWrapper.UnitTest
 {
-    [Fact]
-    public void TestDbQuery()
+    public class RulesEngineDatabaseSourceTests
     {
-        // Arrange
-        var services = new ServiceCollection();
+        private readonly ServiceCollection _services;
+        private readonly ServiceProvider _serviceProvider;
 
-        var folder = Environment.SpecialFolder.LocalApplicationData;
-        var path = Environment.GetFolderPath(folder);
-        var DbPath = $"{path}{System.IO.Path.DirectorySeparatorChar}RulesEngineWrapperTest.db";
-
-        // Act
-        services.AddRulesEngineWrapper<RulesEngineContext>(options =>
+        public RulesEngineDatabaseSourceTests()
         {
-            options.WrapperDbEnsureCreated = true;
-            options.DbContextOptionsAction = dbContextOptionsBuilder =>
+            _services = new ServiceCollection();
+            AddWrapperDbSqlite();
+            _serviceProvider = _services.BuildServiceProvider();
+        }
+
+        [Fact]
+        public async void AddWorkflowToDataSource_ShouldAddWorkflowToDatabase()
+        {
+            // Arrange
+            var rulesEngineWrapper = _serviceProvider.GetRequiredService<IRulesEngineWrapper>();
+            var workflow = new Workflow
             {
-                dbContextOptionsBuilder.UseSqlite($"Data Source={DbPath}");
+                WorkflowName = "TestWorkflow",
+                Rules = new List<Rule>
+                {
+                    new Rule
+                    {
+                        RuleName = "TestRule",
+                        RuleExpressionType = RuleExpressionType.LambdaExpression,
+                        Expression = "x => x > 5",
+                    }
+                }
             };
-        });
 
-        // Assert
-        var serviceProvider = services.BuildServiceProvider();
+            // Act
+            var result = await rulesEngineWrapper.AddWorkflowToDataSource(new List<Workflow> { workflow });
 
-        Assert.NotNull(serviceProvider.GetService<IRulesEngineWrapper>());
-        Assert.IsType<DatabaseSourceRepository>(serviceProvider.GetService<IDataSourceRepository>());
+            // Assert
+            Assert.Contains(result, x => x.WorkflowName == "TestWorkflow");
+            Assert.Contains(result.First().Rules, x => x.RuleName == "TestRule");
+        }
 
-        // Additional assertions to test table population and querying
-        var dbContext = serviceProvider.GetService<RulesEngineContext>();
-        var workflowEntities = dbContext.Workflows.ToList();
+        private void AddWrapperDbSqlite()
+        {
+            var folder = Environment.SpecialFolder.LocalApplicationData;
+            var path = Environment.GetFolderPath(folder);
+            var dbPath = $"{path}{System.IO.Path.DirectorySeparatorChar}RulesEngineWrapperTest.db";
 
-        Assert.NotEmpty(workflowEntities); // Verify that the table is populated
-
-        var queryResult = dbContext.Workflows
-            .Where(w => w.WorkflowName == "SomeWorkflowName")
-            .FirstOrDefault();
-
-        Assert.NotNull(queryResult); // Verify that you can query the table
+            _services.AddRulesEngineWrapper<RulesEngineContext>(options =>
+            {
+                options.WrapperDbEnsureCreated = true;
+                options.DbContextOptionsAction = dbContextOptionsBuilder =>
+                {
+                    dbContextOptionsBuilder.UseSqlite($"Data Source={dbPath}");
+                };
+            });
+        }
     }
 }
-

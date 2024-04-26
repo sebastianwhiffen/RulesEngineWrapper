@@ -1,1 +1,1 @@
-select * from Rules
+select * from Workflows

@@ -6,23 +6,6 @@ using RulesEngineWrapper.presentation.Options;
 
 namespace RulesEngineWrapper;
 
-public interface IRulesEngineWrapper: IRulesEngine 
-{
-    public Task<Workflow> AddWorkflowToDataSource(IEnumerable<Workflow> workflow);
-    public Task<Workflow> AddWorkflowToCache(IEnumerable<Workflow> workflow);
-    public Task<Workflow> RemoveWorkflowFromDataSource(string workflowName);
-    public Task<Workflow> RemoveWorkflowFromCache(string workflowName);
-    public Task<Workflow> GetWorkflowFromDataSource(string workflowName);
-    public Task<Workflow> GetWorkflowFromCache(string workflowName);
-    public Task<IEnumerable<Workflow>> GetAllWorkflowsFromDataSource();
-    public Task<IEnumerable<Workflow>> GetAllWorkflowsFromCache();
-    public Task<IEnumerable<Workflow>> ClearWorkflowsFromDataSource();
-    public Task<IEnumerable<Workflow>> ClearWorkflowsFromCache();
-    public Task<IEnumerable<Workflow>> AddOrUpdateWorkflowInDataSource(IEnumerable<Workflow> workflows);
-    public Task<IEnumerable<Workflow>> AddOrUpdateWorkflowInCache(IEnumerable<Workflow> workflows);
-
-}
-
 public class RulesEngineWrapper : IRulesEngineWrapper
 {
     #region constructors
@@ -42,92 +25,98 @@ public class RulesEngineWrapper : IRulesEngineWrapper
         AddWorkflowToCache(workflows);
     }
 
-    public Task<Workflow> AddWorkflowToDataSource(IEnumerable<Workflow> workflow)
+    public RulesEngineWrapper(IEnumerable<WorkflowEntity> workflows, RulesEngineWrapperOptions options, IDataSourceRepository dataSourceRepository)
+       : this(workflows.ToWorkflows(), options, dataSourceRepository) { }
+
+
+    public async Task<IEnumerable<Workflow>> AddWorkflowToDataSource(IEnumerable<Workflow> workflows)
+    {
+        var workflowEntities = await _dataSourceRepository.AddWorkflow(workflows.ToWorkflowEntities());
+
+        return workflowEntities.ToWorkflows();
+    }
+    public async Task<IEnumerable<Workflow>> AddOrUpdateWorkflowInDataSource(IEnumerable<Workflow> workflows)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Workflow> AddWorkflowToCache(IEnumerable<Workflow> workflow)
+    public async Task<IEnumerable<Workflow>> AddOrUpdateWorkflowInCache(IEnumerable<Workflow> workflows)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Workflow> RemoveWorkflowFromDataSource(string workflowName)
+    public async Task<IEnumerable<Workflow>> AddWorkflowToCache(IEnumerable<Workflow> workflow)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Workflow> RemoveWorkflowFromCache(string workflowName)
+    public async Task<Workflow> RemoveWorkflowFromDataSource(string workflowName)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Workflow> GetWorkflowFromDataSource(string workflowName)
+    public async Task<Workflow> RemoveWorkflowFromCache(string workflowName)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Workflow> GetWorkflowFromCache(string workflowName)
+    public async Task<Workflow> GetWorkflowFromDataSource(string workflowName)
     {
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<Workflow>> GetAllWorkflowsFromDataSource()
+    public async Task<Workflow> GetWorkflowFromCache(string workflowName)
     {
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<Workflow>> GetAllWorkflowsFromCache()
+    public async Task<IEnumerable<Workflow>> GetAllWorkflowsFromDataSource()
     {
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<Workflow>> ClearWorkflowsFromDataSource()
+    public async Task<IEnumerable<Workflow>> GetAllWorkflowsFromCache()
     {
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<Workflow>> ClearWorkflowsFromCache()
+    public async Task<IEnumerable<Workflow>> ClearWorkflowsFromDataSource()
     {
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<Workflow>> AddOrUpdateWorkflowInDataSource(IEnumerable<Workflow> workflows)
+    public async Task<IEnumerable<Workflow>> ClearWorkflowsFromCache()
     {
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<Workflow>> AddOrUpdateWorkflowInCache(IEnumerable<Workflow> workflows)
+
+    public async ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params object[] inputs)
     {
         throw new NotImplementedException();
     }
 
-    public ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params object[] inputs)
+    public async ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params RuleParameter[] ruleParams)
     {
         throw new NotImplementedException();
     }
 
-    public ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params RuleParameter[] ruleParams)
+    public async ValueTask<ActionRuleResult> ExecuteActionWorkflowAsync(string workflowName, string ruleName, RuleParameter[] ruleParameters)
     {
         throw new NotImplementedException();
     }
 
-    public ValueTask<ActionRuleResult> ExecuteActionWorkflowAsync(string workflowName, string ruleName, RuleParameter[] ruleParameters)
+    public async void AddWorkflow(params Workflow[] Workflows)
     {
         throw new NotImplementedException();
     }
 
-    public void AddWorkflow(params Workflow[] Workflows)
+    public async void ClearWorkflows()
     {
         throw new NotImplementedException();
     }
 
-    public void ClearWorkflows()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void RemoveWorkflow(params string[] workflowNames)
+    public async void RemoveWorkflow(params string[] workflowNames)
     {
         throw new NotImplementedException();
     }
@@ -142,7 +131,7 @@ public class RulesEngineWrapper : IRulesEngineWrapper
         throw new NotImplementedException();
     }
 
-    public void AddOrUpdateWorkflow(params Workflow[] Workflows)
+    public async void AddOrUpdateWorkflow(params Workflow[] Workflows)
     {
         throw new NotImplementedException();
     }

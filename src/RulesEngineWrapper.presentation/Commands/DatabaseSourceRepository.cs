@@ -12,17 +12,19 @@ public class DatabaseSourceRepository : IDataSourceRepository
         _rulesEngineContext = rulesEngineContext;
     }
 
-    public ValueTask<IEnumerable<WorkflowEntity>> AddOrUpdateWorkflow(params WorkflowEntity[] Workflows)
+    public async ValueTask<IEnumerable<WorkflowEntity>> AddOrUpdateWorkflow(IEnumerable<WorkflowEntity> workflows)
     {
         throw new NotImplementedException();
     }
 
-    public ValueTask<IEnumerable<WorkflowEntity>> AddWorkflow(params WorkflowEntity[] Workflows)
+    public async ValueTask<IEnumerable<WorkflowEntity>> AddWorkflow(IEnumerable<WorkflowEntity> workflows)
     {
-        throw new NotImplementedException();
+        await _rulesEngineContext.Workflows.AddRangeAsync(workflows);
+        await _rulesEngineContext.SaveChangesAsync();
+        return workflows;
     }
 
-    public void ClearWorkflows()
+    public async void ClearWorkflows()
     {
         throw new NotImplementedException();
     }
@@ -32,12 +34,12 @@ public class DatabaseSourceRepository : IDataSourceRepository
         throw new NotImplementedException();
     }
 
-    public ValueTask<List<string>> GetAllRegisteredWorkflowNames()
+    public async ValueTask<List<string>> GetAllRegisteredWorkflowNames()
     {
         throw new NotImplementedException();
     }
 
-    public ValueTask RemoveWorkflow(params string[] workflowNames)
+    public async ValueTask RemoveWorkflow(params string[] workflowNames)
     {
         throw new NotImplementedException();
     }
