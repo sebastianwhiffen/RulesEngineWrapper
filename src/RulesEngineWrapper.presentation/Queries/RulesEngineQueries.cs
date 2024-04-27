@@ -1,4 +1,5 @@
 using RulesEngine.Models;
+using RulesEngineWrapper.Infrastructure;
 
 namespace RulesEngineWrapper.presentation.Queries;
 

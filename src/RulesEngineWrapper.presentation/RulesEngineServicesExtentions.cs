@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using RulesEngineWrapper.presentation.Options;
 using System.Runtime.InteropServices;
+using RulesEngineWrapper.Infrastructure;
 
 namespace RulesEngineWrapper.presentation;
 

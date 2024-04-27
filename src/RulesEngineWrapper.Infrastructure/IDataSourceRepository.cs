@@ -1,7 +1,7 @@
 using RulesEngineWrapper.Domain;
 
 //these shouldnt be here. again. just need this working for demo
-namespace RulesEngineWrapper.presentation;
+namespace RulesEngineWrapper.Infrastructure;
 
 public interface IDataSourceRepository
 {

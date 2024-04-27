@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RulesEngineWrapper.presentation;
 using RulesEngine.Data;
 using Microsoft.EntityFrameworkCore;
-using RulesEngine.Interfaces;
+using RulesEngineWrapper.Infrastructure;
 
 namespace RulesEngineWrapper.UnitTest;
 public class RuleEngineServicesExtensionsTests
