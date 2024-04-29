@@ -1,8 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using RulesEngine.Models;
-using RulesEngineWrapper.Domain;
+﻿using RulesEngineWrapper.Domain;
 
-//these shouldnt be here. again. just need this working for demo
 namespace RulesEngineWrapper.Infrastructure;
 
 public class FileSourceRepository : IDataSourceRepository

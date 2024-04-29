@@ -14,7 +14,7 @@ public class RuleEngineServicesExtensionsTests
         var services = new ServiceCollection();
 
         // Act
-        services.AddRulesEngineWrapper();
+        services.AddRulesEngineWrapper(callingAssembly : typeof(RuleEngineServicesExtensionsTests).Assembly);
 
         // Assert
         var serviceProvider = services.BuildServiceProvider();
@@ -40,7 +40,7 @@ public class RuleEngineServicesExtensionsTests
             {
                 dbContextOptionsBuilder.UseSqlite($"Data Source={DbPath}");
             };
-        });
+        }, callingAssembly: typeof(RuleEngineServicesExtensionsTests).Assembly);
 
         // Assert
         var serviceProvider = services.BuildServiceProvider();

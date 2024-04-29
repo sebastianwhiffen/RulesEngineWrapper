@@ -1,4 +1,4 @@
-namespace RulesEngineWrapper.presentation.Options
+namespace RulesEngineWrapper.presentation
 {
     public class RulesEngineBuilderOptions
     {

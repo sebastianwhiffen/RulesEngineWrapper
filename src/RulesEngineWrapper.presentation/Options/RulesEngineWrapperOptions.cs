@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using RulesEngine.Data;
 using RulesEngine.Models;
 
-namespace RulesEngineWrapper.presentation.Options
+namespace RulesEngineWrapper.presentation
 {
     public class RulesEngineWrapperOptions
     {
