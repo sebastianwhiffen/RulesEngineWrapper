@@ -1,4 +1,6 @@
 
+using Microsoft.EntityFrameworkCore;
+
 namespace RulesEngineWrapper.Domain
 {
     public class WorkflowRepository : IWorkflowRepository
@@ -13,7 +15,32 @@ namespace RulesEngineWrapper.Domain
 
         public WorkflowEntity Add(WorkflowEntity workflowEntity)
         {
-            return  _context.Workflows.Add(workflowEntity).Entity;
+            return _context.Workflows.Add(workflowEntity).Entity;
+        }
+
+        public WorkflowEntity Update(WorkflowEntity workflow)
+        {
+            return _context.Workflows
+                    .Update(workflow)
+                    .Entity;
+        }
+
+        public async Task<WorkflowEntity> FindAsync(string workflowName)
+        {
+            var workflow = await _context.Workflows
+                .Where(b => b.WorkflowName == workflowName)
+                .SingleOrDefaultAsync();
+
+            return workflow;
+        }
+
+        public async Task<WorkflowEntity> FindByIdAsync(Guid id)
+        {
+            var workflow = await _context.Workflows
+                .Where(b => b.Id == id)
+                .SingleOrDefaultAsync();
+
+            return workflow;
         }
     }
 }

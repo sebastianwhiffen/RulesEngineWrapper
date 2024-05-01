@@ -4,7 +4,7 @@ using global::RulesEngineWrapper.Domain;
 using MediatR;
 using RulesEngine.Models;
 
-public record AddWorkflowCommand(IEnumerable<Workflow> Workflows) : IRequest<bool>;
+public record AddWorkflowCommand(params Workflow[] Workflows) : IRequest<bool>;
 
 public class AddWorkflowCommandHandler
     : IRequestHandler<AddWorkflowCommand, bool>
