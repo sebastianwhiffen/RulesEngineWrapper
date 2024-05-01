@@ -1,5 +1,5 @@
 using RulesEngine.Models;
-using RulesEngineWrapper.Domain;
+namespace RulesEngineWrapper.Domain;
 
 public static class ScopedParamEntityExtentions
 {

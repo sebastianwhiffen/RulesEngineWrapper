@@ -3,34 +3,35 @@ using Microsoft.EntityFrameworkCore;
 using System.Runtime.InteropServices;
 using RulesEngineWrapper.Infrastructure;
 using System.Reflection;
+using RulesEngineWrapper.Domain;
 
 namespace RulesEngineWrapper.presentation;
 public static class RuleEngineServicesExtensions
 {
-    public static IServiceCollection AddRulesEngineWrapper(this IServiceCollection services,
-        [Optional] Action<RulesEngineWrapperOptions> optionsAction,
-        Assembly callingAssembly)
-    {
-        services.AddScoped<IDataSourceRepository, FileSourceRepository>();
+    // public static IServiceCollection AddRulesEngineWrapper(this IServiceCollection services,
+    //     [Optional] Action<RulesEngineWrapperOptions> optionsAction,
+    //     Assembly callingAssembly)
+    // {
+    //     services.AddScoped<IWorkflowRepository, Work>();
 
-        RulesEngineWrapperOptions options = new RulesEngineWrapperOptions();
-        optionsAction?.Invoke(options);
+    //     RulesEngineWrapperOptions options = new RulesEngineWrapperOptions();
+    //     optionsAction?.Invoke(options);
 
-        services.AddScoped<IRulesEngineWrapper, RulesEngineWrapper>(p =>
-        {
-            var dataSourceRepository = p.GetRequiredService<IDataSourceRepository>();
-            return new RulesEngineWrapper(options.workflowsToInit.ToArray(), options, dataSourceRepository);
-        });
+    //     services.AddScoped<IRulesEngineWrapper, RulesEngineWrapper>(p =>
+    //     {
+    //         var dataSourceRepository = p.GetRequiredService<IDataSourceRepository>();
+    //         return new RulesEngineWrapper(options.workflowsToInit.ToArray(), options, dataSourceRepository);
+    //     });
 
-        services.AddDefaultServices(callingAssembly); 
+    //     services.AddDefaultServices(callingAssembly); 
 
-        return services;
-    }
+    //     return services;
+    // }
 
     public static IServiceCollection AddRulesEngineWrapper<TContext>(this IServiceCollection services,
         [Optional] Action<RulesEngineWrapperOptions>? optionsAction, Assembly callingAssembly) where TContext : DbContext, IRulesEngineWrapperContext
     {
-        services.AddScoped<IDataSourceRepository, DatabaseSourceRepository>();
+        services.AddScoped<IWorkflowRepository, WorkflowRepository>();
 
         RulesEngineWrapperOptions options = new RulesEngineWrapperOptions();
         optionsAction?.Invoke(options);
@@ -42,7 +43,7 @@ public static class RuleEngineServicesExtensions
         services.AddScoped<IRulesEngineWrapper, RulesEngineWrapper>(p =>
         {
             var dbContext = p.GetRequiredService<TContext>();
-            var dataSourceRepository = p.GetRequiredService<IDataSourceRepository>();
+            var dataSourceRepository = p.GetRequiredService<IWorkflowRepository>();
 
             if (options.WrapperDbEnsureCreated) dbContext.Database.EnsureCreated();
 

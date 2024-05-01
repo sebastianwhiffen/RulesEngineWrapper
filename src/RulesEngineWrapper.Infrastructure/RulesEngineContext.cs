@@ -1,14 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using RulesEngine.Models;
 using RulesEngineWrapper.Domain;
+using RulesEngineWrapper.Infrastructure;
 
 namespace RulesEngine.Data
 {
     public class RulesEngineContext : DbContext, IRulesEngineWrapperContext
     {
-        public RulesEngineContext(DbContextOptions<RulesEngineContext> options) : base(options)
+        private readonly IMediator _mediator;
+        public RulesEngineContext(DbContextOptions<RulesEngineContext> options, IMediator mediator ) : base(options)
         {
+            _mediator = mediator;
         }
 
         public DbSet<WorkflowEntity> Workflows { get; set; }
@@ -19,9 +22,13 @@ namespace RulesEngine.Data
         public DbSet<ScopedParamEntity> ScopedParams { get; set; }
         public DbSet<ActionInfoEntity> ActionInfos { get; set; }
 
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
         {
-            return base.SaveChangesAsync(cancellationToken);
+            await _mediator.DispatchDomainEventsAsync(this);
+
+            _ = await base.SaveChangesAsync(cancellationToken);
+
+            return true;
         }
 
         //ONLY to be used for nested items where it is not possible to know the depth of the object, making it impossible to explicitly load the nested items.

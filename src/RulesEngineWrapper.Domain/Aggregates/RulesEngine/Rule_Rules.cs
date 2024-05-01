@@ -1,4 +1,4 @@
-using RulesEngineWrapper.Domain;
+namespace RulesEngineWrapper.Domain;
 
 public class Rule_Rules : Entity
 {

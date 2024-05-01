@@ -2,7 +2,7 @@ using CodenameGenerator;
 
 namespace RulesEngineWrapper.Domain;
 
-public class WorkflowEntity : Entity 
+public class WorkflowEntity : Entity, IAggregateRoot
 {
     public string WorkflowName { get; set; } = new Generator().Generate();
     public ICollection<WorkflowEntity>? WorkflowsToInject { get; set; }

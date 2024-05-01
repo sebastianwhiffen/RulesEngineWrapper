@@ -108,6 +108,8 @@ public class RulesEngineWrapperTests : IDisposable
 
         // Assert
         Assert.NotNull(result);
+
+        var workflow = await rulesEngineWrapper.GetWorkflowFromDataSource("Test Workflow");
         Assert.Single(result);
         Assert.Equal("Test Workflow", result.First().WorkflowName);
     }

@@ -1,5 +1,6 @@
+namespace RulesEngineWrapper.Domain;
+
 using CodenameGenerator;
-using RulesEngineWrapper.Domain;
 
 public class ActionInfoEntity : Entity
 {
