@@ -12,7 +12,7 @@ public class RulesEngineWrapper : IRulesEngineWrapper
     private readonly IRulesEngine _rulesEngine;
     private readonly IMediator _mediator;
 
-    private RulesEngineWrapper(ReSettings options,  IMediator mediator)
+    private RulesEngineWrapper(ReSettings options, IMediator mediator)
     {
         _rulesEngine = new RulesEngine.RulesEngine(options);
         _mediator = mediator;
@@ -28,6 +28,8 @@ public class RulesEngineWrapper : IRulesEngineWrapper
     public RulesEngineWrapper(IEnumerable<WorkflowEntity> workflows, RulesEngineWrapperOptions options, IMediator mediator)
         : this(workflows.ToWorkflows(), options, mediator) { }
 
+    #endregion
+    #region commands
     public ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params object[] inputs)
     {
         throw new NotImplementedException();
@@ -58,11 +60,6 @@ public class RulesEngineWrapper : IRulesEngineWrapper
         throw new NotImplementedException();
     }
 
-    public List<string> GetAllRegisteredWorkflowNames()
-    {
-        throw new NotImplementedException();
-    }
-
     public void AddOrUpdateWorkflow(params Workflow[] Workflows)
     {
         _mediator.Send(new AddOrUpdateWorkflowCommand(Workflows));
@@ -71,6 +68,15 @@ public class RulesEngineWrapper : IRulesEngineWrapper
     public void AddWorkflow(params Workflow[] Workflows)
     {
         _mediator.Send(new AddWorkflowCommand(Workflows));
+    }
+
+
+    #endregion
+    
+    #region queries
+    public List<string> GetAllRegisteredWorkflowNames()
+    {
+        throw new NotImplementedException();
     }
 
     #endregion
