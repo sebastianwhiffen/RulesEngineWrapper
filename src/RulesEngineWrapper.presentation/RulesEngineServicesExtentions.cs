@@ -4,6 +4,8 @@ using System.Runtime.InteropServices;
 using RulesEngineWrapper.Infrastructure;
 using System.Reflection;
 using RulesEngineWrapper.Domain;
+using MediatR;
+using System.Data;
 
 namespace RulesEngineWrapper.presentation;
 public static class RuleEngineServicesExtensions
@@ -29,9 +31,10 @@ public static class RuleEngineServicesExtensions
     // }
 
     public static IServiceCollection AddRulesEngineWrapper<TContext>(this IServiceCollection services,
-        [Optional] Action<RulesEngineWrapperOptions>? optionsAction, Assembly callingAssembly) where TContext : DbContext, IRulesEngineWrapperContext
+        [Optional] Action<RulesEngineWrapperOptions>? optionsAction) where TContext : DbContext, IRulesEngineWrapperContext
     {
         services.AddScoped<IWorkflowRepository, WorkflowRepository>();
+        services.AddDefaultServices();  
 
         RulesEngineWrapperOptions options = new RulesEngineWrapperOptions();
         optionsAction?.Invoke(options);
@@ -43,24 +46,23 @@ public static class RuleEngineServicesExtensions
         services.AddScoped<IRulesEngineWrapper, RulesEngineWrapper>(p =>
         {
             var dbContext = p.GetRequiredService<TContext>();
-            var dataSourceRepository = p.GetRequiredService<IWorkflowRepository>();
+            var mediator = p.GetRequiredService<IMediator>();
 
             if (options.WrapperDbEnsureCreated) dbContext.Database.EnsureCreated();
 
             var workflows = dbContext.Workflows.Include(w => w.Rules);
-            return ActivatorUtilities.CreateInstance<RulesEngineWrapper>(p, workflows, options, dataSourceRepository);
+            return ActivatorUtilities.CreateInstance<RulesEngineWrapper>(p, workflows, options, mediator);
         });
 
-        services.AddDefaultServices(callingAssembly);  
 
         return services;
     }
 
-    private static IServiceCollection AddDefaultServices(this IServiceCollection services, Assembly assembly)
+    private static IServiceCollection AddDefaultServices(this IServiceCollection services)
     {
         services.AddMediatR(cfg =>
         {
-            cfg.RegisterServicesFromAssemblyContaining(assembly.GetType());
+            cfg.RegisterServicesFromAssemblyContaining<RulesEngineWrapper>();
         });
 
         return services;
