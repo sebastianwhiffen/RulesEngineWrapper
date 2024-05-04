@@ -1,17 +1,16 @@
 using RulesEngine.Models;
 using Microsoft.Extensions.DependencyInjection;
-using DotNet.Testcontainers.Containers;
-using Testcontainers.PostgreSql;
-using RulesEngineWrapper.presentation;
 using RulesEngine.Data;
-using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
+
 namespace RulesEngineWrapper.UnitTest;
-public class RulesEngineWrapperTests
+
+public class RulesEngineWrapperTests()
 {
     [Theory]
-    [MemberData(nameof(ContainerUtility.GetDatabaseConfigurations), MemberType = typeof(ContainerUtility))]
+    [MemberData(nameof(ContainerUtility.GetServiceSetups), MemberType = typeof(ContainerUtility))]
     public async void AddWorkflowToDataSource_ShouldWorkCorrectly(IServiceCollection services)
     {
         var serviceProvider = services.BuildServiceProvider();
@@ -36,5 +35,13 @@ public class RulesEngineWrapperTests
 
         // Act
         workflows.ForEach(w => rulesEngineWrapper.AddWorkflow(w));
+
+        //assert
+
+        var context = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<RulesEngineContext>();
+        var workflow = await context.Workflows.Include(w => w.Rules).FirstOrDefaultAsync(w => w.WorkflowName == "Test Workflow");
+
+        Assert.NotNull(workflow);
+        Assert.Equal("Test Workflow", workflow.WorkflowName);
     }
 }

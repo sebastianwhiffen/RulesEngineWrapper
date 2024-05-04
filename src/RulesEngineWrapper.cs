@@ -30,54 +30,36 @@ public class RulesEngineWrapper : IRulesEngineWrapper
 
     #endregion
     #region commands
-    public ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params object[] inputs)
-    {
-        throw new NotImplementedException();
-    }
+    // public ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params object[] inputs) =>
+    //     _mediator.Send(new ExecuteAllRulesCommand(workflowName, inputs));
+   
 
-    public ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params RuleParameter[] ruleParams)
-    {
-        throw new NotImplementedException();
-    }
+    // public ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params RuleParameter[] ruleParams) =>
+    //     _mediator.Send(new ExecuteAllRulesCommand(workflowName, ruleParams));
 
-    public ValueTask<ActionRuleResult> ExecuteActionWorkflowAsync(string workflowName, string ruleName, RuleParameter[] ruleParameters)
-    {
-        throw new NotImplementedException();
-    }
+    // public ValueTask<ActionRuleResult> ExecuteActionWorkflowAsync(string workflowName, string ruleName, RuleParameter[] ruleParameters) =>
+    //  _mediator.Send(new ExecuteActionWorkflowCommand(workflowName, ruleName, ruleParameters));
 
-    public void ClearWorkflows()
-    {
-        throw new NotImplementedException();
-    }
 
-    public void RemoveWorkflow(params string[] workflowNames)
-    {
-        throw new NotImplementedException();
-    }
+    // public void ClearWorkflows() => _mediator.Send(new ClearWorkflowsCommand());
 
-    public bool ContainsWorkflow(string workflowName)
-    {
-        throw new NotImplementedException();
-    }
 
-    public void AddOrUpdateWorkflow(params Workflow[] Workflows)
-    {
-        _mediator.Send(new AddOrUpdateWorkflowCommand(Workflows));
-    }
+    // public void RemoveWorkflow(params string[] workflowNames) => _mediator.Send(new RemoveWorkflowCommand(workflowNames));
 
-    public void AddWorkflow(params Workflow[] Workflows)
-    {
-        _mediator.Send(new AddWorkflowCommand(Workflows));
-    }
 
+    // public bool ContainsWorkflow(string workflowName) => _mediator.Send(new ContainsWorkflowQuery(workflowName));
+   
+    public void AddOrUpdateWorkflow(params Workflow[] Workflows) => _mediator.Send(new AddOrUpdateWorkflowCommand(Workflows));
+
+    public void AddWorkflow(params Workflow[] Workflows) => _mediator.Send(new AddWorkflowCommand(Workflows));
 
     #endregion
     
     #region queries
-    public List<string> GetAllRegisteredWorkflowNames()
-    {
-        throw new NotImplementedException();
-    }
+    // public List<string> GetAllRegisteredWorkflowNames() => _mediator.Send(new GetAllRegisteredWorkflowNamesQuery());
+    
+
+
 
     #endregion
 
