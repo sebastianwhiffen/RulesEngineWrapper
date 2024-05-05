@@ -13,16 +13,15 @@ namespace RulesEngineWrapper.Domain
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public WorkflowEntity Add(WorkflowEntity workflowEntity)
+        public async Task<WorkflowEntity> Add(WorkflowEntity workflowEntity)
         {
-            return _context.Workflows.Add(workflowEntity).Entity;
+            return (await _context.Workflows.AddAsync(workflowEntity)).Entity;
         }
 
-        public WorkflowEntity Update(WorkflowEntity workflow)
+        public Task<WorkflowEntity> Update(WorkflowEntity workflow)
         {
-            return _context.Workflows
-                    .Update(workflow)
-                    .Entity;
+            _context.Workflows.Update(workflow);
+            return Task.FromResult(workflow);
         }
 
         public async Task<WorkflowEntity> FindAsync(string workflowName)
@@ -41,6 +40,19 @@ namespace RulesEngineWrapper.Domain
                 .SingleOrDefaultAsync();
 
             return workflow;
+        }
+
+        public async Task<WorkflowEntity> Remove(string workflowName)
+        {
+            var workflow = await FindAsync(workflowName);
+
+            if (workflow != null)
+            {
+                _context.Workflows.Remove(workflow);
+            }
+
+            return workflow;
+            
         }
     }
 }

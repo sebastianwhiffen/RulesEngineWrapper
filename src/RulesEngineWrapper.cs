@@ -44,14 +44,14 @@ public class RulesEngineWrapper : IRulesEngineWrapper
     // public void ClearWorkflows() => _mediator.Send(new ClearWorkflowsCommand());
 
 
-    // public void RemoveWorkflow(params string[] workflowNames) => _mediator.Send(new RemoveWorkflowCommand(workflowNames));
+    public Task<bool> RemoveWorkflow(params string[] workflowNames) => _mediator.Send(new RemoveWorkflowCommand(workflowNames));
 
 
     // public bool ContainsWorkflow(string workflowName) => _mediator.Send(new ContainsWorkflowQuery(workflowName));
    
-    public void AddOrUpdateWorkflow(params Workflow[] Workflows) => _mediator.Send(new AddOrUpdateWorkflowCommand(Workflows));
+    public Task<bool> AddOrUpdateWorkflow(params Workflow[] Workflows) => _mediator.Send(new AddOrUpdateWorkflowCommand(Workflows));
 
-    public void AddWorkflow(params Workflow[] Workflows) => _mediator.Send(new AddWorkflowCommand(Workflows));
+    public Task<bool> AddWorkflow(params Workflow[] Workflows) => _mediator.Send(new AddWorkflowCommand(Workflows));
 
     #endregion
     

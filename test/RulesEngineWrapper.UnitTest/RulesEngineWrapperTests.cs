@@ -1,47 +1,71 @@
 using RulesEngine.Models;
 using Microsoft.Extensions.DependencyInjection;
-using RulesEngine.Data;
-using Microsoft.EntityFrameworkCore;
+using CodenameGenerator;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
 
 namespace RulesEngineWrapper.UnitTest;
 
-public class RulesEngineWrapperTests()
+[Collection("Database collection")]
+public class RulesEngineWrapperTests
 {
-    [Theory]
-    [MemberData(nameof(ContainerUtility.GetServiceSetups), MemberType = typeof(ContainerUtility))]
-    public async void AddWorkflowToDataSource_ShouldWorkCorrectly(IServiceCollection services)
+    static RulesEngineWrapperTests()
     {
-        var serviceProvider = services.BuildServiceProvider();
-        var rulesEngineWrapper = serviceProvider.GetRequiredService<IRulesEngineWrapper>();
+        DatabaseFixture.EnsureInitializedAsync().GetAwaiter().GetResult();
+    }
 
-        var workflows = new List<Workflow>
+    public static IEnumerable<object[]> ServiceCollections => DatabaseFixture.ServiceCollections.Select(sc => new object[] { sc });
+
+    [Theory]
+    [MemberData(nameof(ServiceCollections))]
+    public async Task AddWorkflow_ShouldWorkCorrectly(IServiceCollection services)
+    {
+        using (var scope = services.BuildServiceProvider().CreateScope())
         {
-            new Workflow
+            var rulesEngineWrapper = scope.ServiceProvider.GetRequiredService<IRulesEngineWrapper>();
+            var generator = new Generator();
+
+            var workflow = new Workflow
             {
-                WorkflowName = "Test Workflow",
+                WorkflowName = generator.Generate(),
                 Rules = new List<Rule>
+            {
+                new Rule
                 {
-                    new Rule
-                    {
-                        RuleName = "Test Rule",
-                        RuleExpressionType = RuleExpressionType.LambdaExpression,
-                        Expression = "1 < 5",
-                    }
+                    RuleName = generator.Generate(),
+                    RuleExpressionType = RuleExpressionType.LambdaExpression,
+                    Expression = "1 < 5",
                 }
             }
-        };
+            };
 
-        // Act
-        workflows.ForEach(w => rulesEngineWrapper.AddWorkflow(w));
+            Assert.True(await rulesEngineWrapper.AddWorkflow(workflow), "Workflow should be added successfully");
+        }
+    }
 
-        //assert
+    [Theory]
+    [MemberData(nameof(ServiceCollections))]
+    public async Task AddOrUpdateWorkflow_ShouldWorkCorrectly(IServiceCollection services)
+    {
+        using (var scope = services.BuildServiceProvider().CreateScope())
+        {
+            var rulesEngineWrapper = scope.ServiceProvider.GetRequiredService<IRulesEngineWrapper>();
+            var generator = new Generator();
 
-        var context = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<RulesEngineContext>();
-        var workflow = await context.Workflows.Include(w => w.Rules).FirstOrDefaultAsync(w => w.WorkflowName == "Test Workflow");
-
-        Assert.NotNull(workflow);
-        Assert.Equal("Test Workflow", workflow.WorkflowName);
+            var workflow = new Workflow
+            {
+                WorkflowName = generator.Generate(),
+                Rules = new List<Rule>
+            {
+                new Rule
+                {
+                    RuleName = generator.Generate(),
+                    RuleExpressionType = RuleExpressionType.LambdaExpression,
+                    Expression = "1 < 5",
+                }
+            }
+            };
+            Assert.True(await rulesEngineWrapper.AddOrUpdateWorkflow(workflow), "Workflow should be added successfully");
+        }
     }
 }
