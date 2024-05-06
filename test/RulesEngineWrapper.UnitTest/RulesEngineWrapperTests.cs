@@ -1,6 +1,7 @@
 using RulesEngine.Models;
 using Microsoft.Extensions.DependencyInjection;
 using CodenameGenerator;
+using RulesEngine.Data;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
 
@@ -29,14 +30,14 @@ public class RulesEngineWrapperTests
             {
                 WorkflowName = generator.Generate(),
                 Rules = new List<Rule>
-            {
-                new Rule
                 {
-                    RuleName = generator.Generate(),
-                    RuleExpressionType = RuleExpressionType.LambdaExpression,
-                    Expression = "1 < 5",
+                    new Rule
+                    {
+                        RuleName = generator.Generate(),
+                        RuleExpressionType = RuleExpressionType.LambdaExpression,
+                        Expression = "1 < 5",
+                    }
                 }
-            }
             };
 
             Assert.True(await rulesEngineWrapper.AddWorkflow(workflow), "Workflow should be added successfully");
@@ -56,14 +57,14 @@ public class RulesEngineWrapperTests
             {
                 WorkflowName = generator.Generate(),
                 Rules = new List<Rule>
-            {
-                new Rule
                 {
-                    RuleName = generator.Generate(),
-                    RuleExpressionType = RuleExpressionType.LambdaExpression,
-                    Expression = "1 < 5",
+                    new Rule
+                    {
+                        RuleName = generator.Generate(),
+                        RuleExpressionType = RuleExpressionType.LambdaExpression,
+                        Expression = "1 < 5",
+                    }
                 }
-            }
             };
             Assert.True(await rulesEngineWrapper.AddOrUpdateWorkflow(workflow), "Workflow should be added successfully");
         }
