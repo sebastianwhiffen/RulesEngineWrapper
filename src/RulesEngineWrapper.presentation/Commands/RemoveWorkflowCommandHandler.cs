@@ -14,10 +14,10 @@ public class RemoveWorkflowCommandHandler : IRequestHandler<RemoveWorkflowComman
 
     public async Task<bool> Handle(RemoveWorkflowCommand request, CancellationToken cancellationToken)
     {
-        request.WorkflowNames.ToList().ForEach(async workflowName =>
+        foreach (string workflowName in request.WorkflowNames)
         {
             await _workflowRepository.Remove(workflowName);
-        });
+        }
 
         return await _workflowRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
     }

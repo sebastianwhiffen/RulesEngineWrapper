@@ -1,9 +1,4 @@
-using RulesEngine.Models;
 using Microsoft.Extensions.DependencyInjection;
-using CodenameGenerator;
-using RulesEngine.Data;
-
-[assembly: CollectionBehavior(DisableTestParallelization = true)]
 
 namespace RulesEngineWrapper.UnitTest;
 
@@ -19,54 +14,41 @@ public class RulesEngineWrapperTests
 
     [Theory]
     [MemberData(nameof(ServiceCollections))]
-    public async Task AddWorkflow_ShouldWorkCorrectly(IServiceCollection services)
+    public async Task AddWorkflow_ShouldWork(IServiceCollection services)
     {
-        using (var scope = services.BuildServiceProvider().CreateScope())
-        {
-            var rulesEngineWrapper = scope.ServiceProvider.GetRequiredService<IRulesEngineWrapper>();
-            var generator = new Generator();
+        var serviceProvider = services.BuildServiceProvider();
 
-            var workflow = new Workflow
-            {
-                WorkflowName = generator.Generate(),
-                Rules = new List<Rule>
-                {
-                    new Rule
-                    {
-                        RuleName = generator.Generate(),
-                        RuleExpressionType = RuleExpressionType.LambdaExpression,
-                        Expression = "1 < 5",
-                    }
-                }
-            };
+        var rulesEngineWrapper = serviceProvider.GetRequiredService<IRulesEngineWrapper>();
 
-            Assert.True(await rulesEngineWrapper.AddWorkflow(workflow), "Workflow should be added successfully");
-        }
+        var workflow = RulesEngineWrapperUtility.NewWorkflow();
+
+        Assert.True(await rulesEngineWrapper.AddWorkflow(workflow), "Workflow should be added successfully");
     }
 
     [Theory]
     [MemberData(nameof(ServiceCollections))]
-    public async Task AddOrUpdateWorkflow_ShouldWorkCorrectly(IServiceCollection services)
+    public async Task AddOrUpdateWorkflow_ShouldWork(IServiceCollection services)
     {
-        using (var scope = services.BuildServiceProvider().CreateScope())
-        {
-            var rulesEngineWrapper = scope.ServiceProvider.GetRequiredService<IRulesEngineWrapper>();
-            var generator = new Generator();
+        var serviceProvider = services.BuildServiceProvider();
 
-            var workflow = new Workflow
-            {
-                WorkflowName = generator.Generate(),
-                Rules = new List<Rule>
-                {
-                    new Rule
-                    {
-                        RuleName = generator.Generate(),
-                        RuleExpressionType = RuleExpressionType.LambdaExpression,
-                        Expression = "1 < 5",
-                    }
-                }
-            };
-            Assert.True(await rulesEngineWrapper.AddOrUpdateWorkflow(workflow), "Workflow should be added successfully");
-        }
+        var rulesEngineWrapper = serviceProvider.GetRequiredService<IRulesEngineWrapper>();
+
+        var workflow = RulesEngineWrapperUtility.NewWorkflow();
+
+        Assert.True(await rulesEngineWrapper.AddOrUpdateWorkflow(workflow), "Workflow should be added successfully");
+    }
+
+    [Theory]
+    [MemberData(nameof(ServiceCollections))]
+    public async Task RemoveWorkflow_ShouldWork(IServiceCollection services)
+    {
+        var serviceProvider = services.BuildServiceProvider();
+
+        var rulesEngineWrapper = serviceProvider.GetRequiredService<IRulesEngineWrapper>();
+
+        var workflow = RulesEngineWrapperUtility.NewWorkflow();
+
+        Assert.True(await rulesEngineWrapper.AddWorkflow(workflow), "Workflow should be added successfully");
+        Assert.True(await rulesEngineWrapper.RemoveWorkflow(workflow.WorkflowName), "Workflow should be removed successfully");
     }
 }

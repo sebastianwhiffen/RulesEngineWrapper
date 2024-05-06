@@ -5,7 +5,7 @@ using RulesEngineWrapper.Domain;
 namespace RulesEngineWrapper.Infrastructure;
 static class MediatorExtension
 {
-    public static async Task DispatchDomainEventsAsync(this IMediator mediator, RulesEngineContext ctx)
+  public static async Task DispatchDomainEventsAsync(this IMediator mediator, RulesEngineContext ctx)
     {
         var domainEntities = ctx.ChangeTracker
             .Entries<Entity>()

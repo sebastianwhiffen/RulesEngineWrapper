@@ -24,10 +24,9 @@ namespace RulesEngine.Data
 
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
         {
+            await _mediator.DispatchDomainEventsAsync(this);
             
              _ = await base.SaveChangesAsync(cancellationToken);
-
-            await _mediator.DispatchDomainEventsAsync(this);
 
             return true;
         }

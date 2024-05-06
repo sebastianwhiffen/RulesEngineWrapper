@@ -62,7 +62,9 @@ public class DatabaseFixture : IAsyncLifetime
             {
                 if (container is IDatabaseContainer databaseContainer)
                 {
-                    builder.UseNpgsql(databaseContainer.GetConnectionString());
+                    builder.UseNpgsql(databaseContainer.GetConnectionString())
+                    .EnableSensitiveDataLogging()
+                    .EnableDetailedErrors();
                     options.WrapperDbEnsureCreated = true;
                 }
             };
@@ -76,7 +78,9 @@ public class DatabaseFixture : IAsyncLifetime
             {
                 if (container is IDatabaseContainer databaseContainer)
                 {
-                    builder.UseSqlServer(databaseContainer.GetConnectionString());
+                    builder.UseSqlServer(databaseContainer.GetConnectionString())
+                    .EnableSensitiveDataLogging()
+                    .EnableDetailedErrors();
                     options.WrapperDbEnsureCreated = true;
                 }
             };
@@ -91,7 +95,9 @@ public class DatabaseFixture : IAsyncLifetime
             {
                 if (container is IDatabaseContainer databaseContainer)
                 {
-                    builder.UseMySql(databaseContainer.GetConnectionString(), new MySqlServerVersion(new Version(8, 0, 21)));
+                    builder.UseMySql(databaseContainer.GetConnectionString(), new MySqlServerVersion(new Version(8, 0, 21)))
+                    .EnableSensitiveDataLogging()
+                    .EnableDetailedErrors();
                     options.WrapperDbEnsureCreated = true;
                 }
             };

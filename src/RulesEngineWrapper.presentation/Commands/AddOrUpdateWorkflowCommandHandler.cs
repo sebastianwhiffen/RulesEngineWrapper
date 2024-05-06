@@ -23,17 +23,14 @@ public class AddOrUpdateWorkflowCommandHandler
 
     public async Task<bool> Handle(AddOrUpdateWorkflowCommand message, CancellationToken cancellationToken)
     {
-        message.Workflows.ToList().ForEach(w => _workflowRepository.FindAsync(w.WorkflowName).ContinueWith(async t =>
+        foreach (Workflow workflow in message.Workflows)
         {
-            if (t.Result == null)
-            {
-                await _mediator.Send(new AddWorkflowCommand(w));
-            }
-            else
-            {
-                _workflowRepository.Update(w.ToWorkflowEntity());
-            }
-        }));
+            var workflowEntity = await _workflowRepository.FindAsync(workflow.WorkflowName);
+
+            if (workflowEntity != null) await _workflowRepository.Update(workflowEntity);
+
+            else await _mediator.Send(new AddWorkflowCommand(workflow));
+        }
 
         return await _workflowRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
     }

@@ -33,7 +33,10 @@ public class AddWorkflowCommandHandler
 
         // _logger.LogInformation("Creating Order - Order: {@Order}", order);
 
-        message.Workflows.ToList().ForEach(w => _workflowRepository.Add(w.ToWorkflowEntity()));
+        foreach(Workflow workflow in message.Workflows)
+        {
+           _ = await _workflowRepository.AddAsync(workflow.ToWorkflowEntity());
+        }
 
         return await _workflowRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
     }

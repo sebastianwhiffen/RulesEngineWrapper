@@ -3,7 +3,7 @@ namespace RulesEngineWrapper.Domain;
 
 public interface IWorkflowRepository : IRepository<WorkflowEntity>
 {
-    Task<WorkflowEntity> Add(WorkflowEntity workflowEntity);
+    Task<WorkflowEntity> AddAsync(WorkflowEntity workflowEntity);
 
     Task<WorkflowEntity> FindByIdAsync(Guid id);
 
