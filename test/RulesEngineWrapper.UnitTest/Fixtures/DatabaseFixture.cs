@@ -7,7 +7,7 @@ using Testcontainers.MsSql;
 using Testcontainers.MySql;
 using Testcontainers.PostgreSql;
 
-public class DatabaseFixture : IAsyncLifetime
+public class TestContainersFixture : IAsyncLifetime
 {
     public static List<IContainer> _containers { get; private set; } = new List<IContainer>();
     private static bool isInitialized = false;
@@ -52,7 +52,7 @@ public class DatabaseFixture : IAsyncLifetime
     }
 
     [CollectionDefinition("Database collection")]
-    public class DatabaseCollection : ICollectionFixture<DatabaseFixture>
+    public class DatabaseCollection : ICollectionFixture<TestContainersFixture>
     {
         // This class has no code, and is never created. Its purpose is simply
         // to be the place to apply [CollectionDefinition] and all the

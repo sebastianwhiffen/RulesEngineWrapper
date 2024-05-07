@@ -8,9 +8,9 @@ public class RulesEngineWrapperTests
 {
     static RulesEngineWrapperTests()
     {
-        DatabaseFixture.EnsureInitializedAsync().GetAwaiter().GetResult();
+        TestContainersFixture.EnsureInitializedAsync().GetAwaiter().GetResult();
     }
-    public static IEnumerable<object[]> rulesEngineWrappers => DatabaseFixture._containers.Select(container => new object[] { _factory.Create(container).BuildServiceProvider().GetRequiredService<IRulesEngineWrapper>()});
+    public static IEnumerable<object[]> rulesEngineWrappers => TestContainersFixture._containers.Select(container => new object[] { _factory.Create(container).BuildServiceProvider().GetRequiredService<IRulesEngineWrapper>()});
     public static RulesEngineWrapperFactory _factory = new RulesEngineWrapperFactory();
 
     [Theory]
