@@ -54,7 +54,6 @@ public static class RuleEngineServicesExtensions
             return ActivatorUtilities.CreateInstance<RulesEngineWrapper>(p, workflows, options, mediator);
         });
 
-
         return services;
     }
 

@@ -31,9 +31,6 @@ namespace RulesEngine.Data
             return true;
         }
 
-        //ONLY to be used for nested items where it is not possible to know the depth of the object, making it impossible to explicitly load the nested items.
-        // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseLazyLoadingProxies();
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

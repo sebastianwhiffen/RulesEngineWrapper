@@ -9,7 +9,7 @@ using Testcontainers.PostgreSql;
 
 public class DatabaseFixture : IAsyncLifetime
 {
-    public static List<IServiceCollection> ServiceCollections { get; private set; } = new List<IServiceCollection>();
+    public static List<IContainer> _containers { get; private set; } = new List<IContainer>();
     private static bool isInitialized = false;
     private static readonly object initLock = new object();
 
@@ -37,74 +37,19 @@ public class DatabaseFixture : IAsyncLifetime
     }
     private static async Task InitializeDatabases()
     {
-        // Assuming these builders correctly asynchronously build and start the containers
-        var msSql = new MsSqlBuilder().Build();
-        var mySql = new MySqlBuilder().Build();
-        var postgreSql = new PostgreSqlBuilder().Build();
-
-        ServiceCollections.Add(await UseContainer(postgreSql, PostgeSqlOptions(postgreSql)));
-        ServiceCollections.Add(await UseContainer(mySql, MySqlOptions(mySql)));
-        ServiceCollections.Add(await UseContainer(msSql, SqlServerOptions(msSql)));
-    }
-
-    private static async Task<IServiceCollection> UseContainer(IContainer container, Action<RulesEngineWrapperOptions> configureOptions)
-    {
-        await container.StartAsync();
-        return new ServiceCollection().AddRulesEngineWrapper<RulesEngineContext>(configureOptions);
-    }
-
-    #region options
-    private static Action<RulesEngineWrapperOptions> PostgeSqlOptions(IContainer container)
-    {
-        return options =>
+        var containers = new List<IContainer>()
         {
-            options.DbContextOptionsAction = builder =>
-            {
-                if (container is IDatabaseContainer databaseContainer)
-                {
-                    builder.UseNpgsql(databaseContainer.GetConnectionString())
-                    .EnableSensitiveDataLogging()
-                    .EnableDetailedErrors();
-                    options.WrapperDbEnsureCreated = true;
-                }
-            };
+            new MsSqlBuilder().Build(),
+            new MySqlBuilder().Build(),
+            new PostgreSqlBuilder().Build()
         };
-    }
-    private static Action<RulesEngineWrapperOptions> SqlServerOptions(IContainer container)
-    {
-        return options =>
-        {
-            options.DbContextOptionsAction = builder =>
-            {
-                if (container is IDatabaseContainer databaseContainer)
-                {
-                    builder.UseSqlServer(databaseContainer.GetConnectionString())
-                    .EnableSensitiveDataLogging()
-                    .EnableDetailedErrors();
-                    options.WrapperDbEnsureCreated = true;
-                }
-            };
-        };
-    }
 
-    private static Action<RulesEngineWrapperOptions> MySqlOptions(IContainer container)
-    {
-        return options =>
+        foreach (IContainer container in containers)
         {
-            options.DbContextOptionsAction = builder =>
-            {
-                if (container is IDatabaseContainer databaseContainer)
-                {
-                    builder.UseMySql(databaseContainer.GetConnectionString(), new MySqlServerVersion(new Version(8, 0, 21)))
-                    .EnableSensitiveDataLogging()
-                    .EnableDetailedErrors();
-                    options.WrapperDbEnsureCreated = true;
-                }
-            };
-        };
+            await container.StartAsync();
+            _containers.Add(container);
+        }
     }
-
-    #endregion
 
     [CollectionDefinition("Database collection")]
     public class DatabaseCollection : ICollectionFixture<DatabaseFixture>

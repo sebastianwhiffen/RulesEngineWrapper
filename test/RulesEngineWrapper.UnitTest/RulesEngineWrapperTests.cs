@@ -1,3 +1,4 @@
+using DotNet.Testcontainers.Containers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace RulesEngineWrapper.UnitTest;
@@ -9,14 +10,14 @@ public class RulesEngineWrapperTests
     {
         DatabaseFixture.EnsureInitializedAsync().GetAwaiter().GetResult();
     }
-
-    public static IEnumerable<object[]> ServiceCollections => DatabaseFixture.ServiceCollections.Select(sc => new object[] { sc });
+    public static IEnumerable<object[]> ServiceCollections => DatabaseFixture._containers.Select(sc => new object[] { sc });
+    public static RulesEngineWrapperFactory _factory = new RulesEngineWrapperFactory();
 
     [Theory]
     [MemberData(nameof(ServiceCollections))]
-    public async Task AddWorkflow_ShouldWork(IServiceCollection services)
+    public async Task AddWorkflow_ShouldWork(IContainer container)
     {
-        var serviceProvider = services.BuildServiceProvider();
+        var serviceProvider = _factory.Create(container).BuildServiceProvider();
 
         var rulesEngineWrapper = serviceProvider.GetRequiredService<IRulesEngineWrapper>();
 
@@ -27,9 +28,9 @@ public class RulesEngineWrapperTests
 
     [Theory]
     [MemberData(nameof(ServiceCollections))]
-    public async Task AddOrUpdateWorkflow_ShouldWork(IServiceCollection services)
+    public async Task AddOrUpdateWorkflow_ShouldWork(IContainer container)
     {
-        var serviceProvider = services.BuildServiceProvider();
+        var serviceProvider = _factory.Create(container).BuildServiceProvider();
 
         var rulesEngineWrapper = serviceProvider.GetRequiredService<IRulesEngineWrapper>();
 
@@ -40,9 +41,9 @@ public class RulesEngineWrapperTests
 
     [Theory]
     [MemberData(nameof(ServiceCollections))]
-    public async Task RemoveWorkflow_ShouldWork(IServiceCollection services)
+    public async Task RemoveWorkflow_ShouldWork(IContainer container)
     {
-        var serviceProvider = services.BuildServiceProvider();
+        var serviceProvider = _factory.Create(container).BuildServiceProvider();
 
         var rulesEngineWrapper = serviceProvider.GetRequiredService<IRulesEngineWrapper>();
 

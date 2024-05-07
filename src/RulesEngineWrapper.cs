@@ -22,7 +22,7 @@ public class RulesEngineWrapper : IRulesEngineWrapper
         : this(options.reSettings, mediator)
     {
         //collection params coming soon I hope...
-        AddOrUpdateWorkflow(workflows.ToArray());
+        AddOrUpdateWorkflow(workflows.ToArray()).GetAwaiter().GetResult();
     }
 
     public RulesEngineWrapper(IEnumerable<WorkflowEntity> workflows, RulesEngineWrapperOptions options, IMediator mediator)
