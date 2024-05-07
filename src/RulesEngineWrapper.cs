@@ -29,38 +29,18 @@ public class RulesEngineWrapper : IRulesEngineWrapper
         : this(workflows.ToWorkflows(), options, mediator) { }
 
     #endregion
-    #region commands
-    // public ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params object[] inputs) =>
-    //     _mediator.Send(new ExecuteAllRulesCommand(workflowName, inputs));
-   
-
-    // public ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params RuleParameter[] ruleParams) =>
-    //     _mediator.Send(new ExecuteAllRulesCommand(workflowName, ruleParams));
-
-    // public ValueTask<ActionRuleResult> ExecuteActionWorkflowAsync(string workflowName, string ruleName, RuleParameter[] ruleParameters) =>
-    //  _mediator.Send(new ExecuteActionWorkflowCommand(workflowName, ruleName, ruleParameters));
-
-
-    // public void ClearWorkflows() => _mediator.Send(new ClearWorkflowsCommand());
-
 
     public async Task<bool> RemoveWorkflow(params string[] workflowNames) => await _mediator.Send(new RemoveWorkflowCommand(workflowNames));
 
-
-    // public bool ContainsWorkflow(string workflowName) => _mediator.Send(new ContainsWorkflowQuery(workflowName));
-   
     public async Task<bool> AddOrUpdateWorkflow(params Workflow[] Workflows) => await _mediator.Send(new AddOrUpdateWorkflowCommand(Workflows));
 
     public async Task<bool> AddWorkflow(params Workflow[] Workflows) => await _mediator.Send(new AddWorkflowCommand(Workflows));
 
-    #endregion
-    
-    #region queries
-    // public List<string> GetAllRegisteredWorkflowNames() => _mediator.Send(new GetAllRegisteredWorkflowNamesQuery());
-    
+    public async Task<IEnumerable<string>> GetAllWorkflowNames() => await _mediator.Send(new GetAllWorkflowNamesQuery());
 
+    public async ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params object[] inputs) => await _mediator.Send(new ExecuteAllRulesCommand(workflowName, inputs));
 
+    public async ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params RuleParameter[] ruleParams) => await _mediator.Send(new ExecuteAllRulesCommand(workflowName, ruleParams));
 
-    #endregion
-
+    public async ValueTask<ActionRuleResult> ExecuteActionWorkflowAsync(string workflowName, string ruleName, RuleParameter[] ruleParameters) => await _mediator.Send(new ExecuteActionWorkflowCommand(workflowName, ruleName, ruleParameters));
 }

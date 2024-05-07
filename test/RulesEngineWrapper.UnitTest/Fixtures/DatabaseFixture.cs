@@ -1,8 +1,4 @@
 using DotNet.Testcontainers.Containers;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using RulesEngine.Data;
-using RulesEngineWrapper.presentation;
 using Testcontainers.MsSql;
 using Testcontainers.MySql;
 using Testcontainers.PostgreSql;
