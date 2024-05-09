@@ -1,13 +1,17 @@
 using MediatR;
+using RulesEngine.Interfaces;
 using RulesEngine.Models;
 using RulesEngineWrapper;
 
 public class ExecuteAllRulesCommand() : IRequest<List<RuleResultTree>>
 {
     public string WorkflowName { get; private set; }
-    public List<RuleParameter> RuleParams { get; private set; }
-    public ExecuteAllRulesCommand(string workflowName, params object[] inputs) : this()
+    public List<RuleParameter> RuleParams { get; private set; } = [];
+    public IRulesEngine RulesEngine { get; private set; }
+    public ExecuteAllRulesCommand(IRulesEngine rulesEngine, string workflowName, params object[] inputs) : this()
     {
+        RulesEngine = rulesEngine;
+
         WorkflowName = workflowName;
 
         for (var i = 0; i < inputs.Length; i++)
@@ -16,8 +20,9 @@ public class ExecuteAllRulesCommand() : IRequest<List<RuleResultTree>>
             RuleParams.Add(new RuleParameter($"input{i + 1}", input));
         }
     }
-    public ExecuteAllRulesCommand(string workflowName, params RuleParameter[] ruleParams) : this()
+    public ExecuteAllRulesCommand(IRulesEngine rulesEngine, string workflowName, params RuleParameter[] ruleParams) : this()
     {
+        RulesEngine = rulesEngine;
         WorkflowName = workflowName;
         RuleParams = ruleParams.ToList();
     }
@@ -34,7 +39,6 @@ public class ExecuteAllRulesCommandHandler : IRequestHandler<ExecuteAllRulesComm
 
     public async Task<List<RuleResultTree>> Handle(ExecuteAllRulesCommand request, CancellationToken cancellationToken)
     {
-
-        return await _rulesEngineWrapper.ExecuteAllRulesAsync(request.WorkflowName, request.RuleParams.ToArray());
+        return await request.RulesEngine.ExecuteAllRulesAsync(request.WorkflowName, request.RuleParams.ToArray());
     }
 }

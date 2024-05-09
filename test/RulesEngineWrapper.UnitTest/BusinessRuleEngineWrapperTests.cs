@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 using Xunit;
 using RulesEngine;
 using System.Runtime.CompilerServices;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;  
 
 namespace RulesEngineWrapper.UnitTest
 {
@@ -42,20 +42,24 @@ namespace RulesEngineWrapper.UnitTest
             Assert.NotNull(re);
         }
 
-        // [Theory]
-        // [MemberData(nameof(rulesEngineWrappers))]
-        // public async Task ExecuteRule_ReturnsListOfRuleResultTree(IRulesEngineWrapper re)
-        // {
+        [Theory]
+        [MemberData(nameof(rulesEngineWrappers))]
+        public async Task ExecuteRule_ReturnsListOfRuleResultTree(IRulesEngineWrapper re)
+        {
 
-        //     dynamic input1 = GetInput1();
-        //     dynamic input2 = GetInput2();
-        //     dynamic input3 = GetInput3();
+            var workflow = JsonConvert.DeserializeObject<Workflow>(GetFileContent("rules2.json"));
 
-        //     List<RuleResultTree> result = await re.ExecuteAllRulesAsync("inputWorkflow", input1, input2, input3);
-        //     Assert.NotNull(result);
-        //     Assert.IsType<List<RuleResultTree>>(result);
-        //     Assert.Contains(result, c => c.IsSuccess);
-        // }
+            await re.AddOrUpdateWorkflow(workflow);
+
+            dynamic input1 = GetInput1();
+            dynamic input2 = GetInput2();
+            dynamic input3 = GetInput3();
+
+            List<RuleResultTree> result = await re.ExecuteAllRulesAsync("inputWorkflow", input1, input2, input3);
+            Assert.NotNull(result);
+            Assert.IsType<List<RuleResultTree>>(result);
+            Assert.Contains(result, c => c.IsSuccess);
+        }
 
         // private RulesEngine.RulesEngine GetRulesEngineWrapper(string filename, ReSettings reSettings = null)
         // {
@@ -71,12 +75,12 @@ namespace RulesEngineWrapper.UnitTest
         //     return new RulesEngine.RulesEngine(new string[] { data, injectWorkflowStr }, reSettings);
         // }
 
-        // private string GetFileContent(string filename, [CallerFilePath] string sourceFilePath = "")
-        // {
-        //     var directory = Path.GetDirectoryName(sourceFilePath);
-        //     var filePath = Path.Combine(directory, "TestData", filename);
-        //     return File.ReadAllText(filePath);
-        // }
+        private string GetFileContent(string filename, [CallerFilePath] string sourceFilePath = "")
+        {
+            var directory = Path.GetDirectoryName(sourceFilePath);
+            var filePath = Path.Combine(directory, "TestData", filename);
+            return File.ReadAllText(filePath);
+        }
 
         //     [Theory]
         //     [InlineData("rules2.json")]
@@ -1105,131 +1109,131 @@ namespace RulesEngineWrapper.UnitTest
 
 
 
-        //     [Theory]
-        //     [InlineData(typeof(RulesEngineWrapper), typeof(IRulesEngine))]
-        //     public void Class_PublicMethods_ArePartOfInterface(Type classType, Type interfaceType)
-        //     {
-        //         var classMethods = classType.GetMethods(BindingFlags.DeclaredOnly |
-        //                     BindingFlags.Public |
-        //                     BindingFlags.Instance);
+            // [Theory]
+            // [InlineData(typeof(RulesEngineWrapper), typeof(IRulesEngine))]
+            // public void Class_PublicMethods_ArePartOfInterface(Type classType, Type interfaceType)
+            // {
+            //     var classMethods = classType.GetMethods(BindingFlags.DeclaredOnly |
+            //                 BindingFlags.Public |
+            //                 BindingFlags.Instance);
 
 
-        //         var interfaceMethods = interfaceType.GetMethods();
+            //     var interfaceMethods = interfaceType.GetMethods();
 
 
-        //         Assert.Equal(interfaceMethods.Count(), classMethods.Count());
-        //     }
+            //     Assert.Equal(interfaceMethods.Count(), classMethods.Count());
+            // }
 
 
 
-        //     private RulesEngineWrapper CreateRulesEngine(Workflow workflow)
-        //     {
-        //         var json = JsonConvert.SerializeObject(workflow);
-        //         return new RulesEngineWrapper(new string[] { json }, null);
-        //     }
+            // private RulesEngineWrapper CreateRulesEngine(Workflow workflow)
+            // {
+            //     var json = JsonConvert.SerializeObject(workflow);
+            //     return new RulesEngineWrapper(new string[] { json }, null);
+            // }
 
-        //     private RulesEngineWrapper GetRulesEngine(string filename, ReSettings reSettings = null)
-        //     {
-        //         var data = GetFileContent(filename);
+            // private RulesEngineWrapper GetRulesEngine(string filename, ReSettings reSettings = null)
+            // {
+            //     var data = GetFileContent(filename);
 
-        //         var injectWorkflow = new Workflow
-        //         {
-        //             WorkflowName = "inputWorkflowReference",
-        //             WorkflowsToInject = new List<string> { "inputWorkflow" }
-        //         };
+            //     var injectWorkflow = new Workflow
+            //     {
+            //         WorkflowName = "inputWorkflowReference",
+            //         WorkflowsToInject = new List<string> { "inputWorkflow" }
+            //     };
 
-        //         var injectWorkflowStr = JsonConvert.SerializeObject(injectWorkflow);
-        //         return new RulesEngineWrapper(new string[] { data, injectWorkflowStr }, reSettings);
-        //     }
+            //     var injectWorkflowStr = JsonConvert.SerializeObject(injectWorkflow);
+            //     return new RulesEngineWrapper(new string[] { data, injectWorkflowStr }, reSettings);
+            // }
 
-        //     private string GetSourceDirectory([CallerFilePath] string sourceFilePath = "")
-        //     {
-        //         return Path.GetDirectoryName(sourceFilePath);
-        //     }
+            private string GetSourceDirectory([CallerFilePath] string sourceFilePath = "")
+            {
+                return Path.GetDirectoryName(sourceFilePath);
+            }
 
-        //     private Workflow ParseAsWorkflow(string WorkflowsFileName)
-        //     {
-        //         string content = GetFileContent(WorkflowsFileName);
-        //         return JsonConvert.DeserializeObject<Workflow>(content);
-        //     }
+            private Workflow ParseAsWorkflow(string WorkflowsFileName)
+            {
+                string content = GetFileContent(WorkflowsFileName);
+                return JsonConvert.DeserializeObject<Workflow>(content);
+            }
 
-        //     private dynamic GetInput1()
-        //     {
-        //         var converter = new ExpandoObjectConverter();
-        //         var basicInfo = "{\"name\": \"Dishant\",\"email\": \"abc@xyz.com\",\"creditHistory\": \"good\",\"country\": \"canada\",\"loyaltyFactor\": 3,\"totalPurchasesToDate\": 10000}";
-        //         return JsonConvert.DeserializeObject<ExpandoObject>(basicInfo, converter);
-        //     }
+            private dynamic GetInput1()
+            {
+                var converter = new ExpandoObjectConverter();
+                var basicInfo = "{\"name\": \"Dishant\",\"email\": \"abc@xyz.com\",\"creditHistory\": \"good\",\"country\": \"canada\",\"loyaltyFactor\": 3,\"totalPurchasesToDate\": 10000}";
+                return JsonConvert.DeserializeObject<ExpandoObject>(basicInfo, converter);
+            }
 
-        //     private dynamic GetInput2()
-        //     {
-        //         var converter = new ExpandoObjectConverter();
-        //         var orderInfo = "{\"totalOrders\": 5,\"recurringItems\": 2}";
-        //         return JsonConvert.DeserializeObject<ExpandoObject>(orderInfo, converter);
-        //     }
+            private dynamic GetInput2()
+            {
+                var converter = new ExpandoObjectConverter();
+                var orderInfo = "{\"totalOrders\": 5,\"recurringItems\": 2}";
+                return JsonConvert.DeserializeObject<ExpandoObject>(orderInfo, converter);
+            }
 
-        //     private dynamic GetInput3()
-        //     {
-        //         var converter = new ExpandoObjectConverter();
-        //         var telemetryInfo = "{\"noOfVisitsPerMonth\": 10,\"percentageOfBuyingToVisit\": 15}";
-        //         return JsonConvert.DeserializeObject<ExpandoObject>(telemetryInfo, converter);
-        //     }
+            private dynamic GetInput3()
+            {
+                var converter = new ExpandoObjectConverter();
+                var telemetryInfo = "{\"noOfVisitsPerMonth\": 10,\"percentageOfBuyingToVisit\": 15}";
+                return JsonConvert.DeserializeObject<ExpandoObject>(telemetryInfo, converter);
+            }
 
-        //     /// <summary>
-        //     /// Gets the inputs.
-        //     /// </summary>
-        //     /// <returns>
-        //     /// The inputs.
-        //     /// </returns>
-        //     private static dynamic[] GetInputs4()
-        //     {
-        //         var basicInfo = "{\"name\": \"Dishant\",\"email\": \"abc@xyz.com\",\"creditHistory\": \"good\",\"country\": \"canada\",\"loyaltyFactor\": 3,\"totalPurchasesToDate\": 70000}";
-        //         var orderInfo = "{\"totalOrders\": 50,\"recurringItems\": 2}";
-        //         var telemetryInfo = "{\"noOfVisitsPerMonth\": 10,\"percentageOfBuyingToVisit\": 15}";
-        //         var laborCategoriesInput = "[{\"country\": \"india\", \"loyaltyFactor\": 2, \"totalPurchasesToDate\": 20000}]";
-        //         var currentLaborCategoryInput = "{\"CurrentLaborCategoryProp\":\"TestVal2\"}";
+            /// <summary>
+            /// Gets the inputs.
+            /// </summary>
+            /// <returns>
+            /// The inputs.
+            /// </returns>
+            private static dynamic[] GetInputs4()
+            {
+                var basicInfo = "{\"name\": \"Dishant\",\"email\": \"abc@xyz.com\",\"creditHistory\": \"good\",\"country\": \"canada\",\"loyaltyFactor\": 3,\"totalPurchasesToDate\": 70000}";
+                var orderInfo = "{\"totalOrders\": 50,\"recurringItems\": 2}";
+                var telemetryInfo = "{\"noOfVisitsPerMonth\": 10,\"percentageOfBuyingToVisit\": 15}";
+                var laborCategoriesInput = "[{\"country\": \"india\", \"loyaltyFactor\": 2, \"totalPurchasesToDate\": 20000}]";
+                var currentLaborCategoryInput = "{\"CurrentLaborCategoryProp\":\"TestVal2\"}";
 
-        //         dynamic input1 = JsonConvert.DeserializeObject<List<RuleTestClass>>(laborCategoriesInput);
-        //         dynamic input2 = JsonConvert.DeserializeObject<ExpandoObject>(currentLaborCategoryInput);
-        //         dynamic input3 = JsonConvert.DeserializeObject<ExpandoObject>(telemetryInfo);
-        //         dynamic input4 = JsonConvert.DeserializeObject<ExpandoObject>(basicInfo);
-        //         dynamic input5 = JsonConvert.DeserializeObject<ExpandoObject>(orderInfo);
+                dynamic input1 = JsonConvert.DeserializeObject<List<RuleTestClass>>(laborCategoriesInput);
+                dynamic input2 = JsonConvert.DeserializeObject<ExpandoObject>(currentLaborCategoryInput);
+                dynamic input3 = JsonConvert.DeserializeObject<ExpandoObject>(telemetryInfo);
+                dynamic input4 = JsonConvert.DeserializeObject<ExpandoObject>(basicInfo);
+                dynamic input5 = JsonConvert.DeserializeObject<ExpandoObject>(orderInfo);
 
-        //         var inputs = new dynamic[]
-        //             {
-        //                 input1,
-        //                 input2,
-        //                 input3,
-        //                 input4,
-        //                 input5
-        //             };
+                var inputs = new dynamic[]
+                    {
+                        input1,
+                        input2,
+                        input3,
+                        input4,
+                        input5
+                    };
 
-        //         return inputs;
-        //     }
+                return inputs;
+            }
 
-        //     [ExcludeFromCodeCoverage]
-        //     public class TestInstanceUtils
-        //     {
-        //         public bool CheckExists(string str)
-        //         {
-        //             if (!string.IsNullOrEmpty(str))
-        //             {
-        //                 return true;
-        //             }
+            [ExcludeFromCodeCoverage]
+            public class TestInstanceUtils
+            {
+                public bool CheckExists(string str)
+                {
+                    if (!string.IsNullOrEmpty(str))
+                    {
+                        return true;
+                    }
 
-        //             return false;
-        //         }
+                    return false;
+                }
 
-        //     }
-        //     [ExcludeFromCodeCoverage]
-        //     public class RuleTestClass
-        //     {
-        //         [JsonProperty("country")]
-        //         public string Country { get; set; }
+            }
+            [ExcludeFromCodeCoverage]
+            public class RuleTestClass
+            {
+                [JsonProperty("country")]
+                public string Country { get; set; }
 
-        //         [JsonProperty("loyaltyFactor")]
-        //         public int loyaltyFactor { get; set; }
-        //         public int TotalPurchasesToDate { get; set; }
-        //     }
+                [JsonProperty("loyaltyFactor")]
+                public int loyaltyFactor { get; set; }
+                public int TotalPurchasesToDate { get; set; }
+            }
 
     }
 }

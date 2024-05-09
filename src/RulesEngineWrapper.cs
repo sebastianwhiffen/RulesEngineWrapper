@@ -32,15 +32,15 @@ public class RulesEngineWrapper : IRulesEngineWrapper
 
     public async Task<bool> RemoveWorkflow(params string[] workflowNames) => await _mediator.Send(new RemoveWorkflowCommand(workflowNames));
 
-    public async Task<bool> AddOrUpdateWorkflow(params Workflow[] Workflows) => await _mediator.Send(new AddOrUpdateWorkflowCommand(Workflows));
+    public async Task<bool> AddOrUpdateWorkflow(params Workflow[] Workflows) => await _mediator.Send(new AddOrUpdateWorkflowCommand(_rulesEngine, Workflows));
 
     public async Task<bool> AddWorkflow(params Workflow[] Workflows) => await _mediator.Send(new AddWorkflowCommand(Workflows));
 
     public async Task<IEnumerable<string>> GetAllWorkflowNames() => await _mediator.Send(new GetAllWorkflowNamesQuery());
 
-    public async ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params object[] inputs) => await _mediator.Send(new ExecuteAllRulesCommand(workflowName, inputs));
+    public async ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params object[] inputs) => await _mediator.Send(new ExecuteAllRulesCommand(_rulesEngine, workflowName, inputs));
 
-    public async ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params RuleParameter[] ruleParams) => await _mediator.Send(new ExecuteAllRulesCommand(workflowName, ruleParams));
+    public async ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params RuleParameter[] ruleParams) => await _mediator.Send(new ExecuteAllRulesCommand(_rulesEngine, workflowName, ruleParams));
 
     public async ValueTask<ActionRuleResult> ExecuteActionWorkflowAsync(string workflowName, string ruleName, RuleParameter[] ruleParameters) => await _mediator.Send(new ExecuteActionWorkflowCommand(workflowName, ruleName, ruleParameters));
 }

@@ -2,9 +2,10 @@ namespace RulesEngineWrapper.presentation;
 
 using global::RulesEngineWrapper.Domain;
 using MediatR;
+using RulesEngine.Interfaces;
 using RulesEngine.Models;
 
-public record AddOrUpdateWorkflowCommand(IEnumerable<Workflow> Workflows) : IRequest<bool>;
+public record AddOrUpdateWorkflowCommand(IRulesEngine RulesEngine, IEnumerable<Workflow> Workflows) : IRequest<bool>;
 
 public class AddOrUpdateWorkflowCommandHandler
     : IRequestHandler<AddOrUpdateWorkflowCommand, bool>
@@ -23,6 +24,8 @@ public class AddOrUpdateWorkflowCommandHandler
 
     public async Task<bool> Handle(AddOrUpdateWorkflowCommand message, CancellationToken cancellationToken)
     {
+        message.RulesEngine.AddOrUpdateWorkflow(message.Workflows.ToArray());
+
         foreach (Workflow workflow in message.Workflows)
         {
             var workflowEntity = await _workflowRepository.FindAsync(workflow.WorkflowName);
