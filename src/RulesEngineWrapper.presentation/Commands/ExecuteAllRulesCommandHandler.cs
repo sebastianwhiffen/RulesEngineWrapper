@@ -30,11 +30,8 @@ public class ExecuteAllRulesCommand() : IRequest<List<RuleResultTree>>
 
 public class ExecuteAllRulesCommandHandler : IRequestHandler<ExecuteAllRulesCommand, List<RuleResultTree>>
 {
-    private readonly IRulesEngineWrapper _rulesEngineWrapper;
-
-    public ExecuteAllRulesCommandHandler(IRulesEngineWrapper rulesEngineWrapper)
+    public ExecuteAllRulesCommandHandler()
     {
-        _rulesEngineWrapper = rulesEngineWrapper;
     }
 
     public async Task<List<RuleResultTree>> Handle(ExecuteAllRulesCommand request, CancellationToken cancellationToken)

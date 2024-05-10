@@ -18,15 +18,12 @@ public class RulesEngineWrapper : IRulesEngineWrapper
         _mediator = mediator;
     }
 
-    public RulesEngineWrapper(IEnumerable<Workflow> workflows, RulesEngineWrapperOptions options, IMediator mediator)
+    public RulesEngineWrapper(RulesEngineWrapperOptions options, IMediator mediator)
         : this(options.reSettings, mediator)
     {
         //collection params coming soon I hope...
-        AddOrUpdateWorkflow(workflows.ToArray()).GetAwaiter().GetResult();
+        // AddOrUpdateWorkflow(workflows.ToArray()).GetAwaiter().GetResult();
     }
-
-    public RulesEngineWrapper(IEnumerable<WorkflowEntity> workflows, RulesEngineWrapperOptions options, IMediator mediator)
-        : this(workflows.ToWorkflows(), options, mediator) { }
 
     #endregion
 

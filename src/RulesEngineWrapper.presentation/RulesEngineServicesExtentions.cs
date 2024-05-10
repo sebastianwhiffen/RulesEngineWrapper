@@ -50,8 +50,7 @@ public static class RuleEngineServicesExtensions
 
             if (options.WrapperDbEnsureCreated) dbContext.Database.EnsureCreated();
 
-            var workflows = dbContext.Workflows.Include(w => w.Rules);
-            return ActivatorUtilities.CreateInstance<RulesEngineWrapper>(p, workflows, options, mediator);
+            return ActivatorUtilities.CreateInstance<RulesEngineWrapper>(p, options, mediator);
         });
 
         return services;
