@@ -12,6 +12,8 @@ using System.Runtime.CompilerServices;
 using Microsoft.Extensions.DependencyInjection;
 using RulesEngine.Exceptions;
 using Microsoft.EntityFrameworkCore;
+using DotNet.Testcontainers.Containers;
+using RulesEngineWrapper.presentation;
 
 namespace RulesEngineWrapper.UnitTest
 {
@@ -44,34 +46,32 @@ namespace RulesEngineWrapper.UnitTest
             Assert.Contains(result, c => c.IsSuccess);
         }
 
-        public static IEnumerable<object[]> RulesEngineWrappers(params string?[] files)
+        public static IEnumerable<object[]> RulesEngineWrappers(RulesEngineWrapperOptions options, params string?[] files)
         {
-            if (files == null || files.Length == 0)
-            {
-                // No files provided, return default IRulesEngineWrapper instances
-                return TestContainersFixture._containers.Select(container =>
-                    new object[] { _factory.Create(container).BuildServiceProvider().GetRequiredService<IRulesEngineWrapper>() });
-            }
-            else
-            {
-                // Files provided, return IRulesEngineWrapper instances modified according to the files
-                return TestContainersFixture._containers.SelectMany(
-                    container => files.Select(
-                        file => new Func<IRulesEngineWrapper, IRulesEngineWrapper>(
-                            engine =>
-                            {
-                                engine.AddOrUpdateWorkflow(JsonConvert.DeserializeObject<Workflow>(GetFileContent(file)));
-                                return engine;
-                            }
-                        )
-                    ),
-                    (container, modifyEngine) => new object[]
+            return TestContainersFixture._containers.SelectMany(container =>
+                (files.Length == 0 ? new string?[] { null } : files).Select(file =>
+                {
+                    var serviceCollection = _factory.Create(container);
+                    var optionsAction = _factory._optionsConfigurators[container.Image.Name](container);
+                    optionsAction(options);
+                    serviceCollection.Configure<RulesEngineWrapperOptions>(opts =>
                     {
-                    modifyEngine(_factory.Create(container).BuildServiceProvider().GetRequiredService<IRulesEngineWrapper>())
+                        opts.DbContextOptionsAction = options.DbContextOptionsAction;
+                        opts.WrapperDbEnsureCreated = options.WrapperDbEnsureCreated;
+                        opts.reSettings.UseFastExpressionCompiler = options.reSettings.UseFastExpressionCompiler;
+                    });
+                    var engine = serviceCollection.BuildServiceProvider().GetRequiredService<IRulesEngineWrapper>();
+
+                    if (file != null)
+                    {
+                        engine.AddOrUpdateWorkflow(JsonConvert.DeserializeObject<Workflow>(GetFileContent(file)));
                     }
-                );
-            }
+                    return new object[] { engine };
+                })
+            );
         }
+
+
 
         private static string GetFileContent(string filename, [CallerFilePath] string sourceFilePath = "")
         {
@@ -356,220 +356,220 @@ namespace RulesEngineWrapper.UnitTest
             Assert.Contains(result, c => c.IsSuccess);
         }
 
-        //     [Theory]
-        //     [InlineData("rules4.json", true)]
-        //     [InlineData("rules4.json", false)]
-        //     public async Task RulesEngine_Execute_Rule_For_Nested_Rule_Params_Returns_Success(string ruleFileName, bool fastExpressionEnabled)
+        // [Theory]
+        // [InlineData("rules4.json", true)]
+        // [InlineData("rules4.json", false)]
+        // public async Task RulesEngine_Execute_Rule_For_Nested_Rule_Params_Returns_Success(string ruleFileName, bool fastExpressionEnabled)
+        // {
+        //     var inputs = GetInputs4();
+
+        //     var ruleParams = new List<RuleParameter>();
+
+        //     for (var i = 0; i < inputs.Length; i++)
         //     {
-        //         var inputs = GetInputs4();
-
-        //         var ruleParams = new List<RuleParameter>();
-
-        //         for (var i = 0; i < inputs.Length; i++)
-        //         {
-        //             var input = inputs[i];
-        //             var obj = Utils.GetTypedObject(input);
-        //             ruleParams.Add(new RuleParameter($"input{i + 1}", obj));
-        //         }
-
-        //         var directory = GetSourceDirectory();
-        //         var files = Directory.GetFiles(directory, ruleFileName, SearchOption.AllDirectories);
-
-        //         if (files == null || files.Length == 0)
-        //         {
-        //             throw new Exception("Rules not found.");
-        //         }
-
-        //         var fileData = File.ReadAllText(files[0]);
-        //         var bre = new RulesEngineWrapper(JsonConvert.DeserializeObject<Workflow[]>(fileData), new ReSettings
-        //         {
-        //             UseFastExpressionCompiler = fastExpressionEnabled
-        //         });
-        //         var result = await bre.ExecuteAllRulesAsync("inputWorkflow", ruleParams?.ToArray());
-        //         var ruleResult = result?.FirstOrDefault(r => string.Equals(r.Rule.RuleName, "GiveDiscount10", StringComparison.OrdinalIgnoreCase));
-        //         Assert.True(ruleResult.IsSuccess);
+        //         var input = inputs[i];
+        //         var obj = Utils.GetTypedObject(input);
+        //         ruleParams.Add(new RuleParameter($"input{i + 1}", obj));
         //     }
 
-        //     [Theory]
-        //     [InlineData("rules2.json")]
-        //     public async Task ExecuteRule_ReturnsProperErrorOnMissingRuleParameter(string ruleFileName)
+        //     var directory = GetSourceDirectory();
+        //     var files = Directory.GetFiles(directory, ruleFileName, SearchOption.AllDirectories);
+
+        //     if (files == null || files.Length == 0)
         //     {
-        //         var re = GetRulesEngine(ruleFileName);
-
-        //         var input1 = new RuleParameter("customName", GetInput1());
-        //         var input2 = new RuleParameter("input2", GetInput2());
-        //         var input3 = new RuleParameter("input3", GetInput3());
-
-        //         var result = await re.ExecuteAllRulesAsync("inputWorkflow", input1, input2, input3);
-        //         Assert.NotNull(result);
-        //         Assert.IsType<List<RuleResultTree>>(result);
-        //         Assert.Contains(result.First().ChildResults, c => c.ExceptionMessage.Contains("Unknown identifier 'input1'"));
+        //         throw new Exception("Rules not found.");
         //     }
 
-        //     [Theory]
-        //     [InlineData("rules5.json", "hello", true)]
-        //     [InlineData("rules5.json", null, false)]
-        //     public async Task ExecuteRule_WithInjectedUtils_ReturnsListOfRuleResultTree(string ruleFileName, string propValue, bool expectedResult)
+        //     var fileData = File.ReadAllText(files[0]);
+        //     var bre = new RulesEngineWrapper(JsonConvert.DeserializeObject<Workflow[]>(fileData), new ReSettings
         //     {
-        //         var re = GetRulesEngine(ruleFileName);
+        //         UseFastExpressionCompiler = fastExpressionEnabled
+        //     });
+        //     var result = await bre.ExecuteAllRulesAsync("inputWorkflow", ruleParams?.ToArray());
+        //     var ruleResult = result?.FirstOrDefault(r => string.Equals(r.Rule.RuleName, "GiveDiscount10", StringComparison.OrdinalIgnoreCase));
+        //     Assert.True(ruleResult.IsSuccess);
+        // }
 
-        //         dynamic input1 = new ExpandoObject();
+        // [Theory]
+        // [InlineData("rules2.json")]
+        // public async Task ExecuteRule_ReturnsProperErrorOnMissingRuleParameter(string ruleFileName)
+        // {
+        //     var re = GetRulesEngine(ruleFileName);
 
-        //         input1.Property1 = propValue;
+        //     var input1 = new RuleParameter("customName", GetInput1());
+        //     var input2 = new RuleParameter("input2", GetInput2());
+        //     var input3 = new RuleParameter("input3", GetInput3());
+
+        //     var result = await re.ExecuteAllRulesAsync("inputWorkflow", input1, input2, input3);
+        //     Assert.NotNull(result);
+        //     Assert.IsType<List<RuleResultTree>>(result);
+        //     Assert.Contains(result.First().ChildResults, c => c.ExceptionMessage.Contains("Unknown identifier 'input1'"));
+        // }
+
+        // [Theory]
+        // [InlineData("rules5.json", "hello", true)]
+        // [InlineData("rules5.json", null, false)]
+        // public async Task ExecuteRule_WithInjectedUtils_ReturnsListOfRuleResultTree(string ruleFileName, string propValue, bool expectedResult)
+        // {
+        //     var re = GetRulesEngine(ruleFileName);
+
+        //     dynamic input1 = new ExpandoObject();
+
+        //     input1.Property1 = propValue;
 
 
-        //         var utils = new TestInstanceUtils();
+        //     var utils = new TestInstanceUtils();
 
-        //         var result = await re.ExecuteAllRulesAsync("inputWorkflow", new RuleParameter("input1", input1), new RuleParameter("utils", utils));
-        //         Assert.NotNull(result);
-        //         Assert.IsType<List<RuleResultTree>>(result);
-        //         Assert.All(result, c => Assert.Equal(expectedResult, c.IsSuccess));
-        //     }
+        //     var result = await re.ExecuteAllRulesAsync("inputWorkflow", new RuleParameter("input1", input1), new RuleParameter("utils", utils));
+        //     Assert.NotNull(result);
+        //     Assert.IsType<List<RuleResultTree>>(result);
+        //     Assert.All(result, c => Assert.Equal(expectedResult, c.IsSuccess));
+        // }
 
-        //     [Theory]
-        //     [InlineData("rules6.json")]
-        //     public async Task ExecuteRule_RuleWithMethodExpression_ReturnsSucess(string ruleFileName)
+        // [Theory]
+        // [InlineData("rules6.json")]
+        // public async Task ExecuteRule_RuleWithMethodExpression_ReturnsSucess(string ruleFileName)
+        // {
+        //     Func<bool> func = () => true;
+
+        //     var re = GetRulesEngine(ruleFileName, new ReSettings
         //     {
-        //         Func<bool> func = () => true;
+        //         CustomTypes = new[] { typeof(Func<bool>) }
+        //     });
 
-        //         var re = GetRulesEngine(ruleFileName, new ReSettings
-        //         {
-        //             CustomTypes = new[] { typeof(Func<bool>) }
-        //         });
+        //     dynamic input1 = new ExpandoObject();
+        //     input1.Property1 = "hello";
+        //     input1.Boolean = false;
+        //     input1.Method = func;
 
-        //         dynamic input1 = new ExpandoObject();
-        //         input1.Property1 = "hello";
-        //         input1.Boolean = false;
-        //         input1.Method = func;
+        //     var utils = new TestInstanceUtils();
 
-        //         var utils = new TestInstanceUtils();
+        //     var result = await re.ExecuteAllRulesAsync("inputWorkflow", new RuleParameter("input1", input1));
+        //     Assert.NotNull(result);
+        //     Assert.IsType<List<RuleResultTree>>(result);
+        //     Assert.All(result, c => Assert.True(c.IsSuccess));
+        // }
 
+        // [Theory]
+        // [InlineData("rules7.json")]
+        // public async Task ExecuteRule_RuleWithUnaryExpression_ReturnsSucess(string ruleFileName)
+        // {
+        //     var re = GetRulesEngine(ruleFileName);
+
+        //     dynamic input1 = new ExpandoObject();
+        //     input1.Boolean = false;
+
+        //     var utils = new TestInstanceUtils();
+
+        //     var result = await re.ExecuteAllRulesAsync("inputWorkflow", new RuleParameter("input1", input1));
+        //     Assert.NotNull(result);
+        //     Assert.IsType<List<RuleResultTree>>(result);
+        //     Assert.All(result, c => Assert.True(c.IsSuccess));
+        // }
+
+        // [Theory]
+        // [InlineData("rules8.json")]
+        // public async Task ExecuteRule_RuleWithMemberAccessExpression_ReturnsSucess(string ruleFileName)
+        // {
+        //     var re = GetRulesEngine(ruleFileName);
+
+        //     dynamic input1 = new ExpandoObject();
+        //     input1.Boolean = false;
+
+        //     var utils = new TestInstanceUtils();
+
+        //     var result = await re.ExecuteAllRulesAsync("inputWorkflow", new RuleParameter("input1", input1));
+        //     Assert.NotNull(result);
+        //     Assert.IsType<List<RuleResultTree>>(result);
+        //     Assert.All(result, c => Assert.False(c.IsSuccess));
+        // }
+
+        // [Theory]
+        // [InlineData("rules9.json")]
+        // public async Task ExecuteRule_MissingMethodInExpression_ReturnsException(string ruleFileName)
+        // {
+        //     var re = GetRulesEngine(ruleFileName, new ReSettings() { EnableExceptionAsErrorMessage = false });
+
+        //     dynamic input1 = new ExpandoObject();
+        //     input1.Data = new { TestProperty = "" };
+        //     input1.Boolean = false;
+
+        //     var utils = new TestInstanceUtils();
+
+        //     await Assert.ThrowsAsync<RuleException>(async () =>
+        //     {
         //         var result = await re.ExecuteAllRulesAsync("inputWorkflow", new RuleParameter("input1", input1));
-        //         Assert.NotNull(result);
-        //         Assert.IsType<List<RuleResultTree>>(result);
-        //         Assert.All(result, c => Assert.True(c.IsSuccess));
-        //     }
+        //     });
+        // }
 
-        //     [Theory]
-        //     [InlineData("rules7.json")]
-        //     public async Task ExecuteRule_RuleWithUnaryExpression_ReturnsSucess(string ruleFileName)
+        // [Theory]
+        // [InlineData("rules9.json")]
+        // public async Task ExecuteRule_CompilationException_ReturnsAsErrorMessage(string ruleFileName)
+        // {
+        //     var re = GetRulesEngine(ruleFileName, new ReSettings() { EnableExceptionAsErrorMessage = true });
+
+        //     dynamic input1 = new ExpandoObject();
+        //     input1.Data = new { TestProperty = "" };
+        //     input1.Boolean = false;
+
+        //     var utils = new TestInstanceUtils();
+        //     var result = await re.ExecuteAllRulesAsync("inputWorkflow", new RuleParameter("input1", input1));
+
+        //     Assert.NotNull(result);
+        //     Assert.StartsWith("Exception while parsing expression", result[1].ExceptionMessage);
+        // }
+
+        // [Theory]
+        // [InlineData("rules9.json")]
+        // public async Task ExecuteRuleWithIgnoreException_CompilationException_DoesNotReturnsAsErrorMessage(string ruleFileName)
+        // {
+        //     var re = GetRulesEngine(ruleFileName, new ReSettings() { EnableExceptionAsErrorMessage = true, IgnoreException = true });
+
+        //     dynamic input1 = new ExpandoObject();
+        //     input1.Data = new { TestProperty = "" };
+        //     input1.Boolean = false;
+
+        //     var utils = new TestInstanceUtils();
+        //     var result = await re.ExecuteAllRulesAsync("inputWorkflow", new RuleParameter("input1", input1));
+
+        //     Assert.NotNull(result);
+        //     Assert.False(result[1].ExceptionMessage.StartsWith("Exception while parsing expression"));
+        // }
+
+
+        // [Theory]
+        // [InlineData("rules10.json")]
+        // public async Task ExecuteRuleWithJsonElement(string ruleFileName)
+        // {
+        //     var re = GetRulesEngine(ruleFileName, new ReSettings()
         //     {
-        //         var re = GetRulesEngine(ruleFileName);
+        //         EnableExceptionAsErrorMessage = true,
+        //         CustomTypes = new Type[] { typeof(System.Text.Json.JsonElement) }
 
-        //         dynamic input1 = new ExpandoObject();
-        //         input1.Boolean = false;
+        //     });
 
-        //         var utils = new TestInstanceUtils();
-
-        //         var result = await re.ExecuteAllRulesAsync("inputWorkflow", new RuleParameter("input1", input1));
-        //         Assert.NotNull(result);
-        //         Assert.IsType<List<RuleResultTree>>(result);
-        //         Assert.All(result, c => Assert.True(c.IsSuccess));
-        //     }
-
-        //     [Theory]
-        //     [InlineData("rules8.json")]
-        //     public async Task ExecuteRule_RuleWithMemberAccessExpression_ReturnsSucess(string ruleFileName)
+        //     var input1 = new
         //     {
-        //         var re = GetRulesEngine(ruleFileName);
-
-        //         dynamic input1 = new ExpandoObject();
-        //         input1.Boolean = false;
-
-        //         var utils = new TestInstanceUtils();
-
-        //         var result = await re.ExecuteAllRulesAsync("inputWorkflow", new RuleParameter("input1", input1));
-        //         Assert.NotNull(result);
-        //         Assert.IsType<List<RuleResultTree>>(result);
-        //         Assert.All(result, c => Assert.False(c.IsSuccess));
-        //     }
-
-        //     [Theory]
-        //     [InlineData("rules9.json")]
-        //     public async Task ExecuteRule_MissingMethodInExpression_ReturnsException(string ruleFileName)
-        //     {
-        //         var re = GetRulesEngine(ruleFileName, new ReSettings() { EnableExceptionAsErrorMessage = false });
-
-        //         dynamic input1 = new ExpandoObject();
-        //         input1.Data = new { TestProperty = "" };
-        //         input1.Boolean = false;
-
-        //         var utils = new TestInstanceUtils();
-
-        //         await Assert.ThrowsAsync<RuleException>(async () =>
+        //         Data = System.Text.Json.JsonSerializer.SerializeToElement(new
         //         {
-        //             var result = await re.ExecuteAllRulesAsync("inputWorkflow", new RuleParameter("input1", input1));
-        //         });
-        //     }
+        //             category = "abc"
+        //         })
+        //     };
 
-        //     [Theory]
-        //     [InlineData("rules9.json")]
-        //     public async Task ExecuteRule_CompilationException_ReturnsAsErrorMessage(string ruleFileName)
-        //     {
-        //         var re = GetRulesEngine(ruleFileName, new ReSettings() { EnableExceptionAsErrorMessage = true });
+        //     var result = await re.ExecuteAllRulesAsync("inputWorkflow", new RuleParameter("input1", input1));
 
-        //         dynamic input1 = new ExpandoObject();
-        //         input1.Data = new { TestProperty = "" };
-        //         input1.Boolean = false;
+        //     Assert.NotNull(result);
+        //     Assert.All(result, c => Assert.True(c.IsSuccess));
+        // }
 
-        //         var utils = new TestInstanceUtils();
-        //         var result = await re.ExecuteAllRulesAsync("inputWorkflow", new RuleParameter("input1", input1));
+        // [Theory]
+        // [InlineData("rules11.json")]
+        // public async Task RulesEngineWithGlobalParam_RunsSuccessfully(string ruleFileName)
+        // {
 
-        //         Assert.NotNull(result);
-        //         Assert.StartsWith("Exception while parsing expression", result[1].ExceptionMessage);
-        //     }
+        //     var re = GetRulesEngine(ruleFileName, new ReSettings() { });
 
-        //     [Theory]
-        //     [InlineData("rules9.json")]
-        //     public async Task ExecuteRuleWithIgnoreException_CompilationException_DoesNotReturnsAsErrorMessage(string ruleFileName)
-        //     {
-        //         var re = GetRulesEngine(ruleFileName, new ReSettings() { EnableExceptionAsErrorMessage = true, IgnoreException = true });
-
-        //         dynamic input1 = new ExpandoObject();
-        //         input1.Data = new { TestProperty = "" };
-        //         input1.Boolean = false;
-
-        //         var utils = new TestInstanceUtils();
-        //         var result = await re.ExecuteAllRulesAsync("inputWorkflow", new RuleParameter("input1", input1));
-
-        //         Assert.NotNull(result);
-        //         Assert.False(result[1].ExceptionMessage.StartsWith("Exception while parsing expression"));
-        //     }
-
-
-        //     [Theory]
-        //     [InlineData("rules10.json")]
-        //     public async Task ExecuteRuleWithJsonElement(string ruleFileName)
-        //     {
-        //         var re = GetRulesEngine(ruleFileName, new ReSettings()
-        //         {
-        //             EnableExceptionAsErrorMessage = true,
-        //             CustomTypes = new Type[] { typeof(System.Text.Json.JsonElement) }
-
-        //         });
-
-        //         var input1 = new
-        //         {
-        //             Data = System.Text.Json.JsonSerializer.SerializeToElement(new
-        //             {
-        //                 category = "abc"
-        //             })
-        //         };
-
-        //         var result = await re.ExecuteAllRulesAsync("inputWorkflow", new RuleParameter("input1", input1));
-
-        //         Assert.NotNull(result);
-        //         Assert.All(result, c => Assert.True(c.IsSuccess));
-        //     }
-
-        //     [Theory]
-        //     [InlineData("rules11.json")]
-        //     public async Task RulesEngineWithGlobalParam_RunsSuccessfully(string ruleFileName)
-        //     {
-
-        //         var re = GetRulesEngine(ruleFileName, new ReSettings() { });
-
-        //         var input1 = new[] {
+        //     var input1 = new[] {
         //         new {
         //             Value= 0.13259286,
         //             ChangeDateTime= "2023-07-28T19:57:07.432339Z"
@@ -828,111 +828,111 @@ namespace RulesEngineWrapper.UnitTest
         //         }
         //    }.ToList();
 
-        //         var result = await re.ExecuteAllRulesAsync("MyWorkflow", new RuleParameter("input1", input1));
+        //     var result = await re.ExecuteAllRulesAsync("MyWorkflow", new RuleParameter("input1", input1));
 
-        //         Assert.NotNull(result);
-        //         Assert.False(result[0].IsSuccess);
-        //         Assert.True(result[1].IsSuccess);
-        //     }
+        //     Assert.NotNull(result);
+        //     Assert.False(result[0].IsSuccess);
+        //     Assert.True(result[1].IsSuccess);
+        // }
 
 
 
-        //     [Fact]
-        //     public async Task ExecuteRule_RuntimeError_ShouldReturnAsErrorMessage()
+        // [Fact]
+        // public async Task ExecuteRule_RuntimeError_ShouldReturnAsErrorMessage()
+        // {
+
+        //     var workflow = new Workflow
         //     {
-
-        //         var workflow = new Workflow
-        //         {
-        //             WorkflowName = "TestWorkflow",
-        //             Rules = new[] {
+        //         WorkflowName = "TestWorkflow",
+        //         Rules = new[] {
         //                 new Rule {
         //                     RuleName = "ruleWithRuntimeError",
         //                     Expression = "input1.Country.ToLower() == \"india\""
         //                 }
         //             }
-        //         };
+        //     };
 
-        //         var re = new RulesEngineWrapper(new[] { workflow }, null);
-        //         var input = new RuleTestClass
-        //         {
-        //             Country = null
-        //         };
-
-        //         var result = await re.ExecuteAllRulesAsync("TestWorkflow", input);
-
-        //         Assert.NotNull(result);
-        //         Assert.All(result, rule => Assert.False(rule.IsSuccess));
-        //         Assert.All(result, rule => Assert.StartsWith("Error while executing rule :", rule.ExceptionMessage));
-        //     }
-
-
-        //     [Fact]
-        //     public async Task ExecuteRule_RuntimeError_ThrowsException()
+        //     var re = new RulesEngineWrapper(new[] { workflow }, null);
+        //     var input = new RuleTestClass
         //     {
+        //         Country = null
+        //     };
 
-        //         var workflow = new Workflow
-        //         {
-        //             WorkflowName = "TestWorkflow",
-        //             Rules = new[] {
+        //     var result = await re.ExecuteAllRulesAsync("TestWorkflow", input);
+
+        //     Assert.NotNull(result);
+        //     Assert.All(result, rule => Assert.False(rule.IsSuccess));
+        //     Assert.All(result, rule => Assert.StartsWith("Error while executing rule :", rule.ExceptionMessage));
+        // }
+
+
+        // [Fact]
+        // public async Task ExecuteRule_RuntimeError_ThrowsException()
+        // {
+
+        //     var workflow = new Workflow
+        //     {
+        //         WorkflowName = "TestWorkflow",
+        //         Rules = new[] {
         //                 new Rule {
         //                     RuleName = "ruleWithRuntimeError",
         //                     Expression = "input1.Country.ToLower() == \"india\""
         //                 }
         //             }
-        //         };
+        //     };
 
-        //         var re = new RulesEngineWrapper(new[] { workflow }, new ReSettings
-        //         {
-        //             EnableExceptionAsErrorMessage = false
-        //         });
-        //         var input = new RuleTestClass
-        //         {
-        //             Country = null
-        //         };
-
-        //         _ = await Assert.ThrowsAsync<RuleException>(async () => await re.ExecuteAllRulesAsync("TestWorkflow", input));
-
-        //     }
-
-        //     [Fact]
-        //     public async Task ExecuteRule_RuntimeError_IgnoreException_DoesNotReturnException()
+        //     var re = new RulesEngineWrapper(new[] { workflow }, new ReSettings
         //     {
+        //         EnableExceptionAsErrorMessage = false
+        //     });
+        //     var input = new RuleTestClass
+        //     {
+        //         Country = null
+        //     };
 
-        //         var workflow = new Workflow
-        //         {
-        //             WorkflowName = "TestWorkflow",
-        //             Rules = new[] {
+        //     _ = await Assert.ThrowsAsync<RuleException>(async () => await re.ExecuteAllRulesAsync("TestWorkflow", input));
+
+        // }
+
+        // [Fact]
+        // public async Task ExecuteRule_RuntimeError_IgnoreException_DoesNotReturnException()
+        // {
+
+        //     var workflow = new Workflow
+        //     {
+        //         WorkflowName = "TestWorkflow",
+        //         Rules = new[] {
         //                 new Rule {
         //                     RuleName = "ruleWithRuntimeError",
         //                     Expression = "input1.Country.ToLower() == \"india\""
         //                 }
         //             }
-        //         };
+        //     };
 
-        //         var re = new RulesEngineWrapper(new[] { workflow }, new ReSettings
-        //         {
-        //             IgnoreException = true
-        //         });
-        //         var input = new RuleTestClass
-        //         {
-        //             Country = null
-        //         };
-
-        //         var result = await re.ExecuteAllRulesAsync("TestWorkflow", input);
-
-        //         Assert.NotNull(result);
-        //         Assert.All(result, rule => Assert.False(rule.IsSuccess));
-        //         Assert.All(result, rule => Assert.Empty(rule.ExceptionMessage));
-        //     }
-
-
-        //     [Fact]
-        //     public async Task RemoveWorkFlow_ShouldRemoveAllCompiledCache()
+        //     var re = new RulesEngineWrapper(new[] { workflow }, new ReSettings
         //     {
-        //         var workflow = new Workflow
-        //         {
-        //             WorkflowName = "Test",
-        //             Rules = new Rule[]{
+        //         IgnoreException = true
+        //     });
+        //     var input = new RuleTestClass
+        //     {
+        //         Country = null
+        //     };
+
+        //     var result = await re.ExecuteAllRulesAsync("TestWorkflow", input);
+
+        //     Assert.NotNull(result);
+        //     Assert.All(result, rule => Assert.False(rule.IsSuccess));
+        //     Assert.All(result, rule => Assert.Empty(rule.ExceptionMessage));
+        // }
+
+
+        // [Fact]
+        // public async Task RemoveWorkFlow_ShouldRemoveAllCompiledCache()
+        // {
+        //     var workflow = new Workflow
+        //     {
+        //         WorkflowName = "Test",
+        //         Rules = new Rule[]{
         //                 new Rule {
         //                     RuleName = "RuleWithLocalParam",
         //                     LocalParams = new List<LocalParam> {
@@ -945,29 +945,29 @@ namespace RulesEngineWrapper.UnitTest
         //                     Expression = "lp1 ==  true"
         //                 }
         //             }
-        //         };
+        //     };
 
-        //         var re = new RulesEngineWrapper();
-        //         re.AddWorkflow(workflow);
+        //     var re = new RulesEngineWrapper();
+        //     re.AddWorkflow(workflow);
 
-        //         var result1 = await re.ExecuteAllRulesAsync("Test", "hello");
-        //         Assert.True(result1.All(c => c.IsSuccess));
+        //     var result1 = await re.ExecuteAllRulesAsync("Test", "hello");
+        //     Assert.True(result1.All(c => c.IsSuccess));
 
-        //         re.RemoveWorkflow("Test");
-        //         workflow.Rules.First().LocalParams.First().Expression = "false";
+        //     re.RemoveWorkflow("Test");
+        //     workflow.Rules.First().LocalParams.First().Expression = "false";
 
-        //         re.AddWorkflow(workflow);
-        //         var result2 = await re.ExecuteAllRulesAsync("Test", "hello");
-        //         Assert.True(result2.All(c => c.IsSuccess == false));
-        //     }
+        //     re.AddWorkflow(workflow);
+        //     var result2 = await re.ExecuteAllRulesAsync("Test", "hello");
+        //     Assert.True(result2.All(c => c.IsSuccess == false));
+        // }
 
-        //     [Fact]
-        //     public async Task ClearWorkFlow_ShouldRemoveAllCompiledCache()
+        // [Fact]
+        // public async Task ClearWorkFlow_ShouldRemoveAllCompiledCache()
+        // {
+        //     var workflow = new Workflow
         //     {
-        //         var workflow = new Workflow
-        //         {
-        //             WorkflowName = "Test",
-        //             Rules = new Rule[]{
+        //         WorkflowName = "Test",
+        //         Rules = new Rule[]{
         //                 new Rule {
         //                     RuleName = "RuleWithLocalParam",
         //                     LocalParams = new LocalParam[] {
@@ -980,29 +980,29 @@ namespace RulesEngineWrapper.UnitTest
         //                     Expression = "lp1 ==  true"
         //                 }
         //             }
-        //         };
+        //     };
 
-        //         var re = new RulesEngineWrapper();
-        //         re.AddWorkflow(workflow);
+        //     var re = new RulesEngineWrapper();
+        //     re.AddWorkflow(workflow);
 
-        //         var result1 = await re.ExecuteAllRulesAsync("Test", "hello");
-        //         Assert.True(result1.All(c => c.IsSuccess));
+        //     var result1 = await re.ExecuteAllRulesAsync("Test", "hello");
+        //     Assert.True(result1.All(c => c.IsSuccess));
 
-        //         re.ClearWorkflows();
-        //         workflow.Rules.First().LocalParams.First().Expression = "false";
+        //     re.ClearWorkflows();
+        //     workflow.Rules.First().LocalParams.First().Expression = "false";
 
-        //         re.AddWorkflow(workflow);
-        //         var result2 = await re.ExecuteAllRulesAsync("Test", "hello");
-        //         Assert.True(result2.All(c => c.IsSuccess == false));
-        //     }
+        //     re.AddWorkflow(workflow);
+        //     var result2 = await re.ExecuteAllRulesAsync("Test", "hello");
+        //     Assert.True(result2.All(c => c.IsSuccess == false));
+        // }
 
-        //     [Fact]
-        //     public async Task ExecuteRule_WithNullInput_ShouldNotThrowException()
+        // [Fact]
+        // public async Task ExecuteRule_WithNullInput_ShouldNotThrowException()
+        // {
+        //     var workflow = new Workflow
         //     {
-        //         var workflow = new Workflow
-        //         {
-        //             WorkflowName = "Test",
-        //             Rules = new Rule[]{
+        //         WorkflowName = "Test",
+        //         Rules = new Rule[]{
         //                 new Rule {
         //                     RuleName = "RuleWithLocalParam",
 
@@ -1010,34 +1010,34 @@ namespace RulesEngineWrapper.UnitTest
         //                     Expression = "input1 == null || input1.hello.world = \"wow\""
         //                 }
         //             }
-        //         };
+        //     };
 
-        //         var re = new RulesEngineWrapper();
-        //         re.AddWorkflow(workflow);
+        //     var re = new RulesEngineWrapper();
+        //     re.AddWorkflow(workflow);
 
-        //         var result1 = await re.ExecuteAllRulesAsync("Test", new RuleParameter("input1", value: null));
-        //         Assert.True(result1.All(c => c.IsSuccess));
+        //     var result1 = await re.ExecuteAllRulesAsync("Test", new RuleParameter("input1", value: null));
+        //     Assert.True(result1.All(c => c.IsSuccess));
 
 
-        //         var result2 = await re.ExecuteAllRulesAsync("Test", new object[] { null });
-        //         Assert.True(result2.All(c => c.IsSuccess));
+        //     var result2 = await re.ExecuteAllRulesAsync("Test", new object[] { null });
+        //     Assert.True(result2.All(c => c.IsSuccess));
 
-        //         dynamic input1 = new ExpandoObject();
-        //         input1.hello = new ExpandoObject();
-        //         input1.hello.world = "wow";
+        //     dynamic input1 = new ExpandoObject();
+        //     input1.hello = new ExpandoObject();
+        //     input1.hello.world = "wow";
 
-        //         List<RuleResultTree> result3 = await re.ExecuteAllRulesAsync("Test", input1);
-        //         Assert.True(result3.All(c => c.IsSuccess));
+        //     List<RuleResultTree> result3 = await re.ExecuteAllRulesAsync("Test", input1);
+        //     Assert.True(result3.All(c => c.IsSuccess));
 
-        //     }
+        // }
 
-        //     [Fact]
-        //     public async Task ExecuteRule_SpecialCharInWorkflowName_RunsSuccessfully()
+        // [Fact]
+        // public async Task ExecuteRule_SpecialCharInWorkflowName_RunsSuccessfully()
+        // {
+        //     var workflow = new Workflow
         //     {
-        //         var workflow = new Workflow
-        //         {
-        //             WorkflowName = "Exámple",
-        //             Rules = new Rule[]{
+        //         WorkflowName = "Exámple",
+        //         Rules = new Rule[]{
         //                 new Rule {
         //                     RuleName = "RuleWithLocalParam",
 
@@ -1045,45 +1045,45 @@ namespace RulesEngineWrapper.UnitTest
         //                     Expression = "input1 == null || input1.hello.world = \"wow\""
         //                 }
         //             }
-        //         };
+        //     };
 
-        //         var workflowStr = "{\"WorkflowName\":\"Exámple\",\"WorkflowsToInject\":null,\"GlobalParams\":null,\"Rules\":[{\"RuleName\":\"RuleWithLocalParam\",\"Properties\":null,\"Operator\":null,\"ErrorMessage\":null,\"Enabled\":true,\"ErrorType\":\"Warning\",\"RuleExpressionType\":\"LambdaExpression\",\"WorkflowsToInject\":null,\"Rules\":null,\"LocalParams\":null,\"Expression\":\"input1 == null || input1.hello.world = \\\"wow\\\"\",\"Actions\":null,\"SuccessEvent\":null}]}";
+        //     var workflowStr = "{\"WorkflowName\":\"Exámple\",\"WorkflowsToInject\":null,\"GlobalParams\":null,\"Rules\":[{\"RuleName\":\"RuleWithLocalParam\",\"Properties\":null,\"Operator\":null,\"ErrorMessage\":null,\"Enabled\":true,\"ErrorType\":\"Warning\",\"RuleExpressionType\":\"LambdaExpression\",\"WorkflowsToInject\":null,\"Rules\":null,\"LocalParams\":null,\"Expression\":\"input1 == null || input1.hello.world = \\\"wow\\\"\",\"Actions\":null,\"SuccessEvent\":null}]}";
 
-        //         var re = new RulesEngineWrapper(new string[] { workflowStr }, null);
+        //     var re = new RulesEngineWrapper(new string[] { workflowStr }, null);
 
-        //         dynamic input1 = new ExpandoObject();
-        //         input1.hello = new ExpandoObject();
-        //         input1.hello.world = "wow";
+        //     dynamic input1 = new ExpandoObject();
+        //     input1.hello = new ExpandoObject();
+        //     input1.hello.world = "wow";
 
-        //         List<RuleResultTree> result3 = await re.ExecuteAllRulesAsync("Exámple", input1);
-        //         Assert.True(result3.All(c => c.IsSuccess));
+        //     List<RuleResultTree> result3 = await re.ExecuteAllRulesAsync("Exámple", input1);
+        //     Assert.True(result3.All(c => c.IsSuccess));
 
-        //     }
+        // }
 
-        //     [Fact]
-        //     public void ContainsWorkFlowName_ShouldReturn()
+        // [Fact]
+        // public void ContainsWorkFlowName_ShouldReturn()
+        // {
+        //     const string ExistedWorkflowName = "ExistedWorkflowName";
+        //     const string NotExistedWorkflowName = "NotExistedWorkflowName";
+
+        //     var workflow = new Workflow
         //     {
-        //         const string ExistedWorkflowName = "ExistedWorkflowName";
-        //         const string NotExistedWorkflowName = "NotExistedWorkflowName";
-
-        //         var workflow = new Workflow
-        //         {
-        //             WorkflowName = ExistedWorkflowName,
-        //             Rules = new Rule[]{
+        //         WorkflowName = ExistedWorkflowName,
+        //         Rules = new Rule[]{
         //                 new Rule {
         //                     RuleName = "Rule",
         //                     RuleExpressionType = RuleExpressionType.LambdaExpression,
         //                     Expression = "1==1"
         //                 }
         //             }
-        //         };
+        //     };
 
-        //         var re = new RulesEngineWrapper();
-        //         re.AddWorkflow(workflow);
+        //     var re = new RulesEngineWrapper();
+        //     re.AddWorkflow(workflow);
 
-        //         Assert.True(re.ContainsWorkflow(ExistedWorkflowName));
-        //         Assert.False(re.ContainsWorkflow(NotExistedWorkflowName));
-        //     }
+        //     Assert.True(re.ContainsWorkflow(ExistedWorkflowName));
+        //     Assert.False(re.ContainsWorkflow(NotExistedWorkflowName));
+        // }
 
 
 

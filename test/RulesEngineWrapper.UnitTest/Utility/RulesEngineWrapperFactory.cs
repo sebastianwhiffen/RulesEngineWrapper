@@ -6,7 +6,7 @@ using RulesEngineWrapper.presentation;
 
 public class RulesEngineWrapperFactory
 {
-    private readonly Dictionary<string, Func<IContainer, Action<RulesEngineWrapperOptions>>> _optionsConfigurators;
+    public readonly Dictionary<string, Func<IContainer, Action<RulesEngineWrapperOptions>>> _optionsConfigurators;
 
     public RulesEngineWrapperFactory()
     {
