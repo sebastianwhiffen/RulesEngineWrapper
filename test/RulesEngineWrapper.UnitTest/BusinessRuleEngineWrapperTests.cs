@@ -46,29 +46,33 @@ namespace RulesEngineWrapper.UnitTest
             Assert.Contains(result, c => c.IsSuccess);
         }
 
-        public static IEnumerable<object[]> RulesEngineWrappers(RulesEngineWrapperOptions options, params string?[] files)
+        public static IEnumerable<object[]> RulesEngineWrappers(params string?[] files)
         {
-            return TestContainersFixture._containers.SelectMany(container =>
-                (files.Length == 0 ? new string?[] { null } : files).Select(file =>
-                {
-                    var serviceCollection = _factory.Create(container);
-                    var optionsAction = _factory._optionsConfigurators[container.Image.Name](container);
-                    optionsAction(options);
-                    serviceCollection.Configure<RulesEngineWrapperOptions>(opts =>
+            if (files == null || files.Length == 0)
+            {
+                // No files provided, return default IRulesEngineWrapper instances
+                return TestContainersFixture._containers.Select(container =>
+                    new object[] { _factory.Create(container).BuildServiceProvider().GetRequiredService<IRulesEngineWrapper>() });
+            }
+            else
+            {
+                // Files provided, return IRulesEngineWrapper instances modified according to the files
+                return TestContainersFixture._containers.SelectMany(
+                    container => files.Select(
+                        file => new Func<IRulesEngineWrapper, IRulesEngineWrapper>(
+                            engine =>
+                            {
+                                engine.AddOrUpdateWorkflow(JsonConvert.DeserializeObject<Workflow>(GetFileContent(file)));
+                                return engine;
+                            }
+                        )
+                    ),
+                    (container, modifyEngine) => new object[]
                     {
-                        opts.DbContextOptionsAction = options.DbContextOptionsAction;
-                        opts.WrapperDbEnsureCreated = options.WrapperDbEnsureCreated;
-                        opts.reSettings.UseFastExpressionCompiler = options.reSettings.UseFastExpressionCompiler;
-                    });
-                    var engine = serviceCollection.BuildServiceProvider().GetRequiredService<IRulesEngineWrapper>();
-
-                    if (file != null)
-                    {
-                        engine.AddOrUpdateWorkflow(JsonConvert.DeserializeObject<Workflow>(GetFileContent(file)));
+                    modifyEngine(_factory.Create(container).BuildServiceProvider().GetRequiredService<IRulesEngineWrapper>())
                     }
-                    return new object[] { engine };
-                })
-            );
+                );
+            }
         }
 
 
@@ -390,21 +394,19 @@ namespace RulesEngineWrapper.UnitTest
         //     Assert.True(ruleResult.IsSuccess);
         // }
 
-        // [Theory]
-        // [InlineData("rules2.json")]
-        // public async Task ExecuteRule_ReturnsProperErrorOnMissingRuleParameter(string ruleFileName)
-        // {
-        //     var re = GetRulesEngine(ruleFileName);
+        [Theory]
+        [MemberData(nameof(RulesEngineWrappers), parameters: [new[] { "rules2.json" }])]
+        public async Task ExecuteRule_ReturnsProperErrorOnMissingRuleParameter(IRulesEngineWrapper re)
+        {
+            var input1 = new RuleParameter("customName", GetInput1());
+            var input2 = new RuleParameter("input2", GetInput2());
+            var input3 = new RuleParameter("input3", GetInput3());
 
-        //     var input1 = new RuleParameter("customName", GetInput1());
-        //     var input2 = new RuleParameter("input2", GetInput2());
-        //     var input3 = new RuleParameter("input3", GetInput3());
-
-        //     var result = await re.ExecuteAllRulesAsync("inputWorkflow", input1, input2, input3);
-        //     Assert.NotNull(result);
-        //     Assert.IsType<List<RuleResultTree>>(result);
-        //     Assert.Contains(result.First().ChildResults, c => c.ExceptionMessage.Contains("Unknown identifier 'input1'"));
-        // }
+            var result = await re.ExecuteAllRulesAsync("inputWorkflow", input1, input2, input3);
+            Assert.NotNull(result);
+            Assert.IsType<List<RuleResultTree>>(result);
+            Assert.Contains(result.First().ChildResults, c => c.ExceptionMessage.Contains("Unknown identifier 'input1'"));
+        }
 
         // [Theory]
         // [InlineData("rules5.json", "hello", true)]
@@ -427,7 +429,7 @@ namespace RulesEngineWrapper.UnitTest
         // }
 
         // [Theory]
-        // [InlineData("rules6.json")]
+        // [MemberData(nameof(RulesEngineWrappers), parameters: [new[] { "rules6.json" }])]
         // public async Task ExecuteRule_RuleWithMethodExpression_ReturnsSucess(string ruleFileName)
         // {
         //     Func<bool> func = () => true;
@@ -450,43 +452,39 @@ namespace RulesEngineWrapper.UnitTest
         //     Assert.All(result, c => Assert.True(c.IsSuccess));
         // }
 
-        // [Theory]
-        // [InlineData("rules7.json")]
-        // public async Task ExecuteRule_RuleWithUnaryExpression_ReturnsSucess(string ruleFileName)
-        // {
-        //     var re = GetRulesEngine(ruleFileName);
+        [Theory]
+        [MemberData(nameof(RulesEngineWrappers), parameters: [new[] { "rules7.json" }])]
+        public async Task ExecuteRule_RuleWithUnaryExpression_ReturnsSucess(IRulesEngineWrapper re)
+        {
+            dynamic input1 = new ExpandoObject();
+            input1.Boolean = false;
 
-        //     dynamic input1 = new ExpandoObject();
-        //     input1.Boolean = false;
+            var utils = new TestInstanceUtils();
 
-        //     var utils = new TestInstanceUtils();
+            var result = await re.ExecuteAllRulesAsync("inputWorkflow", new RuleParameter("input1", input1));
+            Assert.NotNull(result);
+            Assert.IsType<List<RuleResultTree>>(result);
+            Assert.All(result, c => Assert.True(c.IsSuccess));
+        }
 
-        //     var result = await re.ExecuteAllRulesAsync("inputWorkflow", new RuleParameter("input1", input1));
-        //     Assert.NotNull(result);
-        //     Assert.IsType<List<RuleResultTree>>(result);
-        //     Assert.All(result, c => Assert.True(c.IsSuccess));
-        // }
+        [Theory]
+        [MemberData(nameof(RulesEngineWrappers), parameters: [new[] { "rules8.json" }])]
+        public async Task ExecuteRule_RuleWithMemberAccessExpression_ReturnsSucess(IRulesEngineWrapper re)
+        {
+            dynamic input1 = new ExpandoObject();
+            input1.Boolean = false;
 
-        // [Theory]
-        // [InlineData("rules8.json")]
-        // public async Task ExecuteRule_RuleWithMemberAccessExpression_ReturnsSucess(string ruleFileName)
-        // {
-        //     var re = GetRulesEngine(ruleFileName);
+            var utils = new TestInstanceUtils();
 
-        //     dynamic input1 = new ExpandoObject();
-        //     input1.Boolean = false;
-
-        //     var utils = new TestInstanceUtils();
-
-        //     var result = await re.ExecuteAllRulesAsync("inputWorkflow", new RuleParameter("input1", input1));
-        //     Assert.NotNull(result);
-        //     Assert.IsType<List<RuleResultTree>>(result);
-        //     Assert.All(result, c => Assert.False(c.IsSuccess));
-        // }
+            var result = await re.ExecuteAllRulesAsync("inputWorkflow", new RuleParameter("input1", input1));
+            Assert.NotNull(result);
+            Assert.IsType<List<RuleResultTree>>(result);
+            Assert.All(result, c => Assert.False(c.IsSuccess));
+        }
 
         // [Theory]
-        // [InlineData("rules9.json")]
-        // public async Task ExecuteRule_MissingMethodInExpression_ReturnsException(string ruleFileName)
+        // [MemberData(nameof(RulesEngineWrappers), parameters: [new[] { "rules9.json" }])]
+        // public async Task ExecuteRule_MissingMethodInExpression_ReturnsException(IRulesEngineWrapper re)
         // {
         //     var re = GetRulesEngine(ruleFileName, new ReSettings() { EnableExceptionAsErrorMessage = false });
 
