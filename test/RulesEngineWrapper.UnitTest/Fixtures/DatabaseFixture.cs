@@ -36,8 +36,8 @@ public class TestContainersFixture : IAsyncLifetime
         var containers = new List<IContainer>()
         {
             new MsSqlBuilder().Build(),
-            // new MySqlBuilder().Build(),
-            // new PostgreSqlBuilder().Build()
+            new MySqlBuilder().Build(),
+            new PostgreSqlBuilder().Build()
         };
 
         foreach (IContainer container in containers)

@@ -32,7 +32,7 @@ public class AddOrUpdateWorkflowCommandHandler
 
             if (workflowEntity != null) await _workflowRepository.Update(workflowEntity);
 
-            else await _mediator.Send(new AddWorkflowCommand(workflow));
+            else await _workflowRepository.AddAsync(workflow.ToWorkflowEntity());
         }
 
         return await _workflowRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
