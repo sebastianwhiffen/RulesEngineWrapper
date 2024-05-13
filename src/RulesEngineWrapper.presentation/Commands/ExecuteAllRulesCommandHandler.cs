@@ -1,7 +1,7 @@
 using MediatR;
 using RulesEngine.Interfaces;
 using RulesEngine.Models;
-using RulesEngineWrapper;
+using RulesEngineWrappers;
 
 public class ExecuteAllRulesCommand() : IRequest<List<RuleResultTree>>
 {

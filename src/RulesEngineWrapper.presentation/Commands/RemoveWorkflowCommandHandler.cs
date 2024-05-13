@@ -1,7 +1,7 @@
 using MediatR;
-using RulesEngineWrapper.Domain;
+using RulesEngineWrappers.Domain;
 
-namespace RulesEngineWrapper.presentation;
+namespace RulesEngineWrappers.presentation;
 public record RemoveWorkflowCommand(params string[] WorkflowNames) : IRequest<bool>;
 
 public class RemoveWorkflowCommandHandler : IRequestHandler<RemoveWorkflowCommand, bool>

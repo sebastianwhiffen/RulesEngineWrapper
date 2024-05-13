@@ -1,11 +1,11 @@
 ﻿using MediatR;
 using RulesEngine.Data;
-using RulesEngineWrapper.Domain;
+using RulesEngineWrappers.Domain;
 
-namespace RulesEngineWrapper.Infrastructure;
+namespace RulesEngineWrappers.Infrastructure;
 static class MediatorExtension
 {
-  public static async Task DispatchDomainEventsAsync(this IMediator mediator, RulesEngineContext ctx)
+  public static async Task DispatchDomainEventsAsync(this IMediator mediator, RulesEngineWrapperContext ctx)
     {
         var domainEntities = ctx.ChangeTracker
             .Entries<Entity>()

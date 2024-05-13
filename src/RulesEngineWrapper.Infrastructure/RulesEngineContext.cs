@@ -1,15 +1,15 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using RulesEngineWrapper.Domain;
-using RulesEngineWrapper.Infrastructure;
+using RulesEngineWrappers.Domain;
+using RulesEngineWrappers.Infrastructure;
 
 namespace RulesEngine.Data
 {
-    public class RulesEngineContext : DbContext, IRulesEngineWrapperContext
+    public class RulesEngineWrapperContext : DbContext, IRulesEngineWrapperContext
     {
         private readonly IMediator _mediator;
-        public RulesEngineContext(DbContextOptions<RulesEngineContext> options, IMediator mediator ) : base(options)
+        public RulesEngineWrapperContext(DbContextOptions<RulesEngineWrapperContext> options, IMediator mediator ) : base(options)
         {
             _mediator = mediator;
         }

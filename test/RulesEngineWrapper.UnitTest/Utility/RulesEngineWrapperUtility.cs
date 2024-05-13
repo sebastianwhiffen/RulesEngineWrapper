@@ -2,8 +2,8 @@ using CodenameGenerator;
 using DotNet.Testcontainers.Containers;
 using Microsoft.EntityFrameworkCore;
 using RulesEngine.Models;
-using RulesEngineWrapper;
-using RulesEngineWrapper.presentation;
+using RulesEngineWrappers;
+using RulesEngineWrappers.presentation;
 
 public static class RulesEngineWrapperUtility
 {

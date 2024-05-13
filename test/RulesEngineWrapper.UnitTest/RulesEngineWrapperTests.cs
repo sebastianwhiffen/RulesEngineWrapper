@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace RulesEngineWrapper.UnitTest;
+namespace RulesEngineWrappers.UnitTest;
 
 [Collection("Database collection")]
 public class RulesEngineWrapperTests

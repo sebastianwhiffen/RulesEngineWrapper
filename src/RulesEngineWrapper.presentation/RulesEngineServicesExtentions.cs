@@ -1,13 +1,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.InteropServices;
-using RulesEngineWrapper.Infrastructure;
-using System.Reflection;
-using RulesEngineWrapper.Domain;
+using RulesEngineWrappers.Domain;
 using MediatR;
-using System.Data;
 
-namespace RulesEngineWrapper.presentation;
+namespace RulesEngineWrappers.presentation;
 public static class RuleEngineServicesExtensions
 {
     // public static IServiceCollection AddRulesEngineWrapper(this IServiceCollection services,
@@ -31,16 +28,12 @@ public static class RuleEngineServicesExtensions
     // }
 
     public static IServiceCollection AddRulesEngineWrapper<TContext>(this IServiceCollection services,
-        [Optional] Action<RulesEngineWrapperOptions>? optionsAction) where TContext : DbContext, IRulesEngineWrapperContext
+        [Optional] RulesEngineWrapperSettings options) where TContext : DbContext, IRulesEngineWrapperContext
     {
+        options ??= new RulesEngineWrapperSettings();
+
         services.AddScoped<IWorkflowRepository, WorkflowRepository>();
         services.AddDefaultServices();  
-
-        RulesEngineWrapperOptions options = new RulesEngineWrapperOptions();
-        optionsAction?.Invoke(options);
-
-        if (options?.DbContextOptionsAction == null)
-            throw new ArgumentNullException("You must specify a database provider if you wish to register a DbContext. Please register a provider in options.DbContextOptionsAction");
 
         services.AddDbContext<IRulesEngineWrapperContext, TContext>(options.DbContextOptionsAction);
         services.AddScoped<IRulesEngineWrapper, RulesEngineWrapper>(p =>
@@ -48,9 +41,11 @@ public static class RuleEngineServicesExtensions
             var dbContext = p.GetRequiredService<TContext>();
             var mediator = p.GetRequiredService<IMediator>();
 
+            options.mediator = mediator;
+            
             if (options.WrapperDbEnsureCreated) dbContext.Database.EnsureCreated();
 
-            return ActivatorUtilities.CreateInstance<RulesEngineWrapper>(p, options, mediator);
+            return new RulesEngineWrapper(options);
         });
 
         return services;

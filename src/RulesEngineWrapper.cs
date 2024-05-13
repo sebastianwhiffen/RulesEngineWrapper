@@ -1,43 +1,48 @@
 ﻿using MediatR;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
+using RulesEngine.Data;
 using RulesEngine.Interfaces;
 using RulesEngine.Models;
-using RulesEngineWrapper.Domain;
-using RulesEngineWrapper.presentation;
+using RulesEngineWrappers.presentation;
 
-namespace RulesEngineWrapper;
-
-public class RulesEngineWrapper : IRulesEngineWrapper
+namespace RulesEngineWrappers
 {
-    #region constructors
-    private readonly IRulesEngine _rulesEngine;
-    private readonly IMediator _mediator;
-
-    private RulesEngineWrapper(ReSettings options, IMediator mediator)
+    public class RulesEngineWrapper : IRulesEngineWrapper
     {
-        _rulesEngine = new RulesEngine.RulesEngine(options);
-        _mediator = mediator;
+        private readonly IRulesEngine _rulesEngine;
+        private readonly IMediator _mediator;
+        public RulesEngineWrapper(string[] jsonConfig, RulesEngineWrapperSettings rewSettings = default!) : this(rewSettings)
+        {
+            var workflows = jsonConfig.Select(JsonConvert.DeserializeObject<Workflow>).ToArray();
+            AddWorkflow(workflows!).Wait();
+        }
+
+        public RulesEngineWrapper(Workflow[] workflows, RulesEngineWrapperSettings rewSettings = default!) : this(rewSettings)
+        {
+            AddWorkflow(workflows).Wait();
+        }
+
+        public RulesEngineWrapper(RulesEngineWrapperSettings rewSettings = default!)
+        {
+            rewSettings ??= new RulesEngineWrapperSettings();
+
+            _rulesEngine = new RulesEngine.RulesEngine(rewSettings.reSettings);
+            _mediator = rewSettings.mediator ?? new ServiceCollection().AddRulesEngineWrapper<RulesEngineWrapperContext>(rewSettings).BuildServiceProvider().GetRequiredService<IMediator>();
+        }
+
+        public async Task<bool> RemoveWorkflow(params string[] workflowNames) => await _mediator.Send(new RemoveWorkflowCommand(workflowNames));
+
+        public async Task<bool> AddOrUpdateWorkflow(params Workflow[] workflows) => await _mediator.Send(new AddOrUpdateWorkflowCommand(_rulesEngine, workflows));
+
+        public async Task<bool> AddWorkflow(params Workflow[] workflows) => await _mediator.Send(new AddWorkflowCommand(workflows));
+
+        public async Task<IEnumerable<string>> GetAllWorkflowNames() => await _mediator.Send(new GetAllWorkflowNamesQuery());
+
+        public async ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params object[] inputs) => await _mediator.Send(new ExecuteAllRulesCommand(_rulesEngine, workflowName, inputs));
+
+        public async ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params RuleParameter[] ruleParams) => await _mediator.Send(new ExecuteAllRulesCommand(_rulesEngine, workflowName, ruleParams));
+
+        public async ValueTask<ActionRuleResult> ExecuteActionWorkflowAsync(string workflowName, string ruleName, RuleParameter[] ruleParameters) => await _mediator.Send(new ExecuteActionWorkflowCommand(workflowName, ruleName, ruleParameters));
     }
-
-    public RulesEngineWrapper(RulesEngineWrapperOptions options, IMediator mediator)
-        : this(options.reSettings, mediator)
-    {
-        //collection params coming soon I hope...
-        // AddOrUpdateWorkflow(workflows.ToArray()).GetAwaiter().GetResult();
-    }
-
-    #endregion
-
-    public async Task<bool> RemoveWorkflow(params string[] workflowNames) => await _mediator.Send(new RemoveWorkflowCommand(workflowNames));
-
-    public async Task<bool> AddOrUpdateWorkflow(params Workflow[] Workflows) => await _mediator.Send(new AddOrUpdateWorkflowCommand(_rulesEngine, Workflows));
-
-    public async Task<bool> AddWorkflow(params Workflow[] Workflows) => await _mediator.Send(new AddWorkflowCommand(Workflows));
-
-    public async Task<IEnumerable<string>> GetAllWorkflowNames() => await _mediator.Send(new GetAllWorkflowNamesQuery());
-
-    public async ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params object[] inputs) => await _mediator.Send(new ExecuteAllRulesCommand(_rulesEngine, workflowName, inputs));
-
-    public async ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params RuleParameter[] ruleParams) => await _mediator.Send(new ExecuteAllRulesCommand(_rulesEngine, workflowName, ruleParams));
-
-    public async ValueTask<ActionRuleResult> ExecuteActionWorkflowAsync(string workflowName, string ruleName, RuleParameter[] ruleParameters) => await _mediator.Send(new ExecuteActionWorkflowCommand(workflowName, ruleName, ruleParameters));
 }

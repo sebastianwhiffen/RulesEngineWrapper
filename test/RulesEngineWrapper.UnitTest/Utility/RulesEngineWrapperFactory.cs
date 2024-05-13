@@ -2,22 +2,22 @@ using DotNet.Testcontainers.Containers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RulesEngine.Data;
-using RulesEngineWrapper.presentation;
+using RulesEngineWrappers.presentation;
 
 public class RulesEngineWrapperFactory
 {
-    public readonly Dictionary<string, Func<IContainer, Action<RulesEngineWrapperOptions>>> _optionsConfigurators;
+    public readonly Dictionary<string, Func<IContainer, Action<RulesEngineWrapperSettings>>> _optionsConfigurators;
 
     public RulesEngineWrapperFactory()
     {
-        _optionsConfigurators = new Dictionary<string, Func<IContainer, Action<RulesEngineWrapperOptions>>>
+        _optionsConfigurators = new Dictionary<string, Func<IContainer, Action<RulesEngineWrapperSettings>>>
         {
             { "postgres", PostgeSqlOptions() },
             { "server", SqlServerOptions() },
             { "mysql", MySqlOptions() }
         };
     }
-    private static Func<IContainer, Action<RulesEngineWrapperOptions>> PostgeSqlOptions()
+    private static Func<IContainer, Action<RulesEngineWrapperSettings>> PostgeSqlOptions()
     {
         return container => options =>
         {
@@ -33,7 +33,20 @@ public class RulesEngineWrapperFactory
             };
         };
     }
-    private static Func<IContainer, Action<RulesEngineWrapperOptions>> SqlServerOptions()
+
+    private static Func<IContainer, Action<RulesEngineWrapperSettings>> InMemoryDbOptions()
+    {
+        return container => options =>
+        {
+            options.DbContextOptionsAction = builder =>
+            {
+                builder.UseInMemoryDatabase("RulesEngineWrapper");
+                options.WrapperDbEnsureCreated = true;
+            };
+        };
+    }
+
+    private static Func<IContainer, Action<RulesEngineWrapperSettings>> SqlServerOptions()
     {
         return container => options =>
         {
@@ -49,7 +62,7 @@ public class RulesEngineWrapperFactory
             };
         };
     }
-    private static Func<IContainer, Action<RulesEngineWrapperOptions>> MySqlOptions()
+    private static Func<IContainer, Action<RulesEngineWrapperSettings>> MySqlOptions()
     {
         return container => options =>
         {
@@ -67,7 +80,13 @@ public class RulesEngineWrapperFactory
     }
     public IServiceCollection Create(IContainer container)
     {
-        var optionsAction = _optionsConfigurators[container.Image.Name](container);
-        return new ServiceCollection().AddRulesEngineWrapper<RulesEngineContext>(optionsAction);
+        var configureOptions = _optionsConfigurators[container.Image.Name];
+
+        var settings = new RulesEngineWrapperSettings();
+
+        configureOptions(container)(settings);
+
+        return new ServiceCollection().AddRulesEngineWrapper<RulesEngineWrapperContext>(settings);
+
     }
 }

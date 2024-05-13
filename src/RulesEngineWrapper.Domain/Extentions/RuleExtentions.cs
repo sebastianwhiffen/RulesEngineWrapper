@@ -1,7 +1,7 @@
 
 using System.Diagnostics;
 using RulesEngine.Models;
-namespace RulesEngineWrapper.Domain;
+namespace RulesEngineWrappers.Domain;
 
 public static class RuleExtentions
 {

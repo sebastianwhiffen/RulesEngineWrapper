@@ -1,10 +1,10 @@
-namespace RulesEngineWrapper.presentation;
 
-using global::RulesEngineWrapper.Domain;
+using RulesEngineWrappers.Domain;
 using MediatR;
 using RulesEngine.Interfaces;
 using RulesEngine.Models;
 
+namespace RulesEngineWrappers.presentation;
 public record AddOrUpdateWorkflowCommand(IRulesEngine RulesEngine, IEnumerable<Workflow> Workflows) : IRequest<bool>;
 
 public class AddOrUpdateWorkflowCommandHandler

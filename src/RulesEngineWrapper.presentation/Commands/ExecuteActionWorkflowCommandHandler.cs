@@ -1,6 +1,6 @@
 using MediatR;
 using RulesEngine.Models;
-using RulesEngineWrapper;
+using RulesEngineWrappers;
 
 public record ExecuteActionWorkflowCommand(string WorkflowName, string RuleName, RuleParameter[] RuleParameters) : IRequest<ActionRuleResult>;
 

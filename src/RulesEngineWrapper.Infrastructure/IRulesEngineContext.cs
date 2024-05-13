@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using RulesEngine.Models;
-using RulesEngineWrapper.Domain;
+using RulesEngineWrappers.Domain;
 
 public interface IRulesEngineWrapperContext : IUnitOfWork
 {

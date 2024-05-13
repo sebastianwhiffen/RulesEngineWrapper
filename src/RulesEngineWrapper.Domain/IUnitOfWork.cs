@@ -1,4 +1,4 @@
-﻿namespace RulesEngineWrapper.Domain;
+﻿namespace RulesEngineWrappers.Domain;
 
 public interface IUnitOfWork : IDisposable
 {

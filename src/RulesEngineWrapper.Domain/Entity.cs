@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace RulesEngineWrapper.Domain
+namespace RulesEngineWrappers.Domain
 {
     public abstract class Entity
     {

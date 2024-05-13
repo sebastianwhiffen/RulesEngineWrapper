@@ -1,7 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 
-namespace RulesEngineWrapper.Domain
+namespace RulesEngineWrappers.Domain
 {
     public class WorkflowRepository : IWorkflowRepository
     {
