@@ -15,12 +15,12 @@ namespace RulesEngineWrappers
         public RulesEngineWrapper(string[] jsonConfig, RulesEngineWrapperSettings rewSettings = default!) : this(rewSettings)
         {
             var workflows = jsonConfig.Select(JsonConvert.DeserializeObject<Workflow>).ToArray();
-            AddWorkflow(workflows!).Wait();
+            AddOrUpdateWorkflow(workflows!).Wait();
         }
 
         public RulesEngineWrapper(Workflow[] workflows, RulesEngineWrapperSettings rewSettings = default!) : this(rewSettings)
         {
-            AddWorkflow(workflows).Wait();
+            AddOrUpdateWorkflow(workflows).Wait();
         }
 
         public RulesEngineWrapper(RulesEngineWrapperSettings rewSettings = default!)
@@ -33,7 +33,7 @@ namespace RulesEngineWrappers
 
         public async Task<bool> RemoveWorkflow(params string[] workflowNames) => await _mediator.Send(new RemoveWorkflowCommand(workflowNames));
 
-        public async Task<bool> AddOrUpdateWorkflow(params Workflow[] workflows) => await _mediator.Send(new AddOrUpdateWorkflowCommand(_rulesEngine, workflows));
+        public async Task AddOrUpdateWorkflow(params Workflow[] workflows) => await _mediator.Publish(new AddOrUpdateWorkflowNotification(_rulesEngine, workflows));
 
         public async Task<bool> AddWorkflow(params Workflow[] workflows) => await _mediator.Send(new AddWorkflowCommand(workflows));
 

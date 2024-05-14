@@ -41,7 +41,7 @@ public class RulesEngineWrapperTests
     {
         var workflow = RulesEngineWrapperUtility.NewWorkflow();
 
-        Assert.True(await rulesEngineWrapper.AddOrUpdateWorkflow(workflow), "Workflow should be added successfully");
+        await rulesEngineWrapper.AddOrUpdateWorkflow(workflow);
     }
 
     [Theory]

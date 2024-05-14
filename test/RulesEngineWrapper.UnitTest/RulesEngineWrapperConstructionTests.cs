@@ -1,5 +1,4 @@
 using Newtonsoft.Json;
-using RulesEngine.Models;
 
 namespace RulesEngineWrappers.UnitTest;
 public class RulesEngineWrapperConstructionTests
@@ -11,27 +10,30 @@ public class RulesEngineWrapperConstructionTests
     // public static IEnumerable<object[]> containers => TestContainersFixture._containers.Select(c => new object[] { c });
 
     [Fact]
-    public void InstantiateRulesEngineWrapperNoParams_ShouldWork()
+    public async void InstantiateRulesEngineWrapperNoParams_ShouldWork()
     {
         var re = new RulesEngineWrapper();
 
         Assert.NotNull(re);
+        Assert.Null(await re.GetAllWorkflowNames());
     }
 
     [Fact]
-    public void InstantiateRulesEngineWrapperWithJsonConfig_ShouldWork()
+    public async void InstantiateRulesEngineWrapperWithJsonConfig_ShouldWork()
     {
         var jsonConfig = new string[] { JsonConvert.SerializeObject(RulesEngineWrapperUtility.NewWorkflow()) };
         var re = new RulesEngineWrapper(jsonConfig);
 
         Assert.NotNull(re);
+        Assert.NotNull(await re.GetAllWorkflowNames());
     }
 
     [Fact]
-    public void InstantiateRulesEngineWrapperWithWorkflows_ShouldWork()
+    public async void InstantiateRulesEngineWrapperWithWorkflows_ShouldWork()
     {
         var re = new RulesEngineWrapper(new[] { RulesEngineWrapperUtility.NewWorkflow() });
 
         Assert.NotNull(re);
+        Assert.NotNull(await re.GetAllWorkflowNames());
     }
 }

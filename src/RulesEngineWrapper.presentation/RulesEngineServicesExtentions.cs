@@ -32,7 +32,6 @@ public static class RuleEngineServicesExtensions
     {
         options ??= new RulesEngineWrapperSettings();
 
-        services.AddScoped<IWorkflowRepository, WorkflowRepository>();
         services.AddDefaultServices();  
 
         services.AddDbContext<IRulesEngineWrapperContext, TContext>(options.DbContextOptionsAction);
@@ -47,17 +46,18 @@ public static class RuleEngineServicesExtensions
 
             return new RulesEngineWrapper(options);
         });
-
+        
         return services;
     }
 
     private static IServiceCollection AddDefaultServices(this IServiceCollection services)
     {
+        services.AddScoped<IWorkflowRepository, WorkflowRepository>();
+
         services.AddMediatR(cfg =>
         {
             cfg.RegisterServicesFromAssemblyContaining<RulesEngineWrapper>();
         });
-
         return services;
     }
 }
