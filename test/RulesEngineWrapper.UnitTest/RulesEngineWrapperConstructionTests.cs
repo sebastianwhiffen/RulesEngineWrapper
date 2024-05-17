@@ -34,6 +34,7 @@ public class RulesEngineWrapperConstructionTests
         var re = new RulesEngineWrapper(new[] { RulesEngineWrapperUtility.NewWorkflow() });
 
         Assert.NotNull(re);
+        await re.AddWorkflow(RulesEngineWrapperUtility.NewWorkflow());
         Assert.NotNull(await re.GetAllWorkflowNames());
     }
 }

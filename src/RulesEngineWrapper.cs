@@ -1,5 +1,4 @@
-﻿using MediatR;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using RulesEngine.Data;
 using RulesEngine.Interfaces;
@@ -11,7 +10,7 @@ namespace RulesEngineWrappers
     public class RulesEngineWrapper : IRulesEngineWrapper
     {
         private readonly IRulesEngine _rulesEngine;
-        private readonly IMediator _mediator;
+        public event EventHandler OnAddWorkflow;
         public RulesEngineWrapper(string[] jsonConfig, RulesEngineWrapperSettings rewSettings = default!) : this(rewSettings)
         {
             var workflows = jsonConfig.Select(JsonConvert.DeserializeObject<Workflow>).ToArray();
@@ -28,21 +27,41 @@ namespace RulesEngineWrappers
             rewSettings ??= new RulesEngineWrapperSettings();
 
             _rulesEngine = new RulesEngine.RulesEngine(rewSettings.reSettings);
-            _mediator = rewSettings.mediator ?? new ServiceCollection().AddRulesEngineWrapper<RulesEngineWrapperContext>(rewSettings).BuildServiceProvider().GetRequiredService<IMediator>();
         }
 
-        public async Task<bool> RemoveWorkflow(params string[] workflowNames) => await _mediator.Send(new RemoveWorkflowCommand(workflowNames));
+        public ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params object[] inputs)
+        {
+            throw new NotImplementedException();
+        }
 
-        public async Task AddOrUpdateWorkflow(params Workflow[] workflows) => await _mediator.Publish(new AddOrUpdateWorkflowNotification(_rulesEngine, workflows));
+        public ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params RuleParameter[] ruleParams)
+        {
+            throw new NotImplementedException();
+        }
 
-        public async Task<bool> AddWorkflow(params Workflow[] workflows) => await _mediator.Send(new AddWorkflowCommand(workflows));
+        public ValueTask<ActionRuleResult> ExecuteActionWorkflowAsync(string workflowName, string ruleName, RuleParameter[] ruleParameters)
+        {
+            throw new NotImplementedException();
+        }
 
-        public async Task<IEnumerable<string>> GetAllWorkflowNames() => await _mediator.Send(new GetAllWorkflowNamesQuery());
+        public Task<bool> RemoveWorkflow(params string[] workflowNames)
+        {
+            throw new NotImplementedException();
+        }
 
-        public async ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params object[] inputs) => await _mediator.Send(new ExecuteAllRulesCommand(_rulesEngine, workflowName, inputs));
+        public Task AddOrUpdateWorkflow(params Workflow[] Workflows)
+        {
+            throw new NotImplementedException();
+        }
 
-        public async ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params RuleParameter[] ruleParams) => await _mediator.Send(new ExecuteAllRulesCommand(_rulesEngine, workflowName, ruleParams));
+        public Task AddWorkflow(params Workflow[] Workflows)
+        {
+            throw new NotImplementedException();
+        }
 
-        public async ValueTask<ActionRuleResult> ExecuteActionWorkflowAsync(string workflowName, string ruleName, RuleParameter[] ruleParameters) => await _mediator.Send(new ExecuteActionWorkflowCommand(workflowName, ruleName, ruleParameters));
+        public Task<IEnumerable<string>> GetAllWorkflowNames()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

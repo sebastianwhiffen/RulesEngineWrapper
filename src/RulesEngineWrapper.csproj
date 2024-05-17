@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <PackageReference Include="CodenameGenerator" Version="1.2.47" />
-    <PackageReference Include="MediatR" Version="12.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.4" />

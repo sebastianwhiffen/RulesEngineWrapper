@@ -21,7 +21,7 @@ public class RulesEngineWrapperTests
     {
         var workflow = RulesEngineWrapperUtility.NewWorkflow();
 
-        Assert.True(await rulesEngineWrapper.AddWorkflow(workflow), "Workflow should be added successfully");
+        await rulesEngineWrapper.AddWorkflow(workflow);
     }
 
     [Theory]
@@ -30,7 +30,7 @@ public class RulesEngineWrapperTests
     {
         var workflow = RulesEngineWrapperUtility.NewWorkflow();
 
-        Assert.True(await rulesEngineWrapper.AddWorkflow(workflow), "Workflow should be added successfully");
+        await rulesEngineWrapper.AddWorkflow(workflow);
 
         await Assert.ThrowsAsync<DbUpdateException>(async () => await rulesEngineWrapper.AddWorkflow(workflow));
     }
@@ -50,7 +50,7 @@ public class RulesEngineWrapperTests
     {
         var workflow = RulesEngineWrapperUtility.NewWorkflow();
 
-        Assert.True(await rulesEngineWrapper.AddWorkflow(workflow), "Workflow should be added successfully");
+        await rulesEngineWrapper.AddWorkflow(workflow);
         Assert.True(await rulesEngineWrapper.RemoveWorkflow(workflow.WorkflowName), "Workflow should be removed successfully");
     }
 
@@ -63,7 +63,7 @@ public class RulesEngineWrapperTests
 
         foreach (var wf in new[] { workflow, workflow1 })
         {
-            Assert.True(await rulesEngineWrapper.AddWorkflow(wf), "Workflow should be added successfully");
+            await rulesEngineWrapper.AddWorkflow(wf);
         }
 
         Assert.True((await rulesEngineWrapper.GetAllWorkflowNames()).Count() > 1, "There should be more than one workflow");

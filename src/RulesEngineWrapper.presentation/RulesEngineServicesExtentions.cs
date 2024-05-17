@@ -2,7 +2,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.InteropServices;
 using RulesEngineWrappers.Domain;
-using MediatR;
 
 namespace RulesEngineWrappers.presentation;
 public static class RuleEngineServicesExtensions
@@ -32,16 +31,12 @@ public static class RuleEngineServicesExtensions
     {
         options ??= new RulesEngineWrapperSettings();
 
-        services.AddDefaultServices();  
-
         services.AddDbContext<IRulesEngineWrapperContext, TContext>(options.DbContextOptionsAction);
         services.AddScoped<IRulesEngineWrapper, RulesEngineWrapper>(p =>
         {
-            var dbContext = p.GetRequiredService<TContext>();
-            var mediator = p.GetRequiredService<IMediator>();
+            p.AddDefaultEvents();
 
-            options.mediator = mediator;
-            
+            var dbContext = p.GetRequiredService<TContext>();
             if (options.WrapperDbEnsureCreated) dbContext.Database.EnsureCreated();
 
             return new RulesEngineWrapper(options);
@@ -49,15 +44,19 @@ public static class RuleEngineServicesExtensions
         
         return services;
     }
-
+    
     private static IServiceCollection AddDefaultServices(this IServiceCollection services)
     {
         services.AddScoped<IWorkflowRepository, WorkflowRepository>();
+       
+        return services;
+    }
 
-        services.AddMediatR(cfg =>
+    private static IServiceProvider AddDefaultEvents(this IServiceProvider services)
+    {
+        services.GetRequiredService<IRulesEngineWrapper>().OnAddWorkflow += async (sender, e) =>
         {
-            cfg.RegisterServicesFromAssemblyContaining<RulesEngineWrapper>();
-        });
+        };
         return services;
     }
 }

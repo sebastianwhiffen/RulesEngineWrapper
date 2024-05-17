@@ -1,5 +1,4 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using RulesEngineWrappers.Domain;
 using RulesEngineWrappers.Infrastructure;
@@ -8,10 +7,8 @@ namespace RulesEngine.Data
 {
     public class RulesEngineWrapperContext : DbContext, IRulesEngineWrapperContext
     {
-        private readonly IMediator _mediator;
-        public RulesEngineWrapperContext(DbContextOptions<RulesEngineWrapperContext> options, IMediator mediator ) : base(options)
+        public RulesEngineWrapperContext(DbContextOptions<RulesEngineWrapperContext> options) : base(options)
         {
-            _mediator = mediator;
         }
 
         public DbSet<WorkflowEntity> Workflows { get; set; }
@@ -24,7 +21,7 @@ namespace RulesEngine.Data
 
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
         {
-            await _mediator.DispatchDomainEventsAsync(this);
+            // await _mediator.DispatchDomainEventsAsync(this);
             
              _ = await base.SaveChangesAsync(cancellationToken);
 
