@@ -1,7 +1,5 @@
 using DotNet.Testcontainers.Containers;
 using Testcontainers.MsSql;
-using Testcontainers.MySql;
-using Testcontainers.PostgreSql;
 
 public class TestContainersFixture : IAsyncLifetime
 {
@@ -13,13 +11,10 @@ public class TestContainersFixture : IAsyncLifetime
     {
         if (!isInitialized)
         {
-            lock (initLock)
+            if (!isInitialized)
             {
-                if (!isInitialized)
-                {
-                    InitializeDatabases().GetAwaiter().GetResult();
-                    isInitialized = true;
-                }
+                await InitializeDatabases();
+                isInitialized = true;
             }
         }
     }
