@@ -22,6 +22,5 @@ namespace RulesEngineWrappers
         public List<string> GetAllRegisteredWorkflowNames() => _workflowService.GetAllRegisteredWorkflowNames();
         public bool ContainsWorkflow(string workflowName) => _workflowService.ContainsWorkflow(workflowName);
         public void ClearWorkflows() => _workflowService.ClearWorkflows();
-
     }
 }

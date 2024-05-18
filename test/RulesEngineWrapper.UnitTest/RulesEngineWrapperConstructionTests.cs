@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using RulesEngineWrappers.Presentation;
 
 namespace RulesEngineWrappers.UnitTest;
 public class RulesEngineWrapperConstructionTests
@@ -7,6 +8,19 @@ public class RulesEngineWrapperConstructionTests
     public void InstantiateRulesEngineWrapperNoParams_ShouldWork()
     {
         Assert.NotNull(new RulesEngineWrapper());
+    }
+
+    [Fact]
+    public void InstantiateRulesEngineWrapperDefaultSettings_ShouldWork()
+    {
+        Assert.NotNull(new RulesEngineWrapper(new RulesEngineWrapperSettings()));
+    }
+
+    [Fact]
+    public void InstantiateRulesEngineWrapperEnableDatabase_ShouldWork()
+    {
+        var ReSettings = new RulesEngineWrapperSettings { UseDatabase = true };
+        Assert.NotNull(new RulesEngineWrapper(ReSettings));
     }
 
     [Fact]

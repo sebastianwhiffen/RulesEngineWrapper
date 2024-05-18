@@ -1,8 +1,7 @@
 using DotNet.Testcontainers.Containers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using RulesEngine.Data;
-using RulesEngineWrappers.presentation;
+using RulesEngineWrappers.Presentation;
 
 public class RulesEngineWrapperFactory
 {
@@ -86,7 +85,6 @@ public class RulesEngineWrapperFactory
 
         configureOptions(container)(settings);
 
-        return new ServiceCollection().AddRulesEngineWrapper<RulesEngineWrapperContext>(settings);
-
+        return new ServiceCollection().AddRulesEngineWrapper(settings);
     }
 }
