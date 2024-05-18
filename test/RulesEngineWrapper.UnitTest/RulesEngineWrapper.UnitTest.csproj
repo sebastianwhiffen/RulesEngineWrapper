@@ -7,6 +7,9 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors>CS0168;CS0219;CS8019</WarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
