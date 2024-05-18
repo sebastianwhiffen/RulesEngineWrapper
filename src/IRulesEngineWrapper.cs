@@ -1,18 +1,14 @@
 using RulesEngine.Interfaces;
 using RulesEngine.Models;
-using RulesEngineWrappers.presentation;
 
 namespace RulesEngineWrappers
 {
-    public interface IRulesEngineWrapper
+    public interface IRulesEngineWrapper : IRulesEngine
     {
-        public event EventHandler OnAddWorkflow;
-        public ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params object[] inputs);
-        public ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params RuleParameter[] ruleParams);
-        public ValueTask<ActionRuleResult> ExecuteActionWorkflowAsync(string workflowName, string ruleName, RuleParameter[] ruleParameters);
-        public Task<bool> RemoveWorkflow(params string[] workflowNames);
-        public Task AddOrUpdateWorkflow(params Workflow[] Workflows);
-        public Task AddWorkflow(params Workflow[] Workflows);
-        public Task<IEnumerable<string>> GetAllWorkflowNames();
+        public event EventHandler<Workflow[]> OnAddWorkflow;
+        public event EventHandler<Workflow[]> OnExecuteAllRulesAsync;
+        public event EventHandler<Workflow[]> OnExecuteActionWorkflowAsync;
+        public event EventHandler<string[]> OnRemoveWorkflow;
+        public event EventHandler<Workflow[]> OnAddOrUpdateWorkflow;
     }
 }

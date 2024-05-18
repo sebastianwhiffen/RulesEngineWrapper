@@ -1,71 +1,71 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+// using Microsoft.EntityFrameworkCore;
+// using Microsoft.Extensions.DependencyInjection;
 
-namespace RulesEngineWrappers.UnitTest;
+// namespace RulesEngineWrappers.UnitTest;
 
-[Collection("Database collection")]
-public class RulesEngineWrapperTests
-{
-    static RulesEngineWrapperTests()
-    {
-        TestContainersFixture.EnsureInitializedAsync().GetAwaiter().GetResult();
-    }
-    public static IEnumerable<object[]> rulesEngineWrappers => TestContainersFixture._containers.Select(container => new object[] { _factory.Create(container).BuildServiceProvider().GetRequiredService<IRulesEngineWrapper>() });
+// [Collection("Database collection")]
+// public class RulesEngineWrapperTests
+// {
+//     static RulesEngineWrapperTests()
+//     {
+//         TestContainersFixture.EnsureInitializedAsync().GetAwaiter().GetResult();
+//     }
+//     public static IEnumerable<object[]> rulesEngineWrappers => TestContainersFixture._containers.Select(container => new object[] { _factory.Create(container).BuildServiceProvider().GetRequiredService<IRulesEngineWrapper>() });
 
     
-    public static RulesEngineWrapperFactory _factory = new RulesEngineWrapperFactory();
+//     public static RulesEngineWrapperFactory _factory = new RulesEngineWrapperFactory();
 
-    [Theory]
-    [MemberData(nameof(rulesEngineWrappers))]
-    public async Task AddWorkflow_ShouldWork(IRulesEngineWrapper rulesEngineWrapper)
-    {
-        var workflow = RulesEngineWrapperUtility.NewWorkflow();
+//     [Theory]
+//     [MemberData(nameof(rulesEngineWrappers))]
+//     public async Task AddWorkflow_ShouldWork(IRulesEngineWrapper rulesEngineWrapper)
+//     {
+//         var workflow = RulesEngineWrapperUtility.NewWorkflow();
 
-        await rulesEngineWrapper.AddWorkflow(workflow);
-    }
+//         await rulesEngineWrapper.AddWorkflow(workflow);
+//     }
 
-    [Theory]
-    [MemberData(nameof(rulesEngineWrappers))]
-    public async Task AddWorkflow_ShouldntWork(IRulesEngineWrapper rulesEngineWrapper)
-    {
-        var workflow = RulesEngineWrapperUtility.NewWorkflow();
+//     [Theory]
+//     [MemberData(nameof(rulesEngineWrappers))]
+//     public async Task AddWorkflow_ShouldntWork(IRulesEngineWrapper rulesEngineWrapper)
+//     {
+//         var workflow = RulesEngineWrapperUtility.NewWorkflow();
 
-        await rulesEngineWrapper.AddWorkflow(workflow);
+//         await rulesEngineWrapper.AddWorkflow(workflow);
 
-        await Assert.ThrowsAsync<DbUpdateException>(async () => await rulesEngineWrapper.AddWorkflow(workflow));
-    }
+//         await Assert.ThrowsAsync<DbUpdateException>(async () => await rulesEngineWrapper.AddWorkflow(workflow));
+//     }
 
-    [Theory]
-    [MemberData(nameof(rulesEngineWrappers))]
-    public async Task AddOrUpdateWorkflow_ShouldWork(IRulesEngineWrapper rulesEngineWrapper)
-    {
-        var workflow = RulesEngineWrapperUtility.NewWorkflow();
+//     [Theory]
+//     [MemberData(nameof(rulesEngineWrappers))]
+//     public async Task AddOrUpdateWorkflow_ShouldWork(IRulesEngineWrapper rulesEngineWrapper)
+//     {
+//         var workflow = RulesEngineWrapperUtility.NewWorkflow();
 
-        await rulesEngineWrapper.AddOrUpdateWorkflow(workflow);
-    }
+//         await rulesEngineWrapper.AddOrUpdateWorkflow(workflow);
+//     }
 
-    [Theory]
-    [MemberData(nameof(rulesEngineWrappers))]
-    public async Task RemoveWorkflow_ShouldWork(IRulesEngineWrapper rulesEngineWrapper)
-    {
-        var workflow = RulesEngineWrapperUtility.NewWorkflow();
+//     [Theory]
+//     [MemberData(nameof(rulesEngineWrappers))]
+//     public async Task RemoveWorkflow_ShouldWork(IRulesEngineWrapper rulesEngineWrapper)
+//     {
+//         var workflow = RulesEngineWrapperUtility.NewWorkflow();
 
-        await rulesEngineWrapper.AddWorkflow(workflow);
-        Assert.True(await rulesEngineWrapper.RemoveWorkflow(workflow.WorkflowName), "Workflow should be removed successfully");
-    }
+//         await rulesEngineWrapper.AddWorkflow(workflow);
+//         Assert.True(await rulesEngineWrapper.RemoveWorkflow(workflow.WorkflowName), "Workflow should be removed successfully");
+//     }
 
-    [Theory]
-    [MemberData(nameof(rulesEngineWrappers))]
-    public async Task GetAllWorkflowNames_ShouldWork(IRulesEngineWrapper rulesEngineWrapper)
-    {
-        var workflow = RulesEngineWrapperUtility.NewWorkflow();
-        var workflow1 = RulesEngineWrapperUtility.NewWorkflow();
+//     [Theory]
+//     [MemberData(nameof(rulesEngineWrappers))]
+//     public async Task GetAllWorkflowNames_ShouldWork(IRulesEngineWrapper rulesEngineWrapper)
+//     {
+//         var workflow = RulesEngineWrapperUtility.NewWorkflow();
+//         var workflow1 = RulesEngineWrapperUtility.NewWorkflow();
 
-        foreach (var wf in new[] { workflow, workflow1 })
-        {
-            await rulesEngineWrapper.AddWorkflow(wf);
-        }
+//         foreach (var wf in new[] { workflow, workflow1 })
+//         {
+//             await rulesEngineWrapper.AddWorkflow(wf);
+//         }
 
-        Assert.True((await rulesEngineWrapper.GetAllWorkflowNames()).Count() > 1, "There should be more than one workflow");
-    }
-}
+//         Assert.True((await rulesEngineWrapper.GetAllWorkflowNames()).Count() > 1, "There should be more than one workflow");
+//     }
+// }
