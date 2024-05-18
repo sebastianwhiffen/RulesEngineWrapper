@@ -17,7 +17,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>    
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>   
+    
+    <WarningsAsErrors>CS0168;CS0219;CS8019</WarningsAsErrors>
+    
   </PropertyGroup>
 
+  
 </Project>

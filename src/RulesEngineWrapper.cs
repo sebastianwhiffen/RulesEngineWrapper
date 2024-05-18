@@ -6,15 +6,15 @@ namespace RulesEngineWrappers
     {
         public ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params object[] inputs)
         {
-            throw new NotImplementedException();
+            return _workflowService.ExecuteAllRulesAsync(workflowName, inputs);
         }
         public ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params RuleParameter[] ruleParams)
         {
-            throw new NotImplementedException();
+            return _workflowService.ExecuteAllRulesAsync(workflowName, ruleParams);
         }
         public ValueTask<ActionRuleResult> ExecuteActionWorkflowAsync(string workflowName, string ruleName, RuleParameter[] ruleParameters)
         {
-            throw new NotImplementedException();
+            return _workflowService.ExecuteActionWorkflowAsync(workflowName, ruleName, ruleParameters);
         }
         public void RemoveWorkflow(params string[] workflowNames) => OnRemoveWorkflow?.Invoke(this, workflowNames);
         public void AddOrUpdateWorkflow(params Workflow[] workflows) => OnAddOrUpdateWorkflow?.Invoke(this, workflows);
