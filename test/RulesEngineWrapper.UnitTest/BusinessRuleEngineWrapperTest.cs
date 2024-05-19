@@ -494,7 +494,7 @@ namespace RulesEngineWrappers.UnitTest
         {
             var re = GetRulesEngine(ruleFileName, new RulesEngineWrapperSettings()
             {
-                ReSettings = new ReSettings() { EnableExceptionAsErrorMessage = false }
+                ReSettings = new ReSettings() { EnableExceptionAsErrorMessage = true }
             });
             dynamic input1 = new ExpandoObject();
             input1.Data = new { TestProperty = "" };
@@ -513,7 +513,7 @@ namespace RulesEngineWrappers.UnitTest
         {
             var re = GetRulesEngine(ruleFileName, new RulesEngineWrapperSettings()
             {
-                ReSettings = new ReSettings() { EnableExceptionAsErrorMessage = false, IgnoreException = true }
+                ReSettings = new ReSettings() { EnableExceptionAsErrorMessage = true, IgnoreException = true }
             });
             dynamic input1 = new ExpandoObject();
             input1.Data = new { TestProperty = "" };
@@ -1095,7 +1095,10 @@ namespace RulesEngineWrappers.UnitTest
                         BindingFlags.Public |
                         BindingFlags.Instance);
 
-            var interfaceMethods = interfaceType.GetMethods();
+            HashSet<MethodInfo> interfaceMethods = new HashSet<MethodInfo>(interfaceType.GetMethods());
+
+            foreach (var baseInterface in interfaceType.GetInterfaces())
+                interfaceMethods.UnionWith(baseInterface.GetMethods());
 
             Assert.Equal(interfaceMethods.Count(), classMethods.Count());
         }
@@ -1122,10 +1125,9 @@ namespace RulesEngineWrappers.UnitTest
             return new RulesEngineWrapper(new string[] { data, injectWorkflowStr }, reSettings);
         }
 
-        private static string GetFileContent(string filename, [CallerFilePath] string sourceFilePath = "")
+        private string GetFileContent(string filename)
         {
-            var directory = Path.GetDirectoryName(sourceFilePath);
-            var filePath = Path.Combine(directory, "TestData", filename);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory() as string, "TestData", filename);
             return File.ReadAllText(filePath);
         }
 

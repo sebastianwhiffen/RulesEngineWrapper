@@ -35,6 +35,7 @@ public partial class RulesEngineWrapper : IRulesEngineWrapper
     {
         OnAddWorkflow += (sender, workflows) => _workflowService.AddWorkflow(workflows);
         OnAddOrUpdateWorkflow += (sender, workflows) => _workflowService.AddOrUpdateWorkflow(workflows);
+        OnRemoveWorkflow += (sender, workflowNames) => _workflowService.RemoveWorkflow(workflowNames);
     }
 
     

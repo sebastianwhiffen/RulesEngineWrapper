@@ -12,7 +12,7 @@ public static class RuleEngineServicesExtensions
     {
         options ??= new RulesEngineWrapperSettings();
 
-        services.AddDefaultServices();
+        services.AddDefaultServices(options);
 
         services.AddScoped<IWorkflowService, WorkflowService>();
 
@@ -26,9 +26,11 @@ public static class RuleEngineServicesExtensions
         return services;
     }
 
-    private static IServiceCollection AddDefaultServices(this IServiceCollection services)
+    private static IServiceCollection AddDefaultServices(this IServiceCollection services, RulesEngineWrapperSettings options)
     {
-        services.AddScoped<IRulesEngine, RulesEngine.RulesEngine>();
+        services.AddScoped<IRulesEngine, RulesEngine.RulesEngine>(p =>
+        new RulesEngine.RulesEngine(options.ReSettings)
+        );
         return services;
     }
 }
