@@ -52,7 +52,6 @@ namespace RulesEngineWrappers.Domain
             }
 
             return workflow;
-
         }
     }
 }

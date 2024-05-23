@@ -4,16 +4,16 @@ namespace RulesEngineWrappers.Domain;
 public static class ScopedParamEntityExtentions
 {
 
-    public static IEnumerable<ScopedParam> ToScopedParam(this IEnumerable<ScopedParamEntity> scopedParamEntities)
+    public static IEnumerable<ScopedParam> ToDTOs(this IEnumerable<ScopedParamEntity> scopedParamEntities)
     {
         foreach(ScopedParamEntity scopedParamEntity in scopedParamEntities)
         {
-            yield return scopedParamEntity.ToScopedParam();
+            yield return scopedParamEntity.ToDTO();
         }
 
     }
 
-    public static ScopedParam ToScopedParam(this ScopedParamEntity scopedParamEntity)
+    public static ScopedParam ToDTO(this ScopedParamEntity scopedParamEntity)
     {
         return new ScopedParam 
         {
@@ -22,15 +22,15 @@ public static class ScopedParamEntityExtentions
         };
     }
 
-    public static IEnumerable<ScopedParamEntity> ToScopedParamEntity(this IEnumerable<ScopedParam> scopedParams)
+    public static IEnumerable<ScopedParamEntity> ToEntities(this IEnumerable<ScopedParam> scopedParams)
     {
         foreach(ScopedParam scopedParam in scopedParams)
         {
-            yield return scopedParam.ToScopedParamEntity();
+            yield return scopedParam.ToEntity();
         }
     }
 
-    public static ScopedParamEntity ToScopedParamEntity(this ScopedParam scopedParam)
+    public static ScopedParamEntity ToEntity(this ScopedParam scopedParam)
     {
         return new ScopedParamEntity 
         {

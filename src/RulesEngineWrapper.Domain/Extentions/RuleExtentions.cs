@@ -1,20 +1,19 @@
 
-using System.Diagnostics;
 using RulesEngine.Models;
 namespace RulesEngineWrappers.Domain;
 
 public static class RuleExtentions
 {
 
-     public static IEnumerable<Rule> ToRules (this IEnumerable<RuleEntity> ruleEntities)
+     public static IEnumerable<Rule> ToDTOs (this IEnumerable<RuleEntity> ruleEntities)
     {
         foreach (var ruleEntity in ruleEntities)
         {
-            yield return ruleEntity.ToRule();
+            yield return ruleEntity.ToDTO();
         }
     }
 
-    public static Rule ToRule(this RuleEntity ruleEntity)
+    public static Rule ToDTO(this RuleEntity ruleEntity)
     {
         return new Rule
         {
@@ -25,22 +24,22 @@ public static class RuleExtentions
             Enabled = ruleEntity.Enabled,
             RuleExpressionType = RuleExpressionType.LambdaExpression,
             // WorkflowsToInject = ruleEntity.WorkflowsToInject.Select(w => w.WorkflowName).ToList(),
-            Rules = ruleEntity.Rules?.Select(r => r.ToRule()).ToList(),
-            LocalParams = ruleEntity.LocalParams?.Select(p => p.ToScopedParam()).ToList(),
+            Rules = ruleEntity.Rules?.Select(r => r.ToDTO()).ToList(),
+            LocalParams = ruleEntity.LocalParams?.Select(p => p.ToDTO()).ToList(),
             // Actions = ruleEntity.Actions,
             SuccessEvent = ruleEntity.SuccessEvent
         };
     }
 
-    public static IEnumerable<RuleEntity> ToRuleEntities(this IEnumerable<Rule> rules)
+    public static IEnumerable<RuleEntity> ToEntities(this IEnumerable<Rule> rules)
     {
         foreach (var rule in rules)
         {
-            yield return rule.ToRuleEntity();
+            yield return rule.ToEntity();
         }
     }
 
-    public static RuleEntity ToRuleEntity(this Rule rule)
+    public static RuleEntity ToEntity(this Rule rule)
     {
         return new RuleEntity
         {
@@ -50,8 +49,8 @@ public static class RuleExtentions
             ErrorMessage = rule.ErrorMessage,
             Enabled = rule.Enabled,
             // WorkflowsToInject = rule.WorkflowsToInject.Select(w => new WorkflowEntity { WorkflowName = w }).ToList(),
-            Rules = rule.Rules?.Select(r => r.ToRuleEntity()).ToList(),
-            LocalParams = rule.LocalParams?.Select(p => p.ToScopedParamEntity()).ToList(),
+            Rules = rule.Rules?.Select(r => r.ToEntity()).ToList(),
+            LocalParams = rule.LocalParams?.Select(p => p.ToEntity()).ToList(),
             // Actions = rule.Actions,
             SuccessEvent = rule.SuccessEvent
         };

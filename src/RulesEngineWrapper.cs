@@ -16,9 +16,9 @@ namespace RulesEngineWrappers
         {
             return _workflowService.ExecuteActionWorkflowAsync(workflowName, ruleName, ruleParameters);
         }
-        public void RemoveWorkflow(params string[] workflowNames) => OnRemoveWorkflow?.Invoke(this, workflowNames);
-        public void AddOrUpdateWorkflow(params Workflow[] workflows) => OnAddOrUpdateWorkflow?.Invoke(this, workflows);
-        public void AddWorkflow(params Workflow[] workflows) => OnAddWorkflow?.Invoke(this,workflows);
+        public void RemoveWorkflow(params string[] workflowNames) => _workflowService.RemoveWorkflow(workflowNames);
+        public void AddOrUpdateWorkflow(params Workflow[] workflows) => _workflowService.AddOrUpdateWorkflow(workflows);
+        public void AddWorkflow(params Workflow[] workflows) => _workflowService.AddWorkflow(workflows);
         public List<string> GetAllRegisteredWorkflowNames() => _workflowService.GetAllRegisteredWorkflowNames();
         public bool ContainsWorkflow(string workflowName) => _workflowService.ContainsWorkflow(workflowName);
         public void ClearWorkflows() => _workflowService.ClearWorkflows();
