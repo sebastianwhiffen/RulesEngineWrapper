@@ -22,6 +22,8 @@ public static class RuleEngineServicesExtensions
             services.AddScoped<IWorkflowRepository, WorkflowRepository>();
             services.AddScoped<IWorkflowService, WorkflowDataSourceService>();
         }
+        
+        options.Logger.Invoke(services);
 
         return services;
     }

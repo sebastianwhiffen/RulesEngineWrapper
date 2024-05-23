@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using RulesEngineWrappers.Presentation;
 
 namespace RulesEngineWrappers.UnitTest;
-public class RulesEngineWrapperConstructionTests
+public class ConstructorTests
 {
     [Fact]
     public void InstantiateRulesEngineWrapperNoParams_ShouldWork()

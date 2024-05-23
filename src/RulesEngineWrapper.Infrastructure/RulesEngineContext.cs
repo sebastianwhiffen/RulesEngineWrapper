@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using RulesEngineWrappers.Domain;
-using RulesEngineWrappers.Infrastructure;
 
 namespace RulesEngine.Data
 {
@@ -22,8 +20,8 @@ namespace RulesEngine.Data
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
         {
             // await _mediator.DispatchDomainEventsAsync(this);
-            
-             _ = await base.SaveChangesAsync(cancellationToken);
+
+            _ = await base.SaveChangesAsync(cancellationToken);
 
             return true;
         }
@@ -52,12 +50,21 @@ namespace RulesEngine.Data
                 e.HasMany(e => e.Rules);
             });
 
-            modelBuilder.Entity<ActionInfoEntity>()
-            .Property(e => e.Context)
-            .HasConversion(
-                v => JsonConvert.SerializeObject(v),
-                v => JsonConvert.DeserializeObject<Dictionary<string, object>>(v)
-            );
+            modelBuilder.Entity<ActionInfoEntity>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Name).IsRequired();
+                entity.HasMany(e => e.Contexts)
+                    .WithOne(c => c.ActionInfoEntity)
+                    .HasForeignKey(c => c.Id);
+            });
+
+            modelBuilder.Entity<ActionInfoContext>(entity =>
+            {
+                entity.HasKey(c => c.Id);
+                entity.Property(c => c.Key).IsRequired();
+                entity.Property(c => c.Value).IsRequired();
+            });
         }
     }
 }

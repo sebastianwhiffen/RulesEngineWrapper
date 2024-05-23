@@ -1,9 +1,9 @@
-﻿using RulesEngine.Data;
-using RulesEngineWrappers.Domain;
+﻿// using RulesEngine.Data;
+// using RulesEngineWrappers.Domain;
 
-namespace RulesEngineWrappers.Infrastructure;
-static class MediatorExtension
-{
+// namespace RulesEngineWrappers.Infrastructure;
+// static class MediatorExtension
+// {
 //   public static async Task DispatchDomainEventsAsync(RulesEngineWrapperContext ctx)
 //     {
 //         var domainEntities = ctx.ChangeTracker
@@ -19,4 +19,4 @@ static class MediatorExtension
 
 //         foreach (var domainEvent in domainEvents) {}
 //     }
-}
+// }

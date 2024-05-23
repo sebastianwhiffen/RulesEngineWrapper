@@ -1,23 +1,18 @@
-﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
-
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using RulesEngine.Exceptions;
 using RulesEngine.HelperFunctions;
-using RulesEngine.Interfaces;
 using RulesEngine.Models;
 using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using System.Reflection;
 using RulesEngineWrappers.Presentation;
-using System.Runtime.CompilerServices;
 
 namespace RulesEngineWrappers.UnitTest
 {
     [Trait("Category", "Unit")]
     [ExcludeFromCodeCoverage]
-    public class RulesEngineWrapperTest
+    public class BuisnessRulesTest
     {
         [Theory]
         [InlineData("rules1.json")]

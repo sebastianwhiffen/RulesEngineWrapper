@@ -16,6 +16,7 @@ namespace RulesEngineWrappers.Domain
         public async Task<WorkflowEntity> AddAsync(WorkflowEntity workflowEntity)
         {
             var workflow = await _context.Workflows.AddAsync(workflowEntity);
+            
             return workflow.Entity;
         }
 
