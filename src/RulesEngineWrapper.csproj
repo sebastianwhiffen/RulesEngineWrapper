@@ -1,15 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\RulesEngine\src\RulesEngine\RulesEngine.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="CodenameGenerator" Version="1.2.47" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4"/>
+    <PackageReference Include="RulesEngine" Version="5.0.3" />
   </ItemGroup>
 
   <PropertyGroup>

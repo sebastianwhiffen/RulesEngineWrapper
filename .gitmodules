@@ -1,3 +1,0 @@
-[submodule "RulesEngine"]
-	path = RulesEngine
-	url = https://github.com/microsoft/RulesEngine.git

@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulesEngine", "RulesEngine\src\RulesEngine\RulesEngine.csproj", "{69F0CAB5-3EB4-4286-A1FC-B75F35101368}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulesEngineWrapper.UnitTest", "test\RulesEngineWrapper.UnitTest\RulesEngineWrapper.UnitTest.csproj", "{40F1D100-58F7-4457-9BF0-9E9E06F6C033}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulesEngineWrapper", "src\RulesEngineWrapper.csproj", "{9611857E-F45E-4F56-9F01-81B4093F81D7}"
