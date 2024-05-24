@@ -62,7 +62,7 @@ public class LoggingTests
                 builder.ClearProviders();
                 builder.SetMinimumLevel(logLevel);
                 builder.AddProvider(new CustomFileLoggerProvider(logFileWriter, logLevel));
-
+                builder.AddFilter("Microsoft.EntityFrameworkCore", LogLevel.None);
             })
         };
 

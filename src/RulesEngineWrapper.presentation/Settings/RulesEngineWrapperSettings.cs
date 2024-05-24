@@ -8,7 +8,10 @@ namespace RulesEngineWrappers.Presentation
     public class RulesEngineWrapperSettings
     {
         public ReSettings ReSettings { get; set; } = new ReSettings();
-        public Action<DbContextOptionsBuilder> DbContextOptionsAction { get; set; } = options => options.UseInMemoryDatabase("RulesEngineWrapper");
+        public Action<DbContextOptionsBuilder> DbContextOptionsAction { get; set; } = options => 
+            options.UseInMemoryDatabase("RulesEngineWrapper")
+            .EnableSensitiveDataLogging()
+            .EnableDetailedErrors();
         public bool WrapperDbEnsureCreated { get; set; } = false;
         public bool UseDatabase { get; set; } = false;
         public Func<IServiceCollection, IServiceCollection> Logger { get; set; } = options => options.AddLogging(builder =>

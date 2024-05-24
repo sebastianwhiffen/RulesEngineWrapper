@@ -21,7 +21,7 @@ public class WorkflowDataSourceService : IWorkflowService
         {
             if (await _workflowRepository.FindAsync(workflow.WorkflowName) != null)
             {
-                _logger.LogDebug("Updating workflow {workflowname}", workflow.WorkflowName);
+                _logger.LogInformation("Updating workflow {workflowname}", workflow.WorkflowName);
 
                 await _workflowRepository.Update(workflow.ToEntity());
             }
@@ -35,7 +35,7 @@ public class WorkflowDataSourceService : IWorkflowService
     {
         foreach (var workflow in workflows)
         {
-            _logger.LogDebug("Adding workflow {workflowname}", workflow.WorkflowName);
+            _logger.LogInformation("Adding workflow {workflowname}", workflow.WorkflowName);
 
             _workflowRepository.AddAsync(workflow.ToEntity());
         }
@@ -45,7 +45,7 @@ public class WorkflowDataSourceService : IWorkflowService
 
     public void ClearWorkflows()
     {
-        _logger.LogDebug("Clearing all workflows");
+        _logger.LogInformation("Clearing all workflows");
         _baseWorkflowService.ClearWorkflows();
     }
 
@@ -56,19 +56,19 @@ public class WorkflowDataSourceService : IWorkflowService
 
     public ValueTask<ActionRuleResult> ExecuteActionWorkflowAsync(string workflowName, string ruleName, RuleParameter[] ruleParameters)
     {
-        _logger.LogDebug("Executing action {ruleName} for workflow {workflowName}", ruleName, workflowName);
+        _logger.LogInformation("Executing action {ruleName} for workflow {workflowName}", ruleName, workflowName);
         return _baseWorkflowService.ExecuteActionWorkflowAsync(workflowName, ruleName, ruleParameters);
     }
 
     public ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params object[] inputs)
     {
-        _logger.LogDebug("Executing all rules for workflow {workflowName}", workflowName);
+        _logger.LogInformation("Executing all rules for workflow {workflowName}", workflowName);
         return _baseWorkflowService.ExecuteAllRulesAsync(workflowName, inputs);
     }
 
     public ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params RuleParameter[] ruleParams)
     {
-        _logger.LogDebug("Executing all rules for workflow {workflowName}", workflowName);
+        _logger.LogInformation("Executing all rules for workflow {workflowName}", workflowName);
         return _baseWorkflowService.ExecuteAllRulesAsync(workflowName, ruleParams);
     }
 
@@ -81,7 +81,7 @@ public class WorkflowDataSourceService : IWorkflowService
     {
         foreach (var workflowName in workflowNames)
         {
-            _logger.LogDebug("Removing workflow {workflowName}", workflowName);
+            _logger.LogInformation("Removing workflow {workflowName}", workflowName);
 
             _workflowRepository.Remove(workflowName);
         }
