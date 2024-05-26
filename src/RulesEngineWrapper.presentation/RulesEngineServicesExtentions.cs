@@ -3,8 +3,9 @@ using System.Runtime.InteropServices;
 using RulesEngine.Interfaces;
 using RulesEngine.Data;
 using RulesEngineWrappers.Domain;
+using RulesEngineWrappers.Presentation;
 
-namespace RulesEngineWrappers.Presentation;
+namespace RulesEngineWrappers;
 public static class RuleEngineServicesExtensions
 {
     public static IServiceCollection AddRulesEngineWrapper(this IServiceCollection services,
