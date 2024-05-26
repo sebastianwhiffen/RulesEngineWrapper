@@ -1,8 +1,16 @@
-﻿using RulesEngineWrappers.Presentation;
+using RulesEngineWrappers;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddRulesEngineWrapper();
+builder.Services.AddSwaggerGen();
 
+var app = builder.Build();
 
-Console.WriteLine("Hello, World!");
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.UseHttpsRedirection();
+
+app.Run();
