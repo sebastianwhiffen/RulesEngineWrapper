@@ -6,6 +6,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddRulesEngineWrapper();
 builder.Services.AddSwaggerGen();
 
+
+
+
 var app = builder.Build();
 
 app.UseSwagger();
