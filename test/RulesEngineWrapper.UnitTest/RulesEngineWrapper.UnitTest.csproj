@@ -16,6 +16,7 @@
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
     <PackageReference Include="RulesEngine" Version="5.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.8" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\RulesEngineWrapper.Core\RulesEngineWrapper.csproj" />
+    <ProjectReference Include="..\..\src\RulesEngineWrapper.Dashboard\RulesEngineWrapper.Dashboard.csproj" />
   </ItemGroup>
 
   <ItemGroup>

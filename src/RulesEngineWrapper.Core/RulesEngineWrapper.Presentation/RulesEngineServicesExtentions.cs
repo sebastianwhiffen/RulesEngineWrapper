@@ -3,9 +3,8 @@ using System.Runtime.InteropServices;
 using RulesEngine.Interfaces;
 using RulesEngine.Data;
 using RulesEngineWrapper.Domain;
-using RulesEngineWrapper.Presentation;
 
-namespace RulesEngineWrapper;
+namespace RulesEngineWrapper.Presentation;
 public static class RuleEngineServicesExtensions
 {
     public static IServiceCollection AddRulesEngineWrapper(this IServiceCollection services,
@@ -24,7 +23,7 @@ public static class RuleEngineServicesExtensions
             services.AddScoped<IWorkflowService, WorkflowDataSourceService>();
         }
         
-        options.Logger.Invoke(services);
+        options.Logger(services);
 
         return services;
     }
@@ -36,5 +35,15 @@ public static class RuleEngineServicesExtensions
         );
         return services;
     }
+
+     public static void ThrowIfNotConfigured(IServiceProvider serviceProvider)
+        {
+            var configuration = serviceProvider.GetService<IRulesEngine>();
+            if (configuration == null)
+            {
+                throw new InvalidOperationException(
+                    "Unable to find the required services. Please add all the required services by calling 'IServiceCollection.AddRulesEngineWrapper");
+            }
+        }
 }
 
