@@ -1,6 +1,6 @@
 using CodenameGenerator;
 
-namespace RulesEngineWrappers.Domain;
+namespace RulesEngineWrapper.Domain;
 
 public class RuleEntity : Entity
 {

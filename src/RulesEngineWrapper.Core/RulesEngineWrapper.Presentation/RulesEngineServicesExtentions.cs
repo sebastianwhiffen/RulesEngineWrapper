@@ -2,10 +2,10 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Runtime.InteropServices;
 using RulesEngine.Interfaces;
 using RulesEngine.Data;
-using RulesEngineWrappers.Domain;
-using RulesEngineWrappers.Presentation;
+using RulesEngineWrapper.Domain;
+using RulesEngineWrapper.Presentation;
 
-namespace RulesEngineWrappers;
+namespace RulesEngineWrapper;
 public static class RuleEngineServicesExtensions
 {
     public static IServiceCollection AddRulesEngineWrapper(this IServiceCollection services,

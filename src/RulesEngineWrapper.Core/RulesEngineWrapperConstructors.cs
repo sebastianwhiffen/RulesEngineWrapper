@@ -1,9 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using RulesEngine.Models;
-using RulesEngineWrappers.Presentation;
+using RulesEngineWrapper.Presentation;
 
-namespace RulesEngineWrappers;
+namespace RulesEngineWrapper;
 
 public partial class RulesEngineWrapper : IRulesEngineWrapper
 {

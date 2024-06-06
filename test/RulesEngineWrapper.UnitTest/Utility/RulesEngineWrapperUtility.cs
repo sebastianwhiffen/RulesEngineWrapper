@@ -1,8 +1,8 @@
 using CodenameGenerator;
 using Microsoft.EntityFrameworkCore;
 using RulesEngine.Models;
-using RulesEngineWrappers;
-using RulesEngineWrappers.Presentation;
+using RulesEngineWrapper;
+using RulesEngineWrapper.Presentation;
 
 public static class RulesEngineWrapperUtility
 {

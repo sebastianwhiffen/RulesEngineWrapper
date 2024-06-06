@@ -3,7 +3,7 @@ using RulesEngine.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace RulesEngineWrappers.Presentation
+namespace RulesEngineWrapper.Presentation
 {
     public class RulesEngineWrapperSettings
     {

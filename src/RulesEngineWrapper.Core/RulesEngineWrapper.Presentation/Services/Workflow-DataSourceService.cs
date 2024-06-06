@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using RulesEngine.Interfaces;
 using RulesEngine.Models;
-using RulesEngineWrappers.Domain;
+using RulesEngineWrapper.Domain;
 
 public class WorkflowDataSourceService : IWorkflowService
 {

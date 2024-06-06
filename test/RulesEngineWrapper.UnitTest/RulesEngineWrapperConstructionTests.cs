@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
-using RulesEngineWrappers.Presentation;
+using RulesEngineWrapper.Presentation;
 
-namespace RulesEngineWrappers.UnitTest;
+namespace RulesEngineWrapper.UnitTest;
 public class ConstructorTests
 {
     [Fact]

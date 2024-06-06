@@ -1,6 +1,6 @@
 
 using RulesEngine.Models;
-namespace RulesEngineWrappers.Domain;
+namespace RulesEngineWrapper.Domain;
 
 public static class RuleExtentions
 {

@@ -1,6 +1,6 @@
 ﻿using RulesEngine.Models;
 
-namespace RulesEngineWrappers
+namespace RulesEngineWrapper
 {
     public partial class RulesEngineWrapper : IRulesEngineWrapper
     {

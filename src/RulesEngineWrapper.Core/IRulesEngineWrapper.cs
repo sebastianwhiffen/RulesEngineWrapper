@@ -1,6 +1,6 @@
 using RulesEngine.Interfaces;
 
-namespace RulesEngineWrappers
+namespace RulesEngineWrapper
 {
     public interface IRulesEngineWrapper : IRulesEngine
     {

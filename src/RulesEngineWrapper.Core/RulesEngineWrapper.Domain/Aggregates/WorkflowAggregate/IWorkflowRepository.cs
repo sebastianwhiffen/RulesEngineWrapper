@@ -1,5 +1,5 @@
 
-namespace RulesEngineWrappers.Domain;
+namespace RulesEngineWrapper.Domain;
 
 public interface IWorkflowRepository : IRepository<WorkflowEntity>
 {

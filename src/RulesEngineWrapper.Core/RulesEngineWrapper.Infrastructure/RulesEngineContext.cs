@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RulesEngineWrappers.Domain;
+using RulesEngineWrapper.Domain;
 
 namespace RulesEngine.Data
 {

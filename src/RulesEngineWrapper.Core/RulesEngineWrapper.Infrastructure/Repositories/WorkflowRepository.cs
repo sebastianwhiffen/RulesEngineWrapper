@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace RulesEngineWrappers.Domain
+namespace RulesEngineWrapper.Domain
 {
     public class WorkflowRepository : IWorkflowRepository
     {

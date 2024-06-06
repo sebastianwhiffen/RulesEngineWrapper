@@ -1,4 +1,4 @@
-﻿namespace RulesEngineWrappers.Domain;
+﻿namespace RulesEngineWrapper.Domain;
 
 public interface IAggregateRoot { }
 

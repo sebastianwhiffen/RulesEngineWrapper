@@ -1,9 +1,9 @@
 using CodenameGenerator;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using RulesEngineWrappers.Presentation;
+using RulesEngineWrapper.Presentation;
 
-namespace RulesEngineWrappers.UnitTest;
+namespace RulesEngineWrapper.UnitTest;
 public class LoggingTests
 {
     [Fact]

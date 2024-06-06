@@ -6,9 +6,9 @@ using RulesEngine.Models;
 using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using System.Reflection;
-using RulesEngineWrappers.Presentation;
+using RulesEngineWrapper.Presentation;
 
-namespace RulesEngineWrappers.UnitTest
+namespace RulesEngineWrapper.UnitTest
 {
     [Trait("Category", "Unit")]
     [ExcludeFromCodeCoverage]
