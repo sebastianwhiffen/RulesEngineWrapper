@@ -6,12 +6,12 @@ using RulesEngineWrapper.Domain;
 public class WorkflowDataSourceService : IWorkflowService
 {
     private readonly IWorkflowRepository _workflowRepository;
-    private readonly IWorkflowService _baseWorkflowService;
     private readonly ILogger<WorkflowDataSourceService> _logger;
-    public WorkflowDataSourceService(ILoggerFactory logger, IRulesEngine rulesEngine, IWorkflowRepository workflowRepository)
+    private readonly IRulesEngine _rulesEngine;
+    public WorkflowDataSourceService(ILogger<WorkflowDataSourceService> logger, IRulesEngine rulesEngine, IWorkflowRepository workflowRepository)
     {
-        _logger = logger != null ? logger.CreateLogger<WorkflowDataSourceService>() : throw new ArgumentNullException(nameof(logger));
-        _baseWorkflowService = new WorkflowService(rulesEngine);
+        _logger = logger;
+        _rulesEngine = rulesEngine;
         _workflowRepository = workflowRepository ?? throw new ArgumentNullException(nameof(workflowRepository));
     }
 
@@ -28,7 +28,7 @@ public class WorkflowDataSourceService : IWorkflowService
             else AddWorkflow(workflows);
         }
 
-        _baseWorkflowService.AddOrUpdateWorkflow(workflows);
+        _rulesEngine.AddOrUpdateWorkflow(workflows);
     }
 
     public void AddWorkflow(params Workflow[] workflows)
@@ -40,41 +40,41 @@ public class WorkflowDataSourceService : IWorkflowService
             _workflowRepository.AddAsync(workflow.ToEntity());
         }
 
-        _baseWorkflowService.AddWorkflow(workflows);
+        _rulesEngine.AddWorkflow(workflows);
     }
 
     public void ClearWorkflows()
     {
         _logger.LogInformation("Clearing all workflows");
-        _baseWorkflowService.ClearWorkflows();
+        _rulesEngine.ClearWorkflows();
     }
 
     public bool ContainsWorkflow(string workflowName)
     {
-        return _baseWorkflowService.ContainsWorkflow(workflowName) == (_workflowRepository.FindAsync(workflowName).Result != null);
+        return _rulesEngine.ContainsWorkflow(workflowName) == (_workflowRepository.FindAsync(workflowName).Result != null);
     }
 
     public ValueTask<ActionRuleResult> ExecuteActionWorkflowAsync(string workflowName, string ruleName, RuleParameter[] ruleParameters)
     {
         _logger.LogInformation("Executing action {ruleName} for workflow {workflowName}", ruleName, workflowName);
-        return _baseWorkflowService.ExecuteActionWorkflowAsync(workflowName, ruleName, ruleParameters);
+        return _rulesEngine.ExecuteActionWorkflowAsync(workflowName, ruleName, ruleParameters);
     }
 
     public ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params object[] inputs)
     {
         _logger.LogInformation("Executing all rules for workflow {workflowName}", workflowName);
-        return _baseWorkflowService.ExecuteAllRulesAsync(workflowName, inputs);
+        return _rulesEngine.ExecuteAllRulesAsync(workflowName, inputs);
     }
 
     public ValueTask<List<RuleResultTree>> ExecuteAllRulesAsync(string workflowName, params RuleParameter[] ruleParams)
     {
         _logger.LogInformation("Executing all rules for workflow {workflowName}", workflowName);
-        return _baseWorkflowService.ExecuteAllRulesAsync(workflowName, ruleParams);
+        return _rulesEngine.ExecuteAllRulesAsync(workflowName, ruleParams);
     }
 
     public List<string> GetAllRegisteredWorkflowNames()
     {
-        return _baseWorkflowService.GetAllRegisteredWorkflowNames();
+        return _rulesEngine.GetAllRegisteredWorkflowNames();
     }
 
     public void RemoveWorkflow(params string[] workflowNames)
@@ -86,6 +86,6 @@ public class WorkflowDataSourceService : IWorkflowService
             _workflowRepository.Remove(workflowName);
         }
 
-        _baseWorkflowService.RemoveWorkflow(workflowNames);
+        _rulesEngine.RemoveWorkflow(workflowNames);
     }
 }

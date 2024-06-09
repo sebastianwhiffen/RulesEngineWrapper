@@ -1,15 +1,20 @@
+using Microsoft.Extensions.Logging;
 using RulesEngine.Interfaces;
 using RulesEngine.Models;
 
 public class WorkflowService : IWorkflowService
 {
     private readonly IRulesEngine _rulesEngine;
-    public WorkflowService(IRulesEngine rulesEngine)
+    public WorkflowService(IRulesEngine rulesEngine, ILogger<WorkflowService> logger)
     {
         _rulesEngine = rulesEngine;
     }
     public void ClearWorkflows() => _rulesEngine.ClearWorkflows();
-    public void AddWorkflow(params Workflow[] workflows) => _rulesEngine.AddWorkflow(workflows);
+    public void AddWorkflow(params Workflow[] workflows) 
+    {
+
+        _rulesEngine.AddWorkflow(workflows);
+    }
     public bool ContainsWorkflow(string workflowName) => _rulesEngine.ContainsWorkflow(workflowName);
     public List<string> GetAllRegisteredWorkflowNames() => _rulesEngine.GetAllRegisteredWorkflowNames();
     public void RemoveWorkflow(params string[] workflowNames) => _rulesEngine.RemoveWorkflow(workflowNames);

@@ -1,7 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
-using System.Runtime.InteropServices;
+using Microsoft.Extensions.Logging;
 using RulesEngine.Interfaces;
-using RulesEngine.Data;
 using RulesEngineWrapper.Domain;
 
 namespace RulesEngineWrapper.Presentation;
@@ -22,28 +21,30 @@ public static class RuleEngineServicesExtensions
     //         services.AddScoped<IWorkflowRepository, WorkflowRepository>();
     //         services.AddScoped<IWorkflowService, WorkflowDataSourceService>();
     //     }
-        
+
     //     options.Logger(services);
 
     //     return services;
     // }
 
-    private static IServiceCollection AddDefaultServices(this IServiceCollection services, RulesEngineWrapperSettings options)
-    {
-        services.AddScoped<IRulesEngine, RulesEngine.RulesEngine>(p =>
-        new RulesEngine.RulesEngine(options.ReSettings)
-        );
-        return services;
+    public static IRulesEngineWrapper<T> AddServiceDefaults<T>(this IRulesEngineWrapper<T> wrapper) where T : IRulesEngineWrapper
+    {   
+        wrapper.Services.AddLogging(builder =>builder.AddProvider(new NoOpLoggerProvider()));
+        wrapper.Services.AddSingleton<IRulesEngine, RulesEngine.RulesEngine>();
+        wrapper.Services.AddSingleton<IWorkflowService, WorkflowService>();
+        wrapper.Services.AddSingleton<IWorkflowRepository, WorkflowRepository>();
+        return wrapper;
     }
 
-     public static void ThrowIfNotConfigured(IServiceProvider serviceProvider)
+
+    public static void ThrowIfNotConfigured(IServiceProvider serviceProvider)
+    {
+        var configuration = serviceProvider.GetService<IRulesEngine>();
+        if (configuration == null)
         {
-            var configuration = serviceProvider.GetService<IRulesEngine>();
-            if (configuration == null)
-            {
-                throw new InvalidOperationException(
-                    "Unable to find the required services. Please add all the required services by calling 'IServiceCollection.AddRulesEngineWrapper");
-            }
+            throw new InvalidOperationException(
+                "Unable to find the required services. Please add all the required services by calling 'IServiceCollection.AddRulesEngineWrapper");
         }
+    }
 }
 

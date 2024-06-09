@@ -5,7 +5,6 @@ namespace RulesEngineWrapper
 {
     public interface IRulesEngineWrapper<out T> : IRulesEngineWrapper where T : IRulesEngineWrapper
     {
-        T Entity { get; }
     }
 
     public interface IRulesEngineWrapper : IRulesEngine

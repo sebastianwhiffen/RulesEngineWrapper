@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using RulesEngine.Data;
 using RulesEngine.Interfaces;
 using RulesEngine.Models;
 using RulesEngineWrapper.Domain;
@@ -9,18 +10,18 @@ namespace RulesEngineWrapper;
 
 public static class ConfigurationExtensions
 {
-    public static IConfiguration<IRulesEngineWrapper<T>> UseLogging<T>(
-        this IConfiguration<IRulesEngineWrapper<T>> configuration,
+    public static IRulesEngineWrapper<T> UseLogging<T>(
+        this IRulesEngineWrapper<T> wrapper,
         Action<ILoggingBuilder> action = null
         ) where T : IRulesEngineWrapper
     {
-        configuration.Entry.Entity.Services.AddLogging(action ?? (x => x.AddConsole()));
+        wrapper.Services.AddLogging(action ?? (x => x.AddConsole()));
 
-        return configuration;
+        return wrapper;
     }
 
-    public static IConfiguration<IRulesEngineWrapper<T>> UseRulesEngine<T>(
-       this IConfiguration<IRulesEngineWrapper<T>> configuration,
+    public static IRulesEngineWrapper<T> UseRulesEngine<T>(
+       this IRulesEngineWrapper<T> wrapper,
        Action<ReSettings> action = null
        ) where T : IRulesEngineWrapper
     {
@@ -28,34 +29,51 @@ public static class ConfigurationExtensions
 
         if (action != null) action(options);
 
-        configuration.Entry.Services.AddScoped<IRulesEngine, RulesEngine.RulesEngine>(p =>
+        wrapper.Services.AddScoped<IRulesEngine, RulesEngine.RulesEngine>(p =>
         new RulesEngine.RulesEngine(options));
 
-        return configuration;
+        return wrapper;
     }
 
-    public static IConfiguration<IRulesEngineWrapper<RulesEngineWrapper>> UseDatabase<R>(
-     this IConfiguration<IRulesEngineWrapper<RulesEngineWrapper>> configuration,
+    public static IRulesEngineWrapper<RulesEngineWrapper> UseDatabase(
+    this IRulesEngineWrapper<RulesEngineWrapper> wrapper,
+    Action<DbContextOptionsBuilder> action = null) => wrapper.UseDatabase<RulesEngineWrapperContext>(action);
+
+    public static IRulesEngineWrapper<RulesEngineWrapper> UseDatabase<R>(
+     this IRulesEngineWrapper<RulesEngineWrapper> wrapper,
      Action<DbContextOptionsBuilder> action = null)
      where R : DbContext, IRulesEngineWrapperContext
     {
-        configuration.Entry.Services.AddDbContext<IRulesEngineWrapperContext,R>(action);
+        wrapper.UseDatabase<IRulesEngineWrapper<RulesEngineWrapper>, R>(action);
 
-        configuration.Entry.Services.AddSingleton<IWorkflowService, WorkflowDataSourceService>();
-
-        configuration.Entry.Services.AddSingleton<IWorkflowRepository, WorkflowRepository>();
-        
-        return configuration;
+        return wrapper;
     }
-
-    public static IConfiguration<IRulesEngineWrapper<T>> UseDatabase<T, R>(
-     this IConfiguration<IRulesEngineWrapper<T>> configuration,
+    public static IRulesEngineWrapper<T> UseDatabase<T, R>(
+     this IRulesEngineWrapper<T> wrapper,
      Action<DbContextOptionsBuilder> action = null)
      where T : IRulesEngineWrapper where R : DbContext, IRulesEngineWrapperContext
     {
-        configuration.Entry.Services.AddDbContext<IRulesEngineWrapperContext,R>(action);
         
-        return configuration;
-    }
+        wrapper.Services.AddDbContext<IRulesEngineWrapperContext, R>(action);
 
+        wrapper.Services.AddSingleton<IWorkflowService, WorkflowDataSourceService>();
+
+        wrapper.Services.AddSingleton<IWorkflowRepository, WorkflowRepository>();
+
+        return wrapper;
+    }
+}
+
+class NoOpLoggerProvider : ILoggerProvider
+{
+    public ILogger CreateLogger(string categoryName) => new NoOpLogger();
+    public void Dispose() { }
+}
+
+// No-Op Logger
+class NoOpLogger : ILogger
+{
+    public IDisposable BeginScope<TState>(TState state) => null!;
+    public bool IsEnabled(LogLevel logLevel) => false;
+    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter) { }
 }
