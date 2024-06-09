@@ -7,26 +7,26 @@ using RulesEngineWrapper.Domain;
 namespace RulesEngineWrapper.Presentation;
 public static class RuleEngineServicesExtensions
 {
-    public static IServiceCollection AddRulesEngineWrapper(this IServiceCollection services,
-          [Optional] RulesEngineWrapperSettings options)
-    {
-        options ??= new RulesEngineWrapperSettings();
+    // public static IServiceCollection AddRulesEngineWrapper(this IServiceCollection services,
+    //       [Optional] Action<IConfiguration<RulesEngineWrapper>> action)
+    // {
 
-        services.AddDefaultServices(options);
 
-        services.AddScoped<IWorkflowService, WorkflowService>();
+    //     services.AddDefaultServices(options);
 
-        if (options.UseDatabase)
-        {
-            services.AddDbContext<IRulesEngineWrapperContext, RulesEngineWrapperContext>(options.DbContextOptionsAction);
-            services.AddScoped<IWorkflowRepository, WorkflowRepository>();
-            services.AddScoped<IWorkflowService, WorkflowDataSourceService>();
-        }
+    //     services.AddScoped<IWorkflowService, WorkflowService>();
+
+    //     if (options.UseDatabase)
+    //     {
+    //         services.AddDbContext<IRulesEngineWrapperContext, RulesEngineWrapperContext>(options.DbContextOptionsAction);
+    //         services.AddScoped<IWorkflowRepository, WorkflowRepository>();
+    //         services.AddScoped<IWorkflowService, WorkflowDataSourceService>();
+    //     }
         
-        options.Logger(services);
+    //     options.Logger(services);
 
-        return services;
-    }
+    //     return services;
+    // }
 
     private static IServiceCollection AddDefaultServices(this IServiceCollection services, RulesEngineWrapperSettings options)
     {
