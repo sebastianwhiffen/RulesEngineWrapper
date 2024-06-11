@@ -9,7 +9,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-    <PackageReference Include="RulesEngineWrapper" Version="1.0.1-beta1" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\RulesEngineWrapper.Dashboard\RulesEngineWrapper.Dashboard.csproj" />
+  </ItemGroup>
+
 
 </Project>

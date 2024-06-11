@@ -70,7 +70,6 @@ class NoOpLoggerProvider : ILoggerProvider
     public void Dispose() { }
 }
 
-// No-Op Logger
 class NoOpLogger : ILogger
 {
     public IDisposable BeginScope<TState>(TState state) => null!;

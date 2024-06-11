@@ -14,9 +14,15 @@ public class DashboardTests
 
 
     [Fact]
-    public void UseRulesEngineDashboard_ShouldRegisterMiddleware() =>
-        Assert.NotNull(new ApplicationBuilder(new ServiceCollection().AddSingleton<IRulesEngineWrapper, RulesEngineWrapper>().BuildServiceProvider()).UseRulesEngineDashboard().Build());
+    public void UseRulesEngineDashboard_ShouldRegisterMiddleware()
+    {
+        var builder = WebApplication.CreateBuilder();
 
+        var app = builder.Build();
+
+        app.UseRulesEngineDashboard();
+
+    }
 
 
 }

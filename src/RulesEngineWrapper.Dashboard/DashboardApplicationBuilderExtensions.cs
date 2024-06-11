@@ -1,24 +1,43 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using RulesEngineWrapper.Presentation;
 
 namespace RulesEngineWrapper.Dashboard;
 public static class DashboardApplicationBuilderExtensions
 {
     public static IApplicationBuilder UseRulesEngineDashboard(
-        this IApplicationBuilder app,
-        string defaultPath = "/rulesengine",
-        DashboardOptions? options = null)
+       this IApplicationBuilder app,
+       Action<DashboardOptions> action = null!)
     {
         if (app == null) throw new ArgumentNullException(nameof(app));
-        if (defaultPath == null) throw new ArgumentNullException(nameof(defaultPath));
 
-        RuleEngineServicesExtensions.ThrowIfNotConfigured(app.ApplicationServices);
+        var options = new DashboardOptions();
 
-        options = options ?? app.ApplicationServices.GetService<DashboardOptions>() ?? new DashboardOptions();
-        
-        app.Map(new PathString(defaultPath) , x => x.UseMiddleware<RulesEngineDashboardMiddleware>(options)); 
+        action?.Invoke(options);
+
+        var env = app.ApplicationServices.GetRequiredService<IWebHostEnvironment>();
+
+        app.MapWhen(context => context.Request.Path.StartsWithSegments(options.BaseUrl), builder =>
+        {
+            if (options.isLocal)
+            {
+                builder.UseSpa(spa =>
+                {
+                    spa.UseProxyToSpaDevelopmentServer(options.ApiUrl);
+                });
+            }
+            else
+            {
+                builder.UseStaticFiles("/dist");
+
+                // Redirect to options.BaseUrl/index.html
+                builder.Use((context, next) =>
+                {
+                    context.Request.Path = options.BaseUrl + "/index.html";
+                    return next();
+                });
+            }
+        });
 
         return app;
     }

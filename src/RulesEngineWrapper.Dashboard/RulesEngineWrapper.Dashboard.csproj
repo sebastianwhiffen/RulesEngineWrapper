@@ -7,13 +7,34 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CliWrap" Version="3.6.6" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.8" />
     <PackageReference Include="Microsoft.AspNetCore.ResponseCompression" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="8.0.6" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\RulesEngineWrapper.Core\RulesEngineWrapper.csproj" />
   </ItemGroup>
+
+    <Target Name="PreBuild" BeforeTargets="Build">
+      <!-- Run frontend buildscript -->
+      <Exec WorkingDirectory="Dashboard\" Command="npm run build" />
+
+      <!-- Copy files to the output directory -->
+      <ItemGroup>
+        <FilesToCopy Include="Dashboard\dist\**\*.*" />
+      </ItemGroup>
+      <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutDir)dist\%(RecursiveDir)" />
+    </Target>
+
+    <PropertyGroup>
+      <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    </PropertyGroup>
+    
+    <ItemGroup>
+      <Content Include="Dashboard\dist\**\*.*" PackagePath="contentFiles\any\any\dist\" BuildAction="EmbeddedResource" />
+    </ItemGroup>
 
 </Project>
