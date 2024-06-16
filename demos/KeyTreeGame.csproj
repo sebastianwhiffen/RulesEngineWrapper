@@ -12,8 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\RulesEngineWrapper.Dashboard\RulesEngineWrapper.Dashboard.csproj" />
+    <ProjectReference Include="..\src\RulesEngineWrapper.Dashboard\RulesEngineWrapper.Dashboard.csproj" />
   </ItemGroup>
-
 
 </Project>

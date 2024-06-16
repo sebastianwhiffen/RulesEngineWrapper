@@ -4,37 +4,47 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Version>9.0.0-beta</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CliWrap" Version="3.6.6" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.8" />
     <PackageReference Include="Microsoft.AspNetCore.ResponseCompression" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="8.0.6" />
   </ItemGroup>
 
+
   <ItemGroup>
     <ProjectReference Include="..\RulesEngineWrapper.Core\RulesEngineWrapper.csproj" />
   </ItemGroup>
 
-    <Target Name="PreBuild" BeforeTargets="Build">
-      <!-- Run frontend buildscript -->
-      <Exec WorkingDirectory="Dashboard\" Command="npm run build" />
 
-      <!-- Copy files to the output directory -->
-      <ItemGroup>
-        <FilesToCopy Include="Dashboard\dist\**\*.*" />
-      </ItemGroup>
-      <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutDir)dist\%(RecursiveDir)" />
-    </Target>
+  <!--_______________________________________________________________________________________________________________________________________ -->
 
-    <PropertyGroup>
-      <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    </PropertyGroup>
-    
-    <ItemGroup>
-      <Content Include="Dashboard\dist\**\*.*" PackagePath="contentFiles\any\any\dist\" BuildAction="EmbeddedResource" />
-    </ItemGroup>
+  <!-- custom build -->
+  <PropertyGroup>
+    <!-- this is set to true usually, so that we get hotreload when developing the frontend, but
+    when packaging it will be set to nothing to pack a static file -->
+    <ProductionBuild>false</ProductionBuild>
+  </PropertyGroup>
+  
+  <Target Name="PreBuild"  BeforeTargets="Build" Condition="'$(ProductionBuild)' == 'true'" >
+    <!-- Run frontend buildscript -->
+    <Message Text="building vite: $(MSBuildProjectDirectory)" Importance="high" />
+    <Exec WorkingDirectory="Dashboard\" Command="npm ci" />
+    <Exec WorkingDirectory="Dashboard\" Command="npm run build" />
+  </Target>
+
+  <Target Name="AfterCompile" AfterTargets="Compile" Condition="'$(ProductionBuild)' == 'false'">
+    <!-- Run frontend buildscript -->
+    <Message Text="starting vite dev server: $(MSBuildProjectDirectory)" Importance="high" />
+    <Exec WorkingDirectory="Dashboard" Command="npm ci" />
+    <Exec WorkingDirectory="Dashboard" Command="npm run dev" />
+</Target>
+
+  <ItemGroup>
+    <EmbeddedResource Include="dashboard\dist\**\*.*" />
+  </ItemGroup>
 
 </Project>
