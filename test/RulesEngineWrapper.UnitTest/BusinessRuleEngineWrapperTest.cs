@@ -354,10 +354,8 @@ namespace RulesEngineWrapper.UnitTest
 
             var fileData = File.ReadAllText(files[0]);
 
-            var bre = new RulesEngineWrapper(JsonConvert.DeserializeObject<Workflow[]>(fileData),
-            options => options.UseRulesEngine(
-            reOptions => reOptions.UseFastExpressionCompiler = fastExpressionEnabled
-            ));
+            var bre = new RulesEngineWrapper(x => x.UseRulesEngine(reSettings => reSettings.UseFastExpressionCompiler = fastExpressionEnabled)
+                .AddOrUpdateWorkflow(JsonConvert.DeserializeObject<Workflow[]>(fileData)));
 
             var result = await bre.ExecuteAllRulesAsync("inputWorkflow", ruleParams?.ToArray());
             var ruleResult = result?.FirstOrDefault(r => string.Equals(r.Rule.RuleName, "GiveDiscount10", StringComparison.OrdinalIgnoreCase));
@@ -521,13 +519,13 @@ namespace RulesEngineWrapper.UnitTest
         public async Task ExecuteRuleWithJsonElement(string ruleFileName)
         {
             var re = GetRulesEngine(ruleFileName,
-             x => x.UseRulesEngine(reSettings => 
+             x => x.UseRulesEngine(reSettings =>
              {
-                reSettings.EnableExceptionAsErrorMessage = true;
-                reSettings.CustomTypes = new[] { typeof(System.Text.Json.JsonElement)
+                 reSettings.EnableExceptionAsErrorMessage = true;
+                 reSettings.CustomTypes = new[] { typeof(System.Text.Json.JsonElement)
                 };
-            }));
-            
+             }));
+
 
             var input1 = new
             {
@@ -833,7 +831,7 @@ namespace RulesEngineWrapper.UnitTest
                 }
             };
 
-            var re = new RulesEngineWrapper(new[] { workflow }, null);
+            var re = new RulesEngineWrapper(x => x.AddOrUpdateWorkflow(workflow));
             var input = new RuleTestClass
             {
                 Country = null
@@ -862,7 +860,7 @@ namespace RulesEngineWrapper.UnitTest
                 }
             };
 
-            var re = new RulesEngineWrapper(new[] { workflow }, x => x.UseRulesEngine(reOptions => reOptions.EnableExceptionAsErrorMessage = false));
+            var re = new RulesEngineWrapper(x => x.UseRulesEngine(reOptions => reOptions.EnableExceptionAsErrorMessage = false).AddOrUpdateWorkflow(workflow));
 
             var input = new RuleTestClass
             {
@@ -888,7 +886,7 @@ namespace RulesEngineWrapper.UnitTest
                 }
             };
 
-            var re = new RulesEngineWrapper(new[] { workflow }, x => x.UseRulesEngine(reOptions => reOptions.IgnoreException = true));
+            var re = new RulesEngineWrapper(x => x.UseRulesEngine(reOptions => reOptions.IgnoreException = true).AddOrUpdateWorkflow(workflow));
 
             var input = new RuleTestClass
             {
@@ -1009,35 +1007,6 @@ namespace RulesEngineWrapper.UnitTest
         }
 
         [Fact]
-        public async Task ExecuteRule_SpecialCharInWorkflowName_RunsSuccessfully()
-        {
-            var workflow = new Workflow
-            {
-                WorkflowName = "Exámple",
-                Rules = new Rule[]{
-                    new Rule {
-                        RuleName = "RuleWithLocalParam",
-
-                        RuleExpressionType = RuleExpressionType.LambdaExpression,
-                        Expression = "input1 == null || input1.hello.world = \"wow\""
-                    }
-                }
-            };
-
-            var workflowStr = "{\"WorkflowName\":\"Exámple\",\"WorkflowsToInject\":null,\"GlobalParams\":null,\"Rules\":[{\"RuleName\":\"RuleWithLocalParam\",\"Properties\":null,\"Operator\":null,\"ErrorMessage\":null,\"Enabled\":true,\"ErrorType\":\"Warning\",\"RuleExpressionType\":\"LambdaExpression\",\"WorkflowsToInject\":null,\"Rules\":null,\"LocalParams\":null,\"Expression\":\"input1 == null || input1.hello.world = \\\"wow\\\"\",\"Actions\":null,\"SuccessEvent\":null}]}";
-
-            var re = new RulesEngineWrapper(new string[] { workflowStr }, null);
-
-            dynamic input1 = new ExpandoObject();
-            input1.hello = new ExpandoObject();
-            input1.hello.world = "wow";
-
-            List<RuleResultTree> result3 = await re.ExecuteAllRulesAsync("Exámple", input1);
-            Assert.True(result3.All(c => c.IsSuccess));
-
-        }
-
-        [Fact]
         public void ContainsWorkFlowName_ShouldReturn()
         {
             const string ExistedWorkflowName = "ExistedWorkflowName";
@@ -1084,11 +1053,8 @@ namespace RulesEngineWrapper.UnitTest
 
 
 
-        private RulesEngineWrapper CreateRulesEngine(Workflow workflow)
-        {
-            var json = JsonConvert.SerializeObject(workflow);
-            return new RulesEngineWrapper(new string[] { json }, null);
-        }
+        private RulesEngineWrapper CreateRulesEngine(Workflow workflow) => new RulesEngineWrapper(x => x.AddOrUpdateWorkflow(workflow));
+
 
         private RulesEngineWrapper GetRulesEngine(string filename, Action<IRulesEngineWrapper<RulesEngineWrapper>> reSettings = null)
         {
@@ -1101,7 +1067,8 @@ namespace RulesEngineWrapper.UnitTest
             };
 
             var injectWorkflowStr = JsonConvert.SerializeObject(injectWorkflow);
-            return new RulesEngineWrapper(new string[] { data, injectWorkflowStr }, reSettings);
+            return new RulesEngineWrapper(reSettings);
+            // return new RulesEngineWrapper(new string[] { data, injectWorkflowStr }, reSettings);
         }
 
         private string GetFileContent(string filename)

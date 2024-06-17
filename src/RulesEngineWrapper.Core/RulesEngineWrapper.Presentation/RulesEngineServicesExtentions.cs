@@ -27,12 +27,13 @@ public static class RuleEngineServicesExtensions
     //     return services;
     // }
 
-    public static IRulesEngineWrapper<T> AddServiceDefaults<T>(this IRulesEngineWrapper<T> wrapper) where T : IRulesEngineWrapper
+    internal static IRulesEngineWrapper<T> AddServiceDefaults<T>(this IRulesEngineWrapper<T> wrapper) where T : IRulesEngineWrapper
     {   
-        wrapper.Services.AddLogging(builder =>builder.AddProvider(new NoOpLoggerProvider()));
-        wrapper.Services.AddSingleton<IRulesEngine, RulesEngine.RulesEngine>();
-        wrapper.Services.AddSingleton<IWorkflowService, WorkflowService>();
-        wrapper.Services.AddSingleton<IWorkflowRepository, WorkflowRepository>();
+        wrapper.ModifyRulesEngineWrapperServiceCollection(x => x.AddLogging(builder =>builder.AddProvider(new NoOpLoggerProvider())));
+        wrapper.ModifyRulesEngineWrapperServiceCollection(x => x.AddSingleton<IRulesEngine, RulesEngine.RulesEngine>());
+        wrapper.ModifyRulesEngineWrapperServiceCollection(x => x.AddSingleton<IWorkflowService, WorkflowService>());
+        wrapper.ModifyRulesEngineWrapperServiceCollection(x => x.AddSingleton<IWorkflowRepository, WorkflowRepository>());
+
         return wrapper;
     }
 

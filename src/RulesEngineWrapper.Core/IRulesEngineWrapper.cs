@@ -9,6 +9,6 @@ namespace RulesEngineWrapper
 
     public interface IRulesEngineWrapper : IRulesEngine
     {
-        internal ServiceCollection Services { get; set; }
+        ServiceCollection ModifyRulesEngineWrapperServiceCollection(Action<ServiceCollection> action);
     }
 }

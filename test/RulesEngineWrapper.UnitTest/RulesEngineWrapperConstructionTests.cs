@@ -20,21 +20,23 @@ public class ConstructorTests
     public void InstantiateRulesEngineWrapperEnableDatabase_ShouldWork()
     {
         Assert.NotNull(new RulesEngineWrapper(x =>
-        x.UseDatabase<RulesEngineWrapperContext>()
-        ));
+        {
+            x.UseDatabase<RulesEngineWrapperContext>();
+            x.AddOrUpdateWorkflow(RulesEngineWrapperUtility.NewWorkflow());
+        }));
     }
 
-    [Fact]
-    public void InstantiateRulesEngineWrapperWithJsonConfig_ShouldWork()
-    {
-        var jsonConfig = new string[] { JsonConvert.SerializeObject(RulesEngineWrapperUtility.NewWorkflow()) };
+    // [Fact]
+    // public void InstantiateRulesEngineWrapperWithJsonConfig_ShouldWork()
+    // {
+    //     var jsonConfig = new string[] { JsonConvert.SerializeObject(RulesEngineWrapperUtility.NewWorkflow()) };
 
-        Assert.NotNull(new RulesEngineWrapper(jsonConfig));
-    }
+    //     Assert.NotNull(new RulesEngineWrapper(jsonConfig));
+    // }
 
     [Fact]
     public void InstantiateRulesEngineWrapperWithWorkflows_ShouldWork()
     {
-        Assert.NotNull(new RulesEngineWrapper(new[] { RulesEngineWrapperUtility.NewWorkflow() }));
+        Assert.NotNull(new RulesEngineWrapper(x => x.AddOrUpdateWorkflow(RulesEngineWrapperUtility.NewWorkflow())));
     }
 }

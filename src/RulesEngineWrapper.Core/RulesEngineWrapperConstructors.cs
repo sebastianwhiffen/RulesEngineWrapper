@@ -1,37 +1,41 @@
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using RulesEngine.Models;
 using RulesEngineWrapper.Presentation;
 
 namespace RulesEngineWrapper
 {
     public partial class RulesEngineWrapper : IRulesEngineWrapper<RulesEngineWrapper>
     {
-        private readonly IWorkflowService _workflowService;
-
-        public RulesEngineWrapper(string[] jsonConfig, Action<IRulesEngineWrapper<RulesEngineWrapper>> action = null) : this(action)
-        {
-            var workflows = jsonConfig.Select(JsonConvert.DeserializeObject<Workflow>).ToArray();
-            AddOrUpdateWorkflow(workflows!);
-        }
-
-        public RulesEngineWrapper(Workflow[] workflows, Action<IRulesEngineWrapper<RulesEngineWrapper>> action = null) : this(action)
-        {
-            AddOrUpdateWorkflow(workflows);
-        }
-
+        private bool isServiceCollectionModified { get; set; } = false;
+        private ServiceCollection Services { get; set; } = new ServiceCollection();
+        private IServiceProvider _serviceProvider { get => Services.BuildServiceProvider(); }
+        private IWorkflowService _workflowService {get; set;}
+        
         public RulesEngineWrapper(Action<IRulesEngineWrapper<RulesEngineWrapper>> action = null)
         {
             this.AddServiceDefaults();
 
             action?.Invoke(this);
-
-            var serviceProvider = Services.BuildServiceProvider();
-            
-            _workflowService = serviceProvider.GetRequiredService<IWorkflowService>();
         }
-        
-        public ServiceCollection Services {get; set;} = new ServiceCollection();
 
+        public ServiceCollection ModifyRulesEngineWrapperServiceCollection(Action<ServiceCollection> action)
+        {
+            action(Services);
+            //the reason we set this is to reduce the number of times we call build service provider
+            isServiceCollectionModified = true;
+            return Services;
+        }
+
+        private IWorkflowService GetWorkflowService()
+        {
+            if (isServiceCollectionModified)
+            {
+                _workflowService = _serviceProvider.GetService<IWorkflowService>();
+                //set modification state back to false
+                isServiceCollectionModified = false;
+                return _workflowService;
+            }
+            
+            return _workflowService;
+        }
     }
 }
