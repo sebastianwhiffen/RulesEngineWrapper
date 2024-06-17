@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
-using System.IO;
+using Microsoft.AspNetCore.Rewrite;
+//dont remove Microsoft.Extensions.FileProviders even if it says 'unused', its being used, but the compiler (ProductionBuild) flag is hiding it
 using Microsoft.Extensions.FileProviders;
 
 namespace RulesEngineWrapper.Dashboard
@@ -19,20 +18,32 @@ namespace RulesEngineWrapper.Dashboard
 
             var env = app.ApplicationServices.GetRequiredService<IWebHostEnvironment>();
 
-#if !ProductionBuild
-            app.MapWhen(context => context.Request.Path.StartsWithSegments(options.BaseUrl), builder =>
-            {
-                builder.UseSpa(spa =>
-                {
-                    spa.UseProxyToSpaDevelopmentServer(options.ApiUrl);
-                });
-            });
-#else
+            var rewriteOptions = new RewriteOptions();
+
+#if ProductionBuild == true
+            //for future reference, app.UseRewriter needs to go before UseStaticFiles like below,
+            //this is sketch asf, careful.
+            rewriteOptions.AddRewrite(@"^dashboard(?!/dist)", "dashboard/dist/index.html", true);
+
+            app.UseRewriter(rewriteOptions);
+
+            //look inside the csproj file for this project to see the packing of the embedded files
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new EmbeddedFileProvider(typeof(DashboardApplicationBuilderExtensions).Assembly, "RulesEngineWrapper.Dashboard"),
             });
+
+#else
+            rewriteOptions.AddRewrite(@"^dashboard(?!/dist)", "dashboard/dist/index.html", true);
+
+            app.UseRewriter(rewriteOptions);
+
+            app.UseSpa(spa =>
+            {
+                spa.UseProxyToSpaDevelopmentServer(options.ApiUrl);
+            });
 #endif
+
             return app;
         }
     }

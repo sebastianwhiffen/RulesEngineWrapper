@@ -13,6 +13,8 @@ app.UseRulesEngineDashboard();
 
 var fileProvider = new EmbeddedFileProvider(Assembly.GetCallingAssembly());
 
+app.UseStaticFiles();
+
 app.UseDirectoryBrowser(new DirectoryBrowserOptions
 {
     FileProvider = fileProvider,
