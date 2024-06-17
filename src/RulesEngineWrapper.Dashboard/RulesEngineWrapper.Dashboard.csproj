@@ -44,7 +44,7 @@
 </Target>
 
   <ItemGroup>
-    <EmbeddedResource Include="dashboard\dist\**\*.*" />
+    <EmbeddedResource Include="rulesEngineWrapper-dashboard\dist\**\*.*" />
   </ItemGroup>
 
 </Project>

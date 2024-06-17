@@ -20,7 +20,8 @@ public class ConstructorTests
     public void InstantiateRulesEngineWrapperEnableDatabase_ShouldWork()
     {
         Assert.NotNull(new RulesEngineWrapper(x =>
-        x.UseDatabase<RulesEngineWrapperContext>()));
+        x.UseDatabase<RulesEngineWrapperContext>()
+        ));
     }
 
     [Fact]

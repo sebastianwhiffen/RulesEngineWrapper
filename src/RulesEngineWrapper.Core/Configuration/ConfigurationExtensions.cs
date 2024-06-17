@@ -19,7 +19,7 @@ public static class ConfigurationExtensions
 
         return wrapper;
     }
-
+ 
     public static IRulesEngineWrapper<T> UseRulesEngine<T>(
        this IRulesEngineWrapper<T> wrapper,
        Action<ReSettings> action = null

@@ -9,7 +9,9 @@ builder.Services.AddDirectoryBrowser();
 
 var app = builder.Build();
 
-app.UseRulesEngineDashboard();
+app.
+
+app.UseRulesEngineDashboard(x => x.);
 
 var fileProvider = new EmbeddedFileProvider(Assembly.GetCallingAssembly());
 
