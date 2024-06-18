@@ -15,7 +15,7 @@ public static class ConfigurationExtensions
         Action<ILoggingBuilder> action = null
         ) where T : IRulesEngineWrapper
     {
-        wrapper.ModifyRulesEngineWrapperServiceCollection(x => x.AddLogging(action ?? (x => x.AddConsole())));
+        wrapper.RulesEngineWrapperServices.ModifyRulesEngineWrapperServiceCollection(x => x.AddLogging(action ?? (x => x.AddConsole())));
 
         return wrapper;
     }
@@ -29,7 +29,7 @@ public static class ConfigurationExtensions
 
         if (action != null) action(options);
 
-        wrapper.ModifyRulesEngineWrapperServiceCollection(x => x.AddScoped<IRulesEngine, RulesEngine.RulesEngine>(p =>
+        wrapper.RulesEngineWrapperServices.ModifyRulesEngineWrapperServiceCollection(x => x.AddScoped<IRulesEngine, RulesEngine.RulesEngine>(p =>
         new RulesEngine.RulesEngine(options)));
 
 
@@ -55,11 +55,11 @@ public static class ConfigurationExtensions
      where T : IRulesEngineWrapper where R : DbContext, IRulesEngineWrapperContext
     {
         
-        wrapper.ModifyRulesEngineWrapperServiceCollection(x => x.AddDbContext<IRulesEngineWrapperContext, R>(action ?? (x => x.UseInMemoryDatabase("RulesEngineWrapper"))));
+        wrapper.RulesEngineWrapperServices.ModifyRulesEngineWrapperServiceCollection(x => x.AddDbContext<IRulesEngineWrapperContext, R>(action ?? (x => x.UseInMemoryDatabase("RulesEngineWrapper"))));
 
-        wrapper.ModifyRulesEngineWrapperServiceCollection(x => x.AddSingleton<IWorkflowService, WorkflowDataSourceService>());
+        wrapper.RulesEngineWrapperServices.ModifyRulesEngineWrapperServiceCollection(x => x.AddSingleton<IWorkflowService, WorkflowDataSourceService>());
 
-        wrapper.ModifyRulesEngineWrapperServiceCollection(x => x.AddSingleton<IWorkflowRepository, WorkflowRepository>());
+        wrapper.RulesEngineWrapperServices.ModifyRulesEngineWrapperServiceCollection(x => x.AddSingleton<IWorkflowRepository, WorkflowRepository>());
 
         return wrapper;
     }

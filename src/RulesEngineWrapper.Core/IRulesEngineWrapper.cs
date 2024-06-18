@@ -1,4 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
 using RulesEngine.Interfaces;
 
 namespace RulesEngineWrapper
@@ -9,6 +8,6 @@ namespace RulesEngineWrapper
 
     public interface IRulesEngineWrapper : IRulesEngine
     {
-        ServiceCollection ModifyRulesEngineWrapperServiceCollection(Action<ServiceCollection> action);
+        RulesEngineWrapperServices RulesEngineWrapperServices { get; set; }
     }
 }

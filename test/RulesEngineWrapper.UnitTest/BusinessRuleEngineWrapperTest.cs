@@ -1066,8 +1066,12 @@ namespace RulesEngineWrapper.UnitTest
                 WorkflowsToInject = new List<string> { "inputWorkflow" }
             };
 
+
             var injectWorkflowStr = JsonConvert.SerializeObject(injectWorkflow);
-            return new RulesEngineWrapper(reSettings);
+            var re = new RulesEngineWrapper(reSettings);
+            re.AddOrUpdateWorkflow(injectWorkflow);
+            re.AddOrUpdateWorkflow(JsonConvert.DeserializeObject<Workflow>(data));
+            return re;
             // return new RulesEngineWrapper(new string[] { data, injectWorkflowStr }, reSettings);
         }
 

@@ -1,7 +1,13 @@
 namespace RulesEngineWrapper.Dashboard;
 
-public static class DashBoardOptionExtensions
+public static class RulesEngineWrapperDashboardOptions
 {
+    public static IRulesEngineWrapperDashboard<RulesEngineWrapperDashboard> UseCustomUrl(
+    this IRulesEngineWrapperDashboard<RulesEngineWrapperDashboard> dashboard,
+    string customUrl
+    )
+    => dashboard.UseCustomUrl<RulesEngineWrapperDashboard>(customUrl);
+
     public static IRulesEngineWrapperDashboard<T> UseCustomUrl<T>(
     this IRulesEngineWrapperDashboard<T> dashboard,
     string customUrl
@@ -11,5 +17,4 @@ public static class DashBoardOptionExtensions
 
         return dashboard;
     }
-
 }
