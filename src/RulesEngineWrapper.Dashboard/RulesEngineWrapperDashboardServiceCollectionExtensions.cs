@@ -9,9 +9,10 @@ namespace RulesEngineWrapper.Dashboard
             return services.AddRulesEngineWrapperDashboard<RulesEngineWrapperDashboard>();
         }
 
-        public static IServiceCollection AddRulesEngineWrapperDashboard<T>(this IServiceCollection services) where T : class , IRulesEngineWrapperDashboard
+        public static IServiceCollection AddRulesEngineWrapperDashboard<T>(this IServiceCollection services) where T : class, IRulesEngineWrapperDashboard<T>
         {
-            return services.AddSingleton<IRulesEngineWrapperDashboard, T>();
+            return services.AddSingleton<IRulesEngineWrapperDashboard<T>, T>();
         }
+
     }
 }

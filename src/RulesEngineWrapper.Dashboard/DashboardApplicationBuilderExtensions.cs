@@ -9,25 +9,17 @@ namespace RulesEngineWrapper.Dashboard
 {
     public static class DashboardApplicationBuilderExtensions
     {
-        //this is the path to the embedded files, this is the path to the index.html file
-        //if you wish to change this you also need to change this hardcoded value at these places:
-        //RulesEngineWrapper.Dashboard.csproj
-        //vite.config.ts (also re-run npm build)
-        //here
-        private const string embeddedFilePath = "rulesEngineWrapper-dashboard/dist/index.html";
-
         public static IApplicationBuilder UseRulesEngineDashboard(
             this IApplicationBuilder app,
             Action<IRulesEngineWrapperDashboard<RulesEngineWrapperDashboard>> action = null!)
-            => app.UseRulesEngineDashboard<RulesEngineWrapperDashboard>();
-
+            => app.UseRulesEngineDashboard<RulesEngineWrapperDashboard>(action);
 
         public static IApplicationBuilder UseRulesEngineDashboard<T>(
         this IApplicationBuilder app,
-        Action<IRulesEngineWrapperDashboard> action = null!)
+        Action<IRulesEngineWrapperDashboard<T>> action = null!)
         {
             //this requires the AddRulesEngineWrapperDashboard call to actually return something
-            var instance = app.ApplicationServices.GetRequiredService<IRulesEngineWrapperDashboard>();
+            var instance = app.ApplicationServices.GetRequiredService<IRulesEngineWrapperDashboard<T>>();
 
             action?.Invoke(instance);
 
@@ -36,7 +28,7 @@ namespace RulesEngineWrapper.Dashboard
 #if !ProductionBuild == true
             //for future reference, app.UseRewriter needs to go before UseStaticFiles like below,
             //this is sketch asf, careful.
-            rewriteOptions.AddRewrite(@"^dashboard(?!/dist)", embeddedFilePath, true);
+            rewriteOptions.AddRewrite(instance.DashboardOptions.CustomUrl, DashboardOptions.embeddedFilePath, true);
 
             app.UseRewriter(rewriteOptions);
 
