@@ -36,12 +36,11 @@
     <Exec WorkingDirectory="Dashboard\" Command="npm run build" />
   </Target>
 
-  <Target Name="AfterCompile" AfterTargets="Compile" Condition="'$(ProductionBuild)' == 'false'">
-    <!-- Run frontend buildscript -->
+  <!-- <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Message Text="starting vite dev server: $(MSBuildProjectDirectory)" Importance="high" />
-    <Exec WorkingDirectory="Dashboard" Command="npm ci" />
-    <Exec WorkingDirectory="Dashboard" Command="npm run dev" />
-</Target>
+    <Exec WorkingDirectory="rulesEngineWrapper-dashboard" Command="npm ci" />
+    <Exec WorkingDirectory="rulesEngineWrapper-dashboard" Command="npm run dev" />
+</Target> -->
 
   <ItemGroup>
     <EmbeddedResource Include="rulesEngineWrapper-dashboard\dist\**\*.*" />

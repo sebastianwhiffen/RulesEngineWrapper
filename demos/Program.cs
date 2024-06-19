@@ -1,7 +1,6 @@
 using RulesEngineWrapper.Dashboard;
 using System.Reflection;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.AspNetCore.Rewrite;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDirectoryBrowser();

@@ -37,13 +37,8 @@ namespace RulesEngineWrapper.Dashboard
             {
                 FileProvider = new EmbeddedFileProvider(typeof(DashboardApplicationBuilderExtensions).Assembly)
             });
-
 #else
-            rewriteOptions.AddRewrite(@"^dashboard(?!/dist)", embeddedFilePath, true);
-
-            app.UseRewriter(rewriteOptions);
-
-            app.UseSpa(spa => spa.UseProxyToSpaDevelopmentServer(options.ApiUrl));
+            app.UseSpa(spa => spa.UseProxyToSpaDevelopmentServer(instance.DashboardOptions.ApiUrl));
 #endif
 
             return app;
