@@ -13,6 +13,10 @@ config.initialize()
         path: config.getBaseUrl(),
         element: <div>Hello world!</div>,
       },
+      {
+        path: config.getBaseUrl() + "/holySmokes",
+        element: <div>Hello world d d d </div>,
+      },
     ]);
 
     console.log(config.getBaseUrl() ?? "No base URL found");

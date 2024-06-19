@@ -2,18 +2,18 @@ namespace RulesEngineWrapper.Dashboard;
 
 public static class RulesEngineWrapperDashboardOptions
 {
-    public static IRulesEngineWrapperDashboard<RulesEngineWrapperDashboard> UseCustomUrl(
+    public static IRulesEngineWrapperDashboard<RulesEngineWrapperDashboard> UseCustomBaseUrl(
     this IRulesEngineWrapperDashboard<RulesEngineWrapperDashboard> dashboard,
-    string customUrl
+    string customBaseUrl
     )
-    => dashboard.UseUrlRewrite<RulesEngineWrapperDashboard>(customUrl);
+    => dashboard.UseUrlRewrite<RulesEngineWrapperDashboard>(customBaseUrl);
 
     public static IRulesEngineWrapperDashboard<T> UseUrlRewrite<T>(
     this IRulesEngineWrapperDashboard<T> dashboard,
-    string customUrl
+    string customBaseUrl
     ) where T : IRulesEngineWrapperDashboard
     {
-        dashboard.Instance.DashboardOptions.CustomUrl = customUrl;
+        dashboard.Instance.DashboardOptions.CustomBaseUrl = customBaseUrl;
 
         return dashboard;
     }

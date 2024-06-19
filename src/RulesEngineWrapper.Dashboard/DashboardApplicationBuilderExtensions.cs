@@ -30,7 +30,7 @@ namespace RulesEngineWrapper.Dashboard
 #if !ProductionBuild == true
             //for future reference, app.UseRewriter needs to go before UseStaticFiles like below,
             //this is sketch asf, careful.
-            rewriteOptions.AddRewrite("^" + instance.DashboardOptions.CustomUrl + "(?!/dist)", DashboardOptions.embeddedFilePath, true);
+            rewriteOptions.AddRewrite("^" + instance.DashboardOptions.CustomBaseUrl + "(?!/dist)", DashboardOptions.embeddedFilePath, true);
 
             app.UseRewriter(rewriteOptions);
 

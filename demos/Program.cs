@@ -11,7 +11,7 @@ var app = builder.Build();
 
 app.UseRulesEngineDashboard(x => 
 {
-    x.UseCustomUrl("ffs");
+    x.UseCustomBaseUrl("ffs");
 });
 
 var fileProvider = new EmbeddedFileProvider(Assembly.GetCallingAssembly());

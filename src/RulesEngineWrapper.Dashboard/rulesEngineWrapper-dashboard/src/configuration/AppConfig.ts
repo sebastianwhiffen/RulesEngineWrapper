@@ -1,5 +1,5 @@
 export class AppConfig {
-  private customUrl: string = "rulesEngine-dashboard";
+  private customBaseUrl: string = "rulesEngine-dashboard";
   private initialized: boolean = false;
 
   async initialize(): Promise<AppConfig> {
@@ -8,7 +8,7 @@ export class AppConfig {
         const response = await fetch("/getRulesEngineDashboardConfiguration");
         const config = await response.json();
 
-        this.customUrl = config.CustomUrl;
+        this.customBaseUrl = config.CustomBaseUrl;
 
         this.initialized = true;
       } catch (error) {
@@ -21,7 +21,7 @@ export class AppConfig {
 
   getBaseUrl(): string {
     this.ensureInitialized();
-    return this.customUrl;
+    return this.customBaseUrl;
   }
 
   private ensureInitialized() {
