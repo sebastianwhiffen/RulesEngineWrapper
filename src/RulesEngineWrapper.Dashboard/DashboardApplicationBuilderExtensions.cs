@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Rewrite;
 //don't remove Microsoft.Extensions.FileProviders even if it says 'unused', its being used, but the compiler (ProductionBuild) flag is hiding it
 using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace RulesEngineWrapper.Dashboard
 {
@@ -28,7 +30,7 @@ namespace RulesEngineWrapper.Dashboard
 #if !ProductionBuild == true
             //for future reference, app.UseRewriter needs to go before UseStaticFiles like below,
             //this is sketch asf, careful.
-            rewriteOptions.AddRewrite(instance.DashboardOptions.CustomUrl, DashboardOptions.embeddedFilePath, true);
+            rewriteOptions.AddRewrite("^" + instance.DashboardOptions.CustomUrl + "(?!/dist)", DashboardOptions.embeddedFilePath, true);
 
             app.UseRewriter(rewriteOptions);
 
@@ -38,8 +40,16 @@ namespace RulesEngineWrapper.Dashboard
                 FileProvider = new EmbeddedFileProvider(typeof(DashboardApplicationBuilderExtensions).Assembly)
             });
 #else
-            app.UseSpa(spa => spa.UseProxyToSpaDevelopmentServer(instance.DashboardOptions.ApiUrl));
+            app.UseSpa(spa => spa.UseProxyToSpaDevelopmentServer(instance.DashboardOptions.DevelopmentServerUrl));
 #endif
+            app.Map("/getRulesEngineDashboardConfiguration", apiApp =>
+            {
+                apiApp.Run(async context =>
+                {
+                    context.Response.ContentType = "application/json";
+                    await context.Response.WriteAsync(JsonConvert.SerializeObject(instance.DashboardOptions));
+                });
+            });
 
             return app;
         }

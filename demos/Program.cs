@@ -11,7 +11,7 @@ var app = builder.Build();
 
 app.UseRulesEngineDashboard(x => 
 {
-    x.UseUrlRewrite(@"^dishpup(?!/dist)");
+    x.UseCustomUrl("ffs");
 });
 
 var fileProvider = new EmbeddedFileProvider(Assembly.GetCallingAssembly());

@@ -2,7 +2,7 @@ namespace RulesEngineWrapper.Dashboard;
 
 public static class RulesEngineWrapperDashboardOptions
 {
-    public static IRulesEngineWrapperDashboard<RulesEngineWrapperDashboard> UseUrlRewrite(
+    public static IRulesEngineWrapperDashboard<RulesEngineWrapperDashboard> UseCustomUrl(
     this IRulesEngineWrapperDashboard<RulesEngineWrapperDashboard> dashboard,
     string customUrl
     )
